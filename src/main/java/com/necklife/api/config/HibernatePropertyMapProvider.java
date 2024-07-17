@@ -1,4 +1,4 @@
-package com.necklife.api.repository.config;
+package com.necklife.api.config;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateProperties;
@@ -15,8 +15,8 @@ public class HibernatePropertyMapProvider {
 	private final JpaProperties jpaProperties;
 
 	public HibernatePropertyMapProvider(
-			@Qualifier(com.necklife.api.repository.config.DataJpaConfig.HIBERNATE_PROPERTIES) HibernateProperties hibernateProperties,
-			@Qualifier(com.necklife.api.repository.config.DataJpaConfig.JPA_PROPERTIES) JpaProperties jpaProperties) {
+			@Qualifier(DataJpaConfig.HIBERNATE_PROPERTIES) HibernateProperties hibernateProperties,
+			@Qualifier(DataJpaConfig.JPA_PROPERTIES) JpaProperties jpaProperties) {
 		this.hibernateProperties = hibernateProperties;
 		this.jpaProperties = jpaProperties;
 	}

@@ -1,4 +1,4 @@
-package com.necklife.api.repository.config;
+package com.necklife.api.config;
 
 import lombok.RequiredArgsConstructor;
 import org.hibernate.cfg.AvailableSettings;
@@ -12,16 +12,16 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 
 import javax.sql.DataSource;
 
-import static com.necklife.api.repository.config.ApiRepositoryDataSourceConfig.DATASOURCE_NAME;
+import static com.necklife.api.config.ApiRepositoryDataSourceConfig.DATASOURCE_NAME;
 
 
 @Configuration
 @RequiredArgsConstructor
 public class ApiRepositoryEntityConfig {
 	public static final String ENTITY_MANAGER_FACTORY_NAME =
-			ApiRepositoryConfig.BEAN_NAME_PREFIX + "EntityManagerFactory";
+			ApiAppConfig.BEAN_NAME_PREFIX + "EntityManagerFactory";
 	private static final String PERSIST_UNIT =
-			ApiRepositoryConfig.BEAN_NAME_PREFIX + "PersistenceUnit";
+			ApiAppConfig.BEAN_NAME_PREFIX + "PersistenceUnit";
 
 	private final HibernatePropertyMapProvider hibernatePropertyMapProvider;
 
@@ -36,7 +36,7 @@ public class ApiRepositoryEntityConfig {
 						.dataSource(dataSource)
 						.properties(hibernatePropertyMapProvider.get())
 						.persistenceUnit(PERSIST_UNIT)
-						.packages(ApiRepositoryConfig.BASE_PACKAGE)
+						.packages(ApiAppConfig.BASE_PACKAGE)
 						.build();
 		build
 				.getJpaPropertyMap()

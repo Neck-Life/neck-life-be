@@ -1,4 +1,4 @@
-package com.necklife.api.repository.config;
+package com.necklife.api.config;
 
 import jakarta.persistence.EntityManagerFactory;
 import org.springframework.context.annotation.Bean;
@@ -14,13 +14,13 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableJpaAuditing
 @EnableTransactionManagement
 @EnableJpaRepositories(
-		basePackages = ApiRepositoryConfig.BASE_PACKAGE,
+		basePackages = ApiAppConfig.BASE_PACKAGE,
 		transactionManagerRef = ApiRepositoryJpaConfig.TRANSACTION_MANAGER_NAME,
 		entityManagerFactoryRef = ApiRepositoryEntityConfig.ENTITY_MANAGER_FACTORY_NAME)
 public class ApiRepositoryJpaConfig {
 
 	public static final String TRANSACTION_MANAGER_NAME =
-			ApiRepositoryConfig.BEAN_NAME_PREFIX + "TransactionalManager";
+			ApiAppConfig.BEAN_NAME_PREFIX + "TransactionalManager";
 
 	@Bean(name = TRANSACTION_MANAGER_NAME)
 	public PlatformTransactionManager transactionManager(EntityManagerFactory emf) {
