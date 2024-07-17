@@ -1,10 +1,10 @@
 package com.necklife.api.security.filter.token;
 
-import com.walking.api.security.exception.AccessTokenInvalidException;
+import com.necklife.api.security.exception.AccessTokenInvalidException;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Objects;
 
 @Slf4j

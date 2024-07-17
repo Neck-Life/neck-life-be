@@ -1,8 +1,8 @@
 package com.necklife.api.security.authentication.token;
 
-import com.walking.api.security.authentication.authority.Roles;
-import com.walking.api.security.exception.AccessTokenInvalidException;
-import com.walking.api.security.token.TokenResolver;
+import com.necklife.api.security.authentication.authority.Roles;
+import com.necklife.api.security.exception.AccessTokenInvalidException;
+import com.necklife.api.security.token.TokenResolver;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
