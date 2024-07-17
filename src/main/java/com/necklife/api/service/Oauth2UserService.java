@@ -2,6 +2,7 @@ package com.necklife.api.service;
 
 import com.necklife.api.entity.member.MemberEntity;
 import com.necklife.api.repository.member.MemberRepository;
+import com.necklife.api.repository.member.dto.response.PostMemberRepoResponse;
 import com.necklife.api.service.oauth.AppleOauthService;
 import com.necklife.api.service.oauth.GoogleOauthService;
 import com.necklife.api.service.oauth.KaKaoOauthService;
@@ -23,7 +24,7 @@ public class Oauth2UserService {
     private final AppleOauthService appleOauthService;
 
     @Transactional(readOnly = false)
-    public MemberEntity findOrSaveMember(String id_token, String provider) {
+    public PostMemberRepoResponse findOrSaveMember(String id_token, String provider) {
         SocialMemberData socialMemberData;
         switch (provider) {
             case "google":
@@ -53,7 +54,13 @@ public class Oauth2UserService {
                 });
 
 
-        return member;
+
+        return PostMemberRepoResponse.builder()
+                .id(member.getId())
+                .email(member.getEmail())
+                .provider(member.getOauthProvider().toString())
+                .status(member.getStatus().name())
+                .build();
     }
 
 }
