@@ -16,7 +16,6 @@ import java.time.LocalDateTime;
 @ToString
 @MappedSuperclass
 @EntityListeners({AuditingEntityListener.class, SoftDeleteListener.class})
-@SuperBuilder(toBuilder = true)
 public abstract class BaseEntity {
 
 	@Id
@@ -31,11 +30,9 @@ public abstract class BaseEntity {
 	@LastModifiedDate
 	private LocalDateTime updatedAt;
 
-	@Builder.Default
-	@Column(nullable = false)
-	private Boolean deleted = false;
+	private LocalDateTime deletedAt;
 
 	public void delete() {
-		this.deleted = true;
+		this.deletedAt = LocalDateTime.now();
 	}
 }

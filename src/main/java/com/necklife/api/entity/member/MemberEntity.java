@@ -19,10 +19,11 @@ import org.hibernate.annotations.SQLDelete;
 						columnNames = {
 								"email",
 								"oauth_provider",
+
 						}
 				),
 		})
-@SQLDelete(sql = "UPDATE member SET deleted=true where id=?")
+@SQLDelete(sql = "UPDATE member SET deleted_At=CURRENT_DATE where id=?")
 public class MemberEntity extends BaseEntity {
 
 
