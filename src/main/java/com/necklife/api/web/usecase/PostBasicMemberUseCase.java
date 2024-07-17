@@ -1,7 +1,7 @@
 package com.necklife.api.web.usecase;
 
 import com.necklife.api.repository.member.dto.response.PostMemberRepoResponse;
-import com.necklife.api.service.Oauth2UserService;
+import com.necklife.api.service.BasicUserService;
 import com.necklife.api.web.usecase.dto.response.PostMemberUseCaseResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -9,14 +9,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class PostMemberUseCase {
+public class PostBasicMemberUseCase {
 
-    private final Oauth2UserService oauth2UserService;
+    private final BasicUserService basicUserService;
 
     @Transactional(readOnly = false)
-    public PostMemberUseCaseResponse execute(String code,String provider) {
-
-        PostMemberRepoResponse savedMember = oauth2UserService.findOrSaveMember(code, provider);// Dummy provider, replace with actual logic
+    public PostMemberUseCaseResponse execute(String email,String password) {
+        PostMemberRepoResponse savedMember = basicUserService.execute(email, password);
 
         return PostMemberUseCaseResponse.builder()
                 .id(savedMember.getId())
@@ -24,4 +23,5 @@ public class PostMemberUseCase {
                 .provider(savedMember.getProvider())
                 .status(savedMember.getStatus()).build();
     }
+
 }

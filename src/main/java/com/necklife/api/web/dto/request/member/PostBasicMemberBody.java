@@ -1,8 +1,6 @@
 package com.necklife.api.web.dto.request.member;
 
-import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
-
 
 @Getter
 @ToString
@@ -10,12 +8,9 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
-public class PostMemberBody {
+public class PostBasicMemberBody {
 
-	@NotEmpty
-	private String code;
+    private String email;
+    private String password;
 
-	// 구글, 애플, 카카오
-	@NotEmpty
-	private String provider;
 }

@@ -1,9 +1,7 @@
 package com.necklife.api.web.dto.request.member;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
-import org.springframework.web.multipart.MultipartFile;
 
 
 @Getter
@@ -12,8 +10,12 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
-public class PatchProfileBody {
+public class PostOauthMemberBody {
 
-	@JsonIgnore @NotEmpty
-	private MultipartFile profile;
+	@NotEmpty
+	private String code;
+
+	// 구글, 애플, 카카오
+	@NotEmpty
+	private String provider;
 }

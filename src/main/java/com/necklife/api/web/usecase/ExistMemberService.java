@@ -1,12 +1,25 @@
 package com.necklife.api.web.usecase;
 
+import com.necklife.api.entity.member.MemberEntity;
+import com.necklife.api.repository.member.MemberRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.webjars.NotFoundException;
+
+import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ExistMemberService {
 
+    private final MemberRepository memberRepository;
+
     public boolean checkMemberExists(Long id) {
-        // Implementation of the service to check if a member exists
-        return true; // Dummy implementation, replace with actual logic
+
+        Optional<MemberEntity> findMember = memberRepository.findById(id);
+        return findMember.isPresent();
+
     }
 }

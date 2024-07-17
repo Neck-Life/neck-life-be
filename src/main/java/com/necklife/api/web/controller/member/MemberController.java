@@ -5,8 +5,8 @@ import com.necklife.api.security.authentication.token.TokenUserDetails;
 import com.necklife.api.security.token.AuthToken;
 import com.necklife.api.security.token.TokenGenerator;
 import com.necklife.api.security.token.TokenResolver;
-import com.necklife.api.web.dto.request.member.PatchProfileBody;
-import com.necklife.api.web.dto.request.member.PostMemberBody;
+import com.necklife.api.web.dto.request.member.PostBasicMemberBody;
+import com.necklife.api.web.dto.request.member.PostOauthMemberBody;
 import com.necklife.api.web.dto.request.member.RefreshMemberAuthTokenBody;
 import com.necklife.api.web.dto.response.member.*;
 import com.necklife.api.web.support.ApiResponse;
@@ -23,8 +23,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 @Slf4j
@@ -43,14 +41,16 @@ public class MemberController {
     private final DeleteMemberUseCase deleteMemberUseCase;
     private final GetMemberDetailUseCase getMemberDetailUseCase;
     private final GetMemberTokenDetailUseCase getMemberTokenDetailUseCase;
+    private final PostBasicMemberUseCase postBasicMemberUseCase;
 
 
+    //todo usecase in/out 객체로 분리
 
     /* 로그인과 회원가입은 동시에 이루어집니다. */
     @PostMapping()
-    public ApiResponse<ApiResponse.SuccessBody<Object>> postMember(
-            @Valid @RequestBody PostMemberBody postMemberBody) {
-        PostMemberUseCaseResponse useCaseResponse = postMemberUseCase.execute(postMemberBody.getCode());
+    public ApiResponse<ApiResponse.SuccessBody<PostMemberResponse>> postMember(
+            @Valid @RequestBody PostOauthMemberBody postOauthMemberBody) {
+        PostMemberUseCaseResponse useCaseResponse = postMemberUseCase.execute(postOauthMemberBody.getCode(), postOauthMemberBody.getProvider());
         AuthToken authToken =
                 tokenGenerator.generateAuthToken(useCaseResponse.getId(), List.of(Roles.ROLE_USER));
         PostMemberResponse response =
@@ -65,11 +65,30 @@ public class MemberController {
         return ApiResponseGenerator.success(response, HttpStatus.CREATED, MessageCode.RESOURCE_CREATED);
     }
 
+    @PostMapping("/basic")
+    public ApiResponse<ApiResponse.SuccessBody<PostMemberResponse>> postBasicMember(
+            @Valid @RequestBody PostBasicMemberBody postBasicMemberBody) {
+        PostMemberUseCaseResponse useCaseResponse = postBasicMemberUseCase.execute(postBasicMemberBody.getEmail(), postBasicMemberBody.getPassword());
+        AuthToken authToken =
+                tokenGenerator.generateAuthToken(useCaseResponse.getId(), List.of(Roles.ROLE_USER));
+        PostMemberResponse response =
+                PostMemberResponse.builder()
+                        .id(useCaseResponse.getId())
+                        .email(useCaseResponse.getEmail())
+                        .provider(useCaseResponse.getProvider())
+                        .status(useCaseResponse.getStatus())
+                        .accessToken(authToken.getAccessToken())
+                        .refreshToken(authToken.getRefreshToken())
+                        .build();
+
+        return ApiResponseGenerator.success(response, HttpStatus.CREATED, MessageCode.RESOURCE_CREATED);
+    }
+
     @DeleteMapping()
     public ApiResponse<ApiResponse.SuccessBody<DeleteMemberResponse>> deleteMember(
             @AuthenticationPrincipal TokenUserDetails userDetails) {
-//        Long memberId = Long.valueOf(userDetails.getUsername());
-        Long memberId = 1L;
+        Long memberId = Long.valueOf(userDetails.getUsername());
+//        Long memberId = 1L;
         DeleteMemberUseCaseResponse useCaseResponse = deleteMemberUseCase.execute(memberId);
         DeleteMemberResponse response =
                 DeleteMemberResponse.builder()
@@ -82,8 +101,8 @@ public class MemberController {
     @GetMapping()
     public ApiResponse<ApiResponse.SuccessBody<GetMemberResponse>> getMember(
             @AuthenticationPrincipal TokenUserDetails userDetails) {
-//        Long memberId = Long.valueOf(userDetails.getUsername());
-        Long memberId = 1L;
+        Long memberId = Long.valueOf(userDetails.getUsername());
+//        Long memberId = 1L;
         GetMemberDetailUseCaseResponse useCaseResponse = getMemberDetailUseCase.execute(memberId);
         GetMemberResponse response =
                 GetMemberResponse.builder()
@@ -113,6 +132,7 @@ public class MemberController {
                         .build();
         return ApiResponseGenerator.success(response, HttpStatus.OK, MessageCode.SUCCESS);
     }
+
 
 
 
