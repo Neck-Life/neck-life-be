@@ -1,4 +1,4 @@
-package com.necklife.api.repository.config;
+package com.necklife.api.config;
 
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -15,7 +15,7 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 
 import java.util.Map;
 
-import static com.necklife.api.repository.config.ApiRepositoryConfig.BEAN_NAME_PREFIX;
+import static com.necklife.api.config.ApiAppConfig.BEAN_NAME_PREFIX;
 
 
 @Configuration

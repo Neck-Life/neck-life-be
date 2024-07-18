@@ -1,6 +1,6 @@
 package com.necklife.api.security.token;
 
-import com.walking.api.security.authentication.authority.Roles;
+import com.necklife.api.security.authentication.authority.Roles;
 import io.jsonwebtoken.Header;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;

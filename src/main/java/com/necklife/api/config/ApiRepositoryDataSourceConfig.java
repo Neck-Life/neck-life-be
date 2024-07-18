@@ -1,5 +1,6 @@
-package com.necklife.api.repository.config;
+package com.necklife.api.config;
 
+import com.necklife.api.config.ApiAppConfig;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration;
@@ -18,10 +19,10 @@ import javax.sql.DataSource;
 		})
 public class ApiRepositoryDataSourceConfig {
 
-	public static final String DATASOURCE_NAME = ApiRepositoryConfig.BEAN_NAME_PREFIX + "DataSource";
+	public static final String DATASOURCE_NAME = ApiAppConfig.BEAN_NAME_PREFIX + "DataSource";
 
 	@Bean(name = DATASOURCE_NAME)
-	@ConfigurationProperties(prefix = "api.datasource")
+	@ConfigurationProperties(prefix = "spring.datasource")
 	public DataSource dataSource() {
 		return DataSourceBuilder.create().build();
 	}
