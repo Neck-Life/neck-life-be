@@ -4,7 +4,6 @@ import com.necklife.api.web.support.MessageSourceAccessor;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 
-
 @Getter
 public class ExternalIntegrationException extends RuntimeException {
 

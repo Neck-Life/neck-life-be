@@ -1,6 +1,5 @@
 package com.necklife.api.entity.listener;
 
-
 import com.necklife.api.entity.BaseEntity;
 import jakarta.persistence.PreRemove;
 

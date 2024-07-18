@@ -2,6 +2,8 @@ package com.necklife.api.web.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.*;
+import java.io.IOException;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.connector.RequestFacade;
@@ -10,10 +12,6 @@ import org.jboss.logging.MDC;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
-
-
-import java.io.IOException;
-import java.util.UUID;
 
 @Slf4j
 @Component

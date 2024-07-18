@@ -4,12 +4,10 @@ import lombok.Data;
 
 @Data
 public class KaKaoUnlinkData implements SocialUnlinkData {
-    private String id;
+	private String id;
 
-    @Override
-    public String getUnlinkInfo() {
-        return id;
-    }
-
-
+	@Override
+	public String getUnlinkInfo() {
+		return id;
+	}
 }

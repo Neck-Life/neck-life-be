@@ -7,22 +7,20 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class AppleMemberData implements SocialMemberData {
-    private String email;
-    private OauthProvider oauthProvider = OauthProvider.APPLE;
+	private String email;
+	private OauthProvider oauthProvider = OauthProvider.APPLE;
 
-    public AppleMemberData(String email) {
-        this.email = email;
-    }
-    @Override
-    public String getEmail() {
-        return this.email;
-    }
-    @Override
-    public OauthProvider getProvider() {
-        return this.oauthProvider;
-    }
+	public AppleMemberData(String email) {
+		this.email = email;
+	}
 
+	@Override
+	public String getEmail() {
+		return this.email;
+	}
 
-
-
+	@Override
+	public OauthProvider getProvider() {
+		return this.oauthProvider;
+	}
 }

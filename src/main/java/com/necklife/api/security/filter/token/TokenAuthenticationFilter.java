@@ -2,10 +2,9 @@ package com.necklife.api.security.filter.token;
 
 import com.necklife.api.security.exception.AccessTokenInvalidException;
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter;
-
-import java.util.Objects;
 
 @Slf4j
 public class TokenAuthenticationFilter extends AbstractPreAuthenticatedProcessingFilter {

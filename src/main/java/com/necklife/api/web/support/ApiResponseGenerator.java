@@ -1,18 +1,16 @@
 package com.necklife.api.web.support;
 
+import static com.necklife.api.web.support.ApiResponse.*;
 
 import lombok.experimental.UtilityClass;
 import org.springframework.http.HttpStatus;
-
-import static com.necklife.api.web.support.ApiResponse.*;
 
 @UtilityClass
 public class ApiResponseGenerator {
 
 	public static ApiResponse<Success> success(final HttpStatus status) {
 		return new ApiResponse<>(
-				new Success(MessageCode.SUCCESS.getValue(), MessageCode.SUCCESS.getCode()),
-				status);
+				new Success(MessageCode.SUCCESS.getValue(), MessageCode.SUCCESS.getCode()), status);
 	}
 
 	public static ApiResponse<Success> success(final HttpStatus status, MessageCode code) {
@@ -41,8 +39,7 @@ public class ApiResponseGenerator {
 		return new ApiResponse<>(status);
 	}
 
-	public static ApiResponse<FailureBody> fail(
-			final FailureBody body, final HttpStatus status) {
+	public static ApiResponse<FailureBody> fail(final FailureBody body, final HttpStatus status) {
 		return new ApiResponse<>(body, status);
 	}
 

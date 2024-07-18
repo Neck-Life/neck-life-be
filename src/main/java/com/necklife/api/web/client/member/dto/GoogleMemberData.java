@@ -7,22 +7,20 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class GoogleMemberData implements SocialMemberData {
-    private String email;
-    private OauthProvider oauthProvider = OauthProvider.GOOGLE;
+	private String email;
+	private OauthProvider oauthProvider = OauthProvider.GOOGLE;
 
-    public GoogleMemberData(String email) {
-        this.email = email;
-    }
-    @Override
-    public String getEmail() {
-        return this.email;
-    }
-    @Override
-    public OauthProvider getProvider() {
-        return this.oauthProvider;
-    }
+	public GoogleMemberData(String email) {
+		this.email = email;
+	}
 
+	@Override
+	public String getEmail() {
+		return this.email;
+	}
 
-
-
+	@Override
+	public OauthProvider getProvider() {
+		return this.oauthProvider;
+	}
 }

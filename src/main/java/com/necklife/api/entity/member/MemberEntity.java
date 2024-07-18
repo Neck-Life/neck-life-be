@@ -5,27 +5,23 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
 
-
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Entity
 @Builder
 @Table(
-		name="member",
-		uniqueConstraints={
-				@UniqueConstraint(
-						name = "member_email_certificatonSubject_unique",
-						columnNames = {
-								"email",
-								"oauth_provider",
-
-						}
-				),
+		name = "member",
+		uniqueConstraints = {
+			@UniqueConstraint(
+					name = "member_email_certificatonSubject_unique",
+					columnNames = {
+						"email",
+						"oauth_provider",
+					}),
 		})
 @SQLDelete(sql = "UPDATE member SET deleted_At=CURRENT_DATE where id=?")
 public class MemberEntity extends BaseEntity {
-
 
 	private Long providerId;
 
@@ -36,7 +32,6 @@ public class MemberEntity extends BaseEntity {
 	/* 일반 로그인을 통해 가입한 회원의 비밀번호 */
 	@Column(length = 50)
 	private String password;
-
 
 	@Column(nullable = false)
 	private boolean isSocial;
@@ -52,26 +47,23 @@ public class MemberEntity extends BaseEntity {
 	@Column(nullable = false)
 	private MemberStatus status;
 
-
-
-
 	public MemberEntity withDrawn() {
 		this.status = MemberStatus.WITHDRAWN;
 		return this;
 	}
+
 	public MemberEntity inactive() {
 		this.status = MemberStatus.INACTIVE;
 		return this;
 	}
+
 	public MemberEntity paid() {
 		this.status = MemberStatus.PAID;
 		return this;
 	}
+
 	public MemberEntity unpaid() {
 		this.status = MemberStatus.UNPAID;
 		return this;
 	}
-
-
-
 }

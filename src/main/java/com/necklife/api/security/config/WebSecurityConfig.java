@@ -1,6 +1,5 @@
 package com.necklife.api.security.config;
 
-
 import com.necklife.api.security.authentication.token.TokenAuthProvider;
 import com.necklife.api.security.filter.exception.TokenInvalidExceptionHandlerFilter;
 import com.necklife.api.security.filter.token.TokenAuthenticationFilter;
@@ -12,7 +11,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.ProviderManager;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
@@ -30,132 +28,128 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @Configuration
 public class WebSecurityConfig {
 
-    private final DelegatedAuthenticationEntryPoint authenticationEntryPoint;
-    private final DelegatedAccessDeniedHandler accessDeniedHandler;
-    private final TokenAuthProvider tokenAuthProvider;
-    private final CorsConfigurationSourceProperties corsProperties;
+	private final DelegatedAuthenticationEntryPoint authenticationEntryPoint;
+	private final DelegatedAccessDeniedHandler accessDeniedHandler;
+	private final TokenAuthProvider tokenAuthProvider;
+	private final CorsConfigurationSourceProperties corsProperties;
 
-    @Bean
-    @Profile("!prod")
-    public SecurityFilterChain localSecurityFilterChain(HttpSecurity http) throws Exception {
+	@Bean
+	@Profile("!prod")
+	public SecurityFilterChain localSecurityFilterChain(HttpSecurity http) throws Exception {
 
-        http
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .csrf(AbstractHttpConfigurer::disable)
-                .formLogin(AbstractHttpConfigurer::disable)
-                .httpBasic(AbstractHttpConfigurer::disable)
+		http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
+				.csrf(AbstractHttpConfigurer::disable)
+				.formLogin(AbstractHttpConfigurer::disable)
+				.httpBasic(AbstractHttpConfigurer::disable)
+				.authorizeHttpRequests(
+						authorize ->
+								authorize.requestMatchers("/api/v1/**").authenticated().anyRequest().permitAll())
+				.addFilterBefore(
+						getTokenInvalidExceptionHandlerFilter(), AbstractPreAuthenticatedProcessingFilter.class)
+				.addFilterAt(generateAuthenticationFilter(), AbstractPreAuthenticatedProcessingFilter.class)
+				.exceptionHandling(
+						exceptionHandling ->
+								exceptionHandling
+										.authenticationEntryPoint(authenticationEntryPoint)
+										.accessDeniedHandler(accessDeniedHandler))
+				.sessionManagement(
+						sessionManagement ->
+								sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
+		return http.build();
+	}
 
-                .authorizeHttpRequests(authorize ->
-                authorize.requestMatchers("/api/v1/**").authenticated()
-                        .anyRequest().permitAll())
+	@Bean
+	@Profile(value = "prod")
+	public SecurityFilterChain prodSecurityFilterChain(HttpSecurity http) throws Exception {
 
-                .addFilterBefore(getTokenInvalidExceptionHandlerFilter(), AbstractPreAuthenticatedProcessingFilter.class)
-                .addFilterAt(generateAuthenticationFilter(), AbstractPreAuthenticatedProcessingFilter.class)
+		http.csrf(AbstractHttpConfigurer::disable)
+				.formLogin(AbstractHttpConfigurer::disable)
+				.httpBasic(AbstractHttpConfigurer::disable)
+				.cors(cors -> cors.configurationSource(corsConfigurationSource()));
 
+		http.authorizeHttpRequests(
+				authorize ->
+						authorize.requestMatchers("/api/v1/**").authenticated().anyRequest().denyAll());
 
-                .exceptionHandling(exceptionHandling ->
-                exceptionHandling.authenticationEntryPoint(authenticationEntryPoint)
-                        .accessDeniedHandler(accessDeniedHandler))
+		http.addFilterBefore(
+						getTokenInvalidExceptionHandlerFilter(), AbstractPreAuthenticatedProcessingFilter.class)
+				.addFilterAt(
+						generateAuthenticationFilter(), AbstractPreAuthenticatedProcessingFilter.class);
 
-                 .sessionManagement(sessionManagement ->
-                sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-               );
+		http.exceptionHandling(
+				exceptionHandling ->
+						exceptionHandling
+								.authenticationEntryPoint(authenticationEntryPoint)
+								.accessDeniedHandler(accessDeniedHandler));
 
-        return http.build();
-    }
+		http.sessionManagement(
+				sessionManagement ->
+						sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-    @Bean
-    @Profile(value = "prod")
-    public SecurityFilterChain prodSecurityFilterChain(HttpSecurity http) throws Exception {
+		return http.build();
+	}
 
-        http.csrf(AbstractHttpConfigurer::disable)
-                .formLogin(AbstractHttpConfigurer::disable)
-                .httpBasic(AbstractHttpConfigurer::disable)
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()));
+	public TokenAuthenticationFilter generateAuthenticationFilter() {
+		TokenAuthenticationFilter tokenAuthenticationFilter = new TokenAuthenticationFilter();
+		tokenAuthenticationFilter.setAuthenticationManager(new ProviderManager(tokenAuthProvider));
+		return tokenAuthenticationFilter;
+	}
 
-        http.authorizeHttpRequests(authorize ->
-                authorize.requestMatchers("/api/v1/**").authenticated()
-                        .anyRequest().denyAll()
-        );
+	public OncePerRequestFilter getTokenInvalidExceptionHandlerFilter() {
+		return new TokenInvalidExceptionHandlerFilter();
+	}
 
-        http.addFilterBefore(getTokenInvalidExceptionHandlerFilter(), AbstractPreAuthenticatedProcessingFilter.class)
-                .addFilterAt(generateAuthenticationFilter(), AbstractPreAuthenticatedProcessingFilter.class);
+	@Bean
+	@Profile("!prod")
+	public WebSecurityCustomizer localWebSecurityFilterIgnoreCustomizer() {
+		return web ->
+				web.ignoring()
+						.requestMatchers(
+								HttpMethod.GET,
+								"/actuator/health",
+								"/error",
+								"/docs/swagger-ui/*",
+								"/swagger-ui/*",
+								"/swagger-resources/**",
+								"/v3/api-docs/**",
+								"/openapi3.yaml",
+								"/reports/**",
+								"/**")
+						.requestMatchers(HttpMethod.POST, "/api/v1/members");
+	}
 
-        http.exceptionHandling(exceptionHandling ->
-                exceptionHandling.authenticationEntryPoint(authenticationEntryPoint)
-                        .accessDeniedHandler(accessDeniedHandler)
-        );
+	@Bean
+	@Profile("prod")
+	public WebSecurityCustomizer prodWebSecurityFilterIgnoreCustomizer() {
+		return web ->
+				web.ignoring()
+						.requestMatchers(
+								HttpMethod.GET,
+								"/actuator/health",
+								"/error",
+								"/docs/swagger-ui/*",
+								"/swagger-ui/*",
+								"/swagger-resources/**",
+								"/v3/api-docs/**",
+								"/openapi3.yaml",
+								"/reports/**",
+								"/api/v1/**",
+								"/swagger")
+						.requestMatchers(HttpMethod.POST, "/api/v1/members");
+	}
 
+	@Bean
+	public CorsConfigurationSource corsConfigurationSource() {
+		CorsConfiguration configuration = new CorsConfiguration();
 
-        http.sessionManagement(sessionManagement ->
-                sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        );
+		configuration.addAllowedOriginPattern(corsProperties.getOriginPatterns());
+		configuration.addAllowedHeader(corsProperties.getAllowedHeaders());
+		configuration.addAllowedMethod(corsProperties.getAllowedMethods());
+		configuration.setAllowCredentials(corsProperties.getAllowCredentials());
 
-        return http.build();
-    }
-
-    public TokenAuthenticationFilter generateAuthenticationFilter() {
-        TokenAuthenticationFilter tokenAuthenticationFilter = new TokenAuthenticationFilter();
-        tokenAuthenticationFilter.setAuthenticationManager(new ProviderManager(tokenAuthProvider));
-        return tokenAuthenticationFilter;
-    }
-
-    public OncePerRequestFilter getTokenInvalidExceptionHandlerFilter() {
-        return new TokenInvalidExceptionHandlerFilter();
-    }
-
-    @Bean
-    @Profile("!prod")
-    public WebSecurityCustomizer localWebSecurityFilterIgnoreCustomizer() {
-        return web ->
-                web.ignoring()
-                        .requestMatchers(
-                                HttpMethod.GET,
-                                "/actuator/health",
-                                "/error",
-                                "/docs/swagger-ui/*",
-                                "/swagger-ui/*",
-                                "/swagger-resources/**",
-                                "/v3/api-docs/**",
-                                "/openapi3.yaml",
-                                "/reports/**",
-                                "/**")
-                        .requestMatchers(HttpMethod.POST, "/api/v1/members");
-    }
-
-    @Bean
-    @Profile("prod")
-    public WebSecurityCustomizer prodWebSecurityFilterIgnoreCustomizer() {
-        return web ->
-                web.ignoring()
-                        .requestMatchers(
-                                HttpMethod.GET,
-                                "/actuator/health",
-                                "/error",
-                                "/docs/swagger-ui/*",
-                                "/swagger-ui/*",
-                                "/swagger-resources/**",
-                                "/v3/api-docs/**",
-                                "/openapi3.yaml",
-                                "/reports/**",
-                                "/api/v1/**",
-                                "/swagger"
-                        )
-                        .requestMatchers(HttpMethod.POST, "/api/v1/members");
-    }
-
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-
-        configuration.addAllowedOriginPattern(corsProperties.getOriginPatterns());
-        configuration.addAllowedHeader(corsProperties.getAllowedHeaders());
-        configuration.addAllowedMethod(corsProperties.getAllowedMethods());
-        configuration.setAllowCredentials(corsProperties.getAllowCredentials());
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration(corsProperties.getPathPattern(), configuration);
-        return source;
-    }
+		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		source.registerCorsConfiguration(corsProperties.getPathPattern(), configuration);
+		return source;
+	}
 }

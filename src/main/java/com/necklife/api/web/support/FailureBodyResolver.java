@@ -1,5 +1,6 @@
 package com.necklife.api.web.support;
 
+import static com.necklife.api.web.support.ApiResponse.*;
 
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Path;
@@ -13,9 +14,6 @@ import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
-
-import static com.necklife.api.web.support.ApiResponse.*;
-
 
 @UtilityClass
 public class FailureBodyResolver {

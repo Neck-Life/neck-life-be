@@ -1,9 +1,6 @@
 package com.necklife.api.web.client.member;
 
-
 import com.necklife.api.web.client.exception.SocialClientException;
-import com.necklife.api.web.client.member.dto.KaKaoMemberData;
-import com.necklife.api.web.client.member.dto.SocialMemberData;
 import com.necklife.api.web.client.member.dto.SocialMemberToken;
 import com.necklife.api.web.client.property.KaKaoApiProperties;
 import com.necklife.api.web.client.util.HeadersFunction;
@@ -21,29 +18,29 @@ import org.springframework.web.client.RestTemplate;
 @RequiredArgsConstructor
 public class KaKaoMemberClient implements SocialMemberClient {
 
-    private final RestTemplate restTemplate;
-    private final KaKaoApiProperties properties;
+	private final RestTemplate restTemplate;
+	private final KaKaoApiProperties properties;
 
-    @Override
-    public SocialMemberToken execute(String targetId)  {
-        String adminKey = properties.getAdminKey();
+	@Override
+	public SocialMemberToken execute(String targetId) {
+		String adminKey = properties.getAdminKey();
 
-        HttpHeaders headers = new HttpHeaders();
-        HeadersFunction.addKakaoHeader(headers, adminKey);
-        headers.add(HttpHeaders.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=utf-8");
+		HttpHeaders headers = new HttpHeaders();
+		HeadersFunction.addKakaoHeader(headers, adminKey);
+		headers.add(HttpHeaders.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=utf-8");
 
-        String queryParameter = "?target_id_type=user_id&target_id=" + targetId;
-        ResponseEntity<SocialMemberToken> response = restTemplate.exchange(
-                properties.getUriMeInfo() + queryParameter,
-                HttpMethod.POST,
-                new HttpEntity<>(null, headers),
-                SocialMemberToken.class
-        );
+		String queryParameter = "?target_id_type=user_id&target_id=" + targetId;
+		ResponseEntity<SocialMemberToken> response =
+				restTemplate.exchange(
+						properties.getUriMeInfo() + queryParameter,
+						HttpMethod.POST,
+						new HttpEntity<>(null, headers),
+						SocialMemberToken.class);
 
-        if (response.getStatusCode().is4xxClientError()) {
-            throw new SocialClientException();
-        }
+		if (response.getStatusCode().is4xxClientError()) {
+			throw new SocialClientException();
+		}
 
-        return response.getBody();
-    }
+		return response.getBody();
+	}
 }

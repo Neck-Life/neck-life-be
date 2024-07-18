@@ -3,7 +3,6 @@ package com.necklife.api.web.dto.request.member;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 
-
 @Getter
 @ToString
 @EqualsAndHashCode
@@ -11,6 +10,5 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 public class RefreshMemberAuthTokenBody {
-	@NotEmpty
-	private String refreshToken;
+	@NotEmpty private String refreshToken;
 }

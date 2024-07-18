@@ -11,17 +11,17 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class PostBasicMemberUseCase {
 
-    private final BasicUserService basicUserService;
+	private final BasicUserService basicUserService;
 
-    @Transactional(readOnly = false)
-    public PostMemberUseCaseResponse execute(String email,String password) {
-        PostMemberRepoResponse savedMember = basicUserService.execute(email, password);
+	@Transactional(readOnly = false)
+	public PostMemberUseCaseResponse execute(String email, String password) {
+		PostMemberRepoResponse savedMember = basicUserService.execute(email, password);
 
-        return PostMemberUseCaseResponse.builder()
-                .id(savedMember.getId())
-                .email(savedMember.getEmail())
-                .provider(savedMember.getProvider())
-                .status(savedMember.getStatus()).build();
-    }
-
+		return PostMemberUseCaseResponse.builder()
+				.id(savedMember.getId())
+				.email(savedMember.getEmail())
+				.provider(savedMember.getProvider())
+				.status(savedMember.getStatus())
+				.build();
+	}
 }
