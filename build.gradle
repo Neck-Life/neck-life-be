@@ -23,7 +23,7 @@ buildscript {
 		swaggerUIVersion = '4.1.3'
 
 		// spotless
-		spotlessVersion = '6.8.0'
+		spotlessVersion = '6.24.0'
 
 		// HTTP client
 		httpclientVersion = '4.5.13'
@@ -60,6 +60,7 @@ plugins {
 apply from: './tasks/install-git-hooks.gradle'
 apply from: './tasks/set-git-commit-template.gradle'
 apply from: './tasks/docs-task.gradle'
+
 
 
 group = 'com.necklife'
@@ -238,4 +239,14 @@ tasks.register('copySwaggerUI', Copy) {
 	def generateSwaggerUISampleTask = tasks.named('generateSwaggerUISample', GenerateSwaggerUI).get()
 	from("${generateSwaggerUISampleTask.outputDir}")
 	into(rootProject.rootDir.toString() + moduleStaticPath + "/docs/swagger-ui")
+}
+
+
+allprojects {
+
+	apply from: rootProject.rootDir.toString() + '/tasks/formatting-task.gradle'
+
+	repositories {
+		mavenCentral()
+	}
 }
