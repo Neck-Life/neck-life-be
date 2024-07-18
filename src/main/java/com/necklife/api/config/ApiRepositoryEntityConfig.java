@@ -1,5 +1,8 @@
 package com.necklife.api.config;
 
+import static com.necklife.api.config.ApiRepositoryDataSourceConfig.DATASOURCE_NAME;
+
+import javax.sql.DataSource;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.cfg.AvailableSettings;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -10,18 +13,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.orm.hibernate5.SpringBeanContainer;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 
-import javax.sql.DataSource;
-
-import static com.necklife.api.config.ApiRepositoryDataSourceConfig.DATASOURCE_NAME;
-
-
 @Configuration
 @RequiredArgsConstructor
 public class ApiRepositoryEntityConfig {
 	public static final String ENTITY_MANAGER_FACTORY_NAME =
 			ApiAppConfig.BEAN_NAME_PREFIX + "EntityManagerFactory";
-	private static final String PERSIST_UNIT =
-			ApiAppConfig.BEAN_NAME_PREFIX + "PersistenceUnit";
+	private static final String PERSIST_UNIT = ApiAppConfig.BEAN_NAME_PREFIX + "PersistenceUnit";
 
 	private final HibernatePropertyMapProvider hibernatePropertyMapProvider;
 

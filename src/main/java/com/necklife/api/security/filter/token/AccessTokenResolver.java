@@ -2,10 +2,9 @@ package com.necklife.api.security.filter.token;
 
 import com.necklife.api.security.exception.AccessTokenInvalidException;
 import jakarta.validation.constraints.NotNull;
+import java.util.regex.Pattern;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.regex.Pattern;
 
 @Slf4j
 @UtilityClass

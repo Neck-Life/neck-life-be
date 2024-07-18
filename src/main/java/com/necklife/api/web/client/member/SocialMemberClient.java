@@ -4,9 +4,10 @@ import com.necklife.api.web.client.member.dto.SocialMemberToken;
 
 @FunctionalInterface
 public interface SocialMemberClient {
-    /**
-     * Get social member data by userId
-     * @param targetId social user id
-     */
-    SocialMemberToken execute(String targetId);
+	/**
+	 * Get social member data by userId
+	 *
+	 * @param targetId social user id
+	 */
+	SocialMemberToken execute(String targetId);
 }

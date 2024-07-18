@@ -1,12 +1,11 @@
 package com.necklife.api.config;
 
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateProperties;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateSettings;
 import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
 import org.springframework.stereotype.Component;
-
-import java.util.Map;
 
 @Component
 public class HibernatePropertyMapProvider {

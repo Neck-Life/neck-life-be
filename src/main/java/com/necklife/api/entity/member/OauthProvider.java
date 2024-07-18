@@ -1,8 +1,11 @@
 package com.necklife.api.entity.member;
 
 public enum OauthProvider {
-	GOOGLE,APPLE,KAKAO,NONE;;
-
+	GOOGLE,
+	APPLE,
+	KAKAO,
+	NONE;
+	;
 
 	public String toString() {
 		switch (this) {

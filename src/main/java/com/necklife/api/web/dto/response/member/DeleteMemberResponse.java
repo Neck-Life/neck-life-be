@@ -1,8 +1,7 @@
 package com.necklife.api.web.dto.response.member;
 
-import lombok.*;
-
 import java.time.LocalDateTime;
+import lombok.*;
 
 @Getter
 @ToString

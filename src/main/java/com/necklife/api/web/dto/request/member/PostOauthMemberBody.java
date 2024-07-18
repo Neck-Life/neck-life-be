@@ -3,7 +3,6 @@ package com.necklife.api.web.dto.request.member;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 
-
 @Getter
 @ToString
 @EqualsAndHashCode
@@ -12,10 +11,8 @@ import lombok.*;
 @Builder
 public class PostOauthMemberBody {
 
-	@NotEmpty
-	private String code;
+	@NotEmpty private String code;
 
 	// 구글, 애플, 카카오
-	@NotEmpty
-	private String provider;
+	@NotEmpty private String provider;
 }

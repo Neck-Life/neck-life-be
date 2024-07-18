@@ -5,6 +5,5 @@ import lombok.Data;
 @Data
 public class SocialMemberToken {
 
-    private final String SocialToken;
-
+	private final String SocialToken;
 }

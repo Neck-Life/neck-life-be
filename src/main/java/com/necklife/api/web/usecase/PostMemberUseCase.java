@@ -11,17 +11,20 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class PostMemberUseCase {
 
-    private final Oauth2UserService oauth2UserService;
+	private final Oauth2UserService oauth2UserService;
 
-    @Transactional(readOnly = false)
-    public PostMemberUseCaseResponse execute(String code,String provider) {
+	@Transactional(readOnly = false)
+	public PostMemberUseCaseResponse execute(String code, String provider) {
 
-        PostMemberRepoResponse savedMember = oauth2UserService.findOrSaveMember(code, provider);// Dummy provider, replace with actual logic
+		PostMemberRepoResponse savedMember =
+				oauth2UserService.findOrSaveMember(
+						code, provider); // Dummy provider, replace with actual logic
 
-        return PostMemberUseCaseResponse.builder()
-                .id(savedMember.getId())
-                .email(savedMember.getEmail())
-                .provider(savedMember.getProvider())
-                .status(savedMember.getStatus()).build();
-    }
+		return PostMemberUseCaseResponse.builder()
+				.id(savedMember.getId())
+				.email(savedMember.getEmail())
+				.provider(savedMember.getProvider())
+				.status(savedMember.getStatus())
+				.build();
+	}
 }

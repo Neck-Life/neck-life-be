@@ -1,8 +1,7 @@
 package com.necklife.api.web.usecase.dto.response;
 
-import lombok.*;
-
 import java.time.LocalDateTime;
+import lombok.*;
 
 @Getter
 @ToString
@@ -11,7 +10,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 public class DeleteMemberUseCaseResponse {
-    private Long id;
-    private LocalDateTime deletedAt;
-
+	private Long id;
+	private LocalDateTime deletedAt;
 }

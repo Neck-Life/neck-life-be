@@ -12,14 +12,12 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class KaKaoOauthService {
 
-    private final KaKaoMemberClient kaKaoMemberClient;
+	private final KaKaoMemberClient kaKaoMemberClient;
 
-    public SocialMemberData execute(String id_token) {
-        SocialMemberToken socialMemberToken = kaKaoMemberClient.execute(id_token);
-        OauthAttribute kakaoOauth = new OauthAttribute(socialMemberToken.getSocialToken());
+	public SocialMemberData execute(String id_token) {
+		SocialMemberToken socialMemberToken = kaKaoMemberClient.execute(id_token);
+		OauthAttribute kakaoOauth = new OauthAttribute(socialMemberToken.getSocialToken());
 
-        return new KaKaoMemberData(kakaoOauth.getEmail());
-
-    }
-
+		return new KaKaoMemberData(kakaoOauth.getEmail());
+	}
 }

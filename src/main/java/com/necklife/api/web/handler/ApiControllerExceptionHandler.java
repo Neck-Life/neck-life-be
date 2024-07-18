@@ -1,10 +1,15 @@
 package com.necklife.api.web.handler;
 
+import static com.necklife.api.web.handler.ExceptionMessage.*;
+
 import com.necklife.api.web.support.ApiResponse;
 import com.necklife.api.web.support.ApiResponse.FailureBody;
 import com.necklife.api.web.support.ApiResponseGenerator;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.ValidationException;
+import java.nio.file.AccessDeniedException;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.TypeMismatchException;
@@ -22,13 +27,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.NoHandlerFoundException;
-
-import jakarta.servlet.http.HttpServletRequest;
-import java.nio.file.AccessDeniedException;
-import java.util.List;
-
-import static com.necklife.api.web.handler.ExceptionMessage.*;
-
 
 /** API 요청 처리 중 발생하는 예외를 처리하는 핸들러 */
 @Slf4j

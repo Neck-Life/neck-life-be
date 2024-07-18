@@ -3,13 +3,10 @@ package com.necklife.api.security.handler;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerExceptionResolver;
-
 
 @Component
 @RequiredArgsConstructor
@@ -17,11 +14,12 @@ public class DelegatedAuthenticationEntryPoint implements AuthenticationEntryPoi
 
 	private final HandlerExceptionResolver handlerExceptionResolver;
 
-//    public DelegatedAuthenticationEntryPoint(@Qualifier("handlerExceptionResolver") HandlerExceptionResolver handlerExceptionResolver) {
-//        this.handlerExceptionResolver = handlerExceptionResolver;
-//    }
+	//    public DelegatedAuthenticationEntryPoint(@Qualifier("handlerExceptionResolver")
+	// HandlerExceptionResolver handlerExceptionResolver) {
+	//        this.handlerExceptionResolver = handlerExceptionResolver;
+	//    }
 
-    @Override
+	@Override
 	public void commence(
 			HttpServletRequest request,
 			HttpServletResponse response,

@@ -4,11 +4,7 @@ import com.necklife.api.entity.member.OauthProvider;
 
 public interface SocialMemberData {
 
-    String getEmail();
+	String getEmail();
 
-    OauthProvider getProvider();
-
-
-
-
+	OauthProvider getProvider();
 }

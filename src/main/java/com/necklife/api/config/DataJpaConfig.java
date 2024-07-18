@@ -1,5 +1,8 @@
 package com.necklife.api.config;
 
+import static com.necklife.api.config.ApiAppConfig.BEAN_NAME_PREFIX;
+
+import java.util.Map;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
@@ -12,11 +15,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.persistenceunit.PersistenceUnitManager;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
-
-import java.util.Map;
-
-import static com.necklife.api.config.ApiAppConfig.BEAN_NAME_PREFIX;
-
 
 @Configuration
 @EnableAutoConfiguration(exclude = HibernateJpaAutoConfiguration.class)

@@ -9,10 +9,8 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 public class PostMemberUseCaseResponse {
-    private Long id;
-    private String email;
-    private String provider;
-    private String status;
-
-
+	private Long id;
+	private String email;
+	private String provider;
+	private String status;
 }

@@ -12,14 +12,12 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class GoogleOauthService {
 
-    private final GoogleMemberClient googleMemberClient;
+	private final GoogleMemberClient googleMemberClient;
 
-    public SocialMemberData execute(String id_token) {
-        SocialMemberToken socialMemberToken = googleMemberClient.execute(id_token);
-        OauthAttribute googleOauth = new OauthAttribute(socialMemberToken.getSocialToken());
+	public SocialMemberData execute(String id_token) {
+		SocialMemberToken socialMemberToken = googleMemberClient.execute(id_token);
+		OauthAttribute googleOauth = new OauthAttribute(socialMemberToken.getSocialToken());
 
-        return new KaKaoMemberData(googleOauth.getEmail());
-
-    }
-
+		return new KaKaoMemberData(googleOauth.getEmail());
+	}
 }

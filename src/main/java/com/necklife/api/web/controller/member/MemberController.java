@@ -16,14 +16,13 @@ import com.necklife.api.web.usecase.*;
 import com.necklife.api.web.usecase.dto.response.*;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Slf4j
 @Validated
@@ -33,108 +32,104 @@ import java.util.List;
 @Tag(name = "Member", description = "Member API")
 public class MemberController {
 
-    private final TokenGenerator tokenGenerator;
-    private final TokenResolver tokenResolver;
+	private final TokenGenerator tokenGenerator;
+	private final TokenResolver tokenResolver;
 
+	private final PostMemberUseCase postMemberUseCase;
+	private final DeleteMemberUseCase deleteMemberUseCase;
+	private final GetMemberDetailUseCase getMemberDetailUseCase;
+	private final GetMemberTokenDetailUseCase getMemberTokenDetailUseCase;
+	private final PostBasicMemberUseCase postBasicMemberUseCase;
 
-    private final PostMemberUseCase postMemberUseCase;
-    private final DeleteMemberUseCase deleteMemberUseCase;
-    private final GetMemberDetailUseCase getMemberDetailUseCase;
-    private final GetMemberTokenDetailUseCase getMemberTokenDetailUseCase;
-    private final PostBasicMemberUseCase postBasicMemberUseCase;
+	// todo usecase in/out 객체로 분리
 
+	/* 로그인과 회원가입은 동시에 이루어집니다. */
+	@PostMapping()
+	public ApiResponse<ApiResponse.SuccessBody<PostMemberResponse>> postMember(
+			@Valid @RequestBody PostOauthMemberBody postOauthMemberBody) {
+		PostMemberUseCaseResponse useCaseResponse =
+				postMemberUseCase.execute(postOauthMemberBody.getCode(), postOauthMemberBody.getProvider());
+		AuthToken authToken =
+				tokenGenerator.generateAuthToken(useCaseResponse.getId(), List.of(Roles.ROLE_USER));
+		PostMemberResponse response =
+				PostMemberResponse.builder()
+						.id(useCaseResponse.getId())
+						.email(useCaseResponse.getEmail())
+						.provider(useCaseResponse.getProvider())
+						.status(useCaseResponse.getStatus())
+						.accessToken(authToken.getAccessToken())
+						.refreshToken(authToken.getRefreshToken())
+						.build();
+		return ApiResponseGenerator.success(response, HttpStatus.CREATED, MessageCode.RESOURCE_CREATED);
+	}
 
-    //todo usecase in/out 객체로 분리
+	@PostMapping("/basic")
+	public ApiResponse<ApiResponse.SuccessBody<PostMemberResponse>> postBasicMember(
+			@Valid @RequestBody PostBasicMemberBody postBasicMemberBody) {
+		PostMemberUseCaseResponse useCaseResponse =
+				postBasicMemberUseCase.execute(
+						postBasicMemberBody.getEmail(), postBasicMemberBody.getPassword());
+		AuthToken authToken =
+				tokenGenerator.generateAuthToken(useCaseResponse.getId(), List.of(Roles.ROLE_USER));
+		PostMemberResponse response =
+				PostMemberResponse.builder()
+						.id(useCaseResponse.getId())
+						.email(useCaseResponse.getEmail())
+						.provider(useCaseResponse.getProvider())
+						.status(useCaseResponse.getStatus())
+						.accessToken(authToken.getAccessToken())
+						.refreshToken(authToken.getRefreshToken())
+						.build();
 
-    /* 로그인과 회원가입은 동시에 이루어집니다. */
-    @PostMapping()
-    public ApiResponse<ApiResponse.SuccessBody<PostMemberResponse>> postMember(
-            @Valid @RequestBody PostOauthMemberBody postOauthMemberBody) {
-        PostMemberUseCaseResponse useCaseResponse = postMemberUseCase.execute(postOauthMemberBody.getCode(), postOauthMemberBody.getProvider());
-        AuthToken authToken =
-                tokenGenerator.generateAuthToken(useCaseResponse.getId(), List.of(Roles.ROLE_USER));
-        PostMemberResponse response =
-                PostMemberResponse.builder()
-                        .id(useCaseResponse.getId())
-                        .email(useCaseResponse.getEmail())
-                        .provider(useCaseResponse.getProvider())
-                        .status(useCaseResponse.getStatus())
-                        .accessToken(authToken.getAccessToken())
-                        .refreshToken(authToken.getRefreshToken())
-                        .build();
-        return ApiResponseGenerator.success(response, HttpStatus.CREATED, MessageCode.RESOURCE_CREATED);
-    }
+		return ApiResponseGenerator.success(response, HttpStatus.CREATED, MessageCode.RESOURCE_CREATED);
+	}
 
-    @PostMapping("/basic")
-    public ApiResponse<ApiResponse.SuccessBody<PostMemberResponse>> postBasicMember(
-            @Valid @RequestBody PostBasicMemberBody postBasicMemberBody) {
-        PostMemberUseCaseResponse useCaseResponse = postBasicMemberUseCase.execute(postBasicMemberBody.getEmail(), postBasicMemberBody.getPassword());
-        AuthToken authToken =
-                tokenGenerator.generateAuthToken(useCaseResponse.getId(), List.of(Roles.ROLE_USER));
-        PostMemberResponse response =
-                PostMemberResponse.builder()
-                        .id(useCaseResponse.getId())
-                        .email(useCaseResponse.getEmail())
-                        .provider(useCaseResponse.getProvider())
-                        .status(useCaseResponse.getStatus())
-                        .accessToken(authToken.getAccessToken())
-                        .refreshToken(authToken.getRefreshToken())
-                        .build();
+	@DeleteMapping()
+	public ApiResponse<ApiResponse.SuccessBody<DeleteMemberResponse>> deleteMember(
+			@AuthenticationPrincipal TokenUserDetails userDetails) {
+		Long memberId = Long.valueOf(userDetails.getUsername());
+		//        Long memberId = 1L;
+		DeleteMemberUseCaseResponse useCaseResponse = deleteMemberUseCase.execute(memberId);
+		DeleteMemberResponse response =
+				DeleteMemberResponse.builder()
+						.id(useCaseResponse.getId())
+						.deletedAt(useCaseResponse.getDeletedAt())
+						.build();
+		return ApiResponseGenerator.success(response, HttpStatus.OK, MessageCode.RESOURCE_DELETED);
+	}
 
-        return ApiResponseGenerator.success(response, HttpStatus.CREATED, MessageCode.RESOURCE_CREATED);
-    }
+	@GetMapping()
+	public ApiResponse<ApiResponse.SuccessBody<GetMemberResponse>> getMember(
+			@AuthenticationPrincipal TokenUserDetails userDetails) {
+		Long memberId = Long.valueOf(userDetails.getUsername());
+		//        Long memberId = 1L;
+		GetMemberDetailUseCaseResponse useCaseResponse = getMemberDetailUseCase.execute(memberId);
+		GetMemberResponse response =
+				GetMemberResponse.builder()
+						.id(useCaseResponse.getId())
+						.email(useCaseResponse.getEmail())
+						.provider(useCaseResponse.getProvider())
+						.status(useCaseResponse.getStatus())
+						.build();
+		return ApiResponseGenerator.success(response, HttpStatus.OK, MessageCode.SUCCESS);
+	}
 
-    @DeleteMapping()
-    public ApiResponse<ApiResponse.SuccessBody<DeleteMemberResponse>> deleteMember(
-            @AuthenticationPrincipal TokenUserDetails userDetails) {
-        Long memberId = Long.valueOf(userDetails.getUsername());
-//        Long memberId = 1L;
-        DeleteMemberUseCaseResponse useCaseResponse = deleteMemberUseCase.execute(memberId);
-        DeleteMemberResponse response =
-                DeleteMemberResponse.builder()
-                        .id(useCaseResponse.getId())
-                        .deletedAt(useCaseResponse.getDeletedAt())
-                        .build();
-        return ApiResponseGenerator.success(response, HttpStatus.OK, MessageCode.RESOURCE_DELETED);
-    }
-
-    @GetMapping()
-    public ApiResponse<ApiResponse.SuccessBody<GetMemberResponse>> getMember(
-            @AuthenticationPrincipal TokenUserDetails userDetails) {
-        Long memberId = Long.valueOf(userDetails.getUsername());
-//        Long memberId = 1L;
-        GetMemberDetailUseCaseResponse useCaseResponse = getMemberDetailUseCase.execute(memberId);
-        GetMemberResponse response =
-                GetMemberResponse.builder()
-                        .id(useCaseResponse.getId())
-                        .email(useCaseResponse.getEmail())
-                        .provider(useCaseResponse.getProvider())
-                        .status(useCaseResponse.getStatus())
-                        .build();
-        return ApiResponseGenerator.success(response, HttpStatus.OK, MessageCode.SUCCESS);
-    }
-
-    @PostMapping("/token")
-    public ApiResponse<ApiResponse.SuccessBody<MemberTokenResponse>> refreshMemberAuthToken(
-            @Valid @RequestBody RefreshMemberAuthTokenBody memberAuthTokenBody) {
-        Long memberId =
-                tokenResolver
-                        .resolveId(memberAuthTokenBody.getRefreshToken())
-                        .orElseThrow(() -> new IllegalArgumentException("Invalid token"));
-        GetMemberTokenDetailUseCaseResponse useCaseResponse =
-                getMemberTokenDetailUseCase.execute(memberId);
-        AuthToken authToken =
-                tokenGenerator.generateAuthToken(useCaseResponse.getId(), List.of(Roles.ROLE_USER));
-        MemberTokenResponse response =
-                MemberTokenResponse.builder()
-                        .accessToken(authToken.getAccessToken())
-                        .refreshToken(authToken.getRefreshToken())
-                        .build();
-        return ApiResponseGenerator.success(response, HttpStatus.OK, MessageCode.SUCCESS);
-    }
-
-
-
-
-
+	@PostMapping("/token")
+	public ApiResponse<ApiResponse.SuccessBody<MemberTokenResponse>> refreshMemberAuthToken(
+			@Valid @RequestBody RefreshMemberAuthTokenBody memberAuthTokenBody) {
+		Long memberId =
+				tokenResolver
+						.resolveId(memberAuthTokenBody.getRefreshToken())
+						.orElseThrow(() -> new IllegalArgumentException("Invalid token"));
+		GetMemberTokenDetailUseCaseResponse useCaseResponse =
+				getMemberTokenDetailUseCase.execute(memberId);
+		AuthToken authToken =
+				tokenGenerator.generateAuthToken(useCaseResponse.getId(), List.of(Roles.ROLE_USER));
+		MemberTokenResponse response =
+				MemberTokenResponse.builder()
+						.accessToken(authToken.getAccessToken())
+						.refreshToken(authToken.getRefreshToken())
+						.build();
+		return ApiResponseGenerator.success(response, HttpStatus.OK, MessageCode.SUCCESS);
+	}
 }
