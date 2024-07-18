@@ -1,60 +1,60 @@
 buildscript {
-	ext {
-		projectName = 'necklife-be'
-		projectVersion = '1.0.0'
-		springBootVersion = '3.3.1'
-		dependencyManagementVersion = '1.1.5'
+    ext {
+        projectName = 'necklife-be'
+        projectVersion = '1.0.0'
+        springBootVersion = '3.3.1'
+        dependencyManagementVersion = '1.1.5'
 
 
-		// jwt
-		jsonwebtokenVersion = '0.11.5'
+        // jwt
+        jsonwebtokenVersion = '0.11.5'
 
-		// jsr
-		jsr305Version = '3.0.1'
+        // jsr
+        jsr305Version = '3.0.1'
 
-		// quartz
-		quartzVersion = '2.3.0'
+        // quartz
+        quartzVersion = '2.3.0'
 
-		// swagger & restdocs
-		asciidoctorVersion = '3.3.2'
-		epagesRestDocsApiSpecVersion = '0.17.1'
-		hidetakeSwaggerGeneratorVersion = '2.18.2'
-		springDocOpenApiUiVersion = '1.6.9'
-		swaggerUIVersion = '4.1.3'
+        // swagger & restdocs
+        asciidoctorVersion = '3.3.2'
+        epagesRestDocsApiSpecVersion = '0.17.1'
+        hidetakeSwaggerGeneratorVersion = '2.18.2'
+        springDocOpenApiUiVersion = '1.6.9'
+        swaggerUIVersion = '4.1.3'
 
-		// spotless
-		spotlessVersion = '6.24.0'
+        // spotless
+        spotlessVersion = '6.8.0'
 
-		// HTTP client
-		httpclientVersion = '4.5.13'
+        // HTTP client
+        httpclientVersion = '4.5.13'
 
 
-		// spring cloud
-		set('springCloudVersion', "2021.0.1")
-	}
+        // spring cloud
+        set('springCloudVersion', "2021.0.1")
+    }
 }
 
 plugins {
-	id 'java'
+    id 'java'
 
 
-	// spring
-	id 'org.springframework.boot' version "${springBootVersion}"
-	id 'io.spring.dependency-management' version "${dependencyManagementVersion}"
+    // spring
+    id 'org.springframework.boot' version "${springBootVersion}"
+    id 'io.spring.dependency-management' version "${dependencyManagementVersion}"
 
-	// code quality
-	id "com.diffplug.spotless" version "${spotlessVersion}"
+    // code quality
+    id "com.diffplug.spotless" version "${spotlessVersion}"
 
-	// docs generation
-	id 'org.asciidoctor.jvm.convert' version "${asciidoctorVersion}"
-	id 'com.epages.restdocs-api-spec' version "${epagesRestDocsApiSpecVersion}"
-	id 'org.hidetake.swagger.generator' version "${hidetakeSwaggerGeneratorVersion}"
+    // docs generation
+    id 'org.asciidoctor.jvm.convert' version "${asciidoctorVersion}"
+    id 'com.epages.restdocs-api-spec' version "${epagesRestDocsApiSpecVersion}"
+    id 'org.hidetake.swagger.generator' version "${hidetakeSwaggerGeneratorVersion}"
 
-	// test coverage
-	id 'jacoco'
+    // test coverage
+    id 'jacoco'
 
-	// lombok
-	id "io.freefair.lombok" version "8.6"
+    // lombok
+    id "io.freefair.lombok" version "8.6"
 }
 
 apply from: './tasks/install-git-hooks.gradle'
@@ -67,112 +67,112 @@ group = 'com.necklife'
 version = '0.0.1-SNAPSHOT'
 
 java {
-	toolchain {
-		languageVersion = JavaLanguageVersion.of(17)
-	}
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
 }
 
 configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
 
-	// web
-	implementation 'org.springframework.boot:spring-boot-starter-web'
+    // web
+    implementation 'org.springframework.boot:spring-boot-starter-web'
 
 
-	implementation 'org.projectlombok:lombok:1.18.30'
-	testImplementation 'org.junit.jupiter:junit-jupiter:5.8.1'
-	runtimeOnly 'io.netty:netty-resolver-dns-native-macos:4.1.104.Final:osx-aarch_64'
+    implementation 'org.projectlombok:lombok:1.18.30'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.8.1'
+    runtimeOnly 'io.netty:netty-resolver-dns-native-macos:4.1.104.Final:osx-aarch_64'
 
-	// swagger & restdocs
-	implementation "org.springdoc:springdoc-openapi-ui:${springDocOpenApiUiVersion}"
-	swaggerUI "org.webjars:swagger-ui:${swaggerUIVersion}"
-	implementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
-	implementation "com.epages:restdocs-api-spec-mockmvc:${epagesRestDocsApiSpecVersion}"
+    // swagger & restdocs
+    implementation "org.springdoc:springdoc-openapi-ui:${springDocOpenApiUiVersion}"
+    swaggerUI "org.webjars:swagger-ui:${swaggerUIVersion}"
+    implementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+    implementation "com.epages:restdocs-api-spec-mockmvc:${epagesRestDocsApiSpecVersion}"
 
-	// actuator
-	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    // actuator
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
 //	// prometheus
 //	runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
 
-	//jwt
-	implementation "io.jsonwebtoken:jjwt-api:${jsonwebtokenVersion}"
-	implementation "io.jsonwebtoken:jjwt-impl:${jsonwebtokenVersion}"
-	implementation "io.jsonwebtoken:jjwt-jackson:${jsonwebtokenVersion}"
+    //jwt
+    implementation "io.jsonwebtoken:jjwt-api:${jsonwebtokenVersion}"
+    implementation "io.jsonwebtoken:jjwt-impl:${jsonwebtokenVersion}"
+    implementation "io.jsonwebtoken:jjwt-jackson:${jsonwebtokenVersion}"
 
-	// jackson
-	implementation 'com.fasterxml.jackson.core:jackson-databind'
-	implementation 'com.fasterxml.jackson.core:jackson-core'
-	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
-	implementation group: 'com.google.code.findbugs', name: 'jsr305', version: "${jsr305Version}"
+    // jackson
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
+    implementation 'com.fasterxml.jackson.core:jackson-core'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+    implementation group: 'com.google.code.findbugs', name: 'jsr305', version: "${jsr305Version}"
 
-	implementation 'org.json:json:20200518'
+    implementation 'org.json:json:20200518'
 
 
-	// security
-	implementation 'org.springframework.boot:spring-boot-starter-security'
-	testImplementation 'org.springframework.security:spring-security-test'
+    // security
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    testImplementation 'org.springframework.security:spring-security-test'
 
-	// database
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'com.mysql:mysql-connector-j'
+    // database
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'com.mysql:mysql-connector-j'
 
 //	implementation 'org.hibernate:hibernate-envers'
 
-	implementation 'org.hibernate.validator:hibernate-validator'
-	implementation 'jakarta.annotation:jakarta.annotation-api'
+    implementation 'org.hibernate.validator:hibernate-validator'
+    implementation 'jakarta.annotation:jakarta.annotation-api'
 
-	annotationProcessor("jakarta.persistence:jakarta.persistence-api")
+    annotationProcessor("jakarta.persistence:jakarta.persistence-api")
 
-	// jackson
-	implementation 'com.fasterxml.jackson.core:jackson-databind'
-	implementation 'com.fasterxml.jackson.core:jackson-core'
-	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
-	implementation group: 'com.google.code.findbugs', name: 'jsr305', version: "${jsr305Version}"
-
-
-	// Apple login
-	implementation 'com.nimbusds:nimbus-jose-jwt:3.10'
-	implementation 'org.bouncycastle:bcpkix-jdk18on:1.72'
-	implementation 'io.jsonwebtoken:jjwt:0.9.1'
-
-	// retry
-	implementation "org.apache.httpcomponents:httpclient:${httpclientVersion}"
-	implementation 'org.springframework.retry:spring-retry:1.2.5.RELEASE'
-	implementation group: 'org.apache.httpcomponents.client5', name: 'httpclient5', version: '5.3.1'
+    // jackson
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
+    implementation 'com.fasterxml.jackson.core:jackson-core'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+    implementation group: 'com.google.code.findbugs', name: 'jsr305', version: "${jsr305Version}"
 
 
-	// test
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    // Apple login
+    implementation 'com.nimbusds:nimbus-jose-jwt:3.10'
+    implementation 'org.bouncycastle:bcpkix-jdk18on:1.72'
+    implementation 'io.jsonwebtoken:jjwt:0.9.1'
+
+    // retry
+    implementation "org.apache.httpcomponents:httpclient:${httpclientVersion}"
+    implementation 'org.springframework.retry:spring-retry:1.2.5.RELEASE'
+    implementation group: 'org.apache.httpcomponents.client5', name: 'httpclient5', version: '5.3.1'
+
+
+    // test
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 test {
-	useJUnitPlatform()
-	testLogging {
-		events "failed"
-		exceptionFormat "full"
-	}
+    useJUnitPlatform()
+    testLogging {
+        events "failed"
+        exceptionFormat "full"
+    }
 }
 
 task buildDockerImage {
-	dependsOn 'bootJar'
+    dependsOn 'bootJar'
 //    dependsOn 'copySwaggerUI'
 
-	doLast {
-		exec {
-			workingDir '.'
-			commandLine 'docker', 'build', '-t', "${imageName}", '--build-arg', "RELEASE_VERSION=${releaseVersion}", '.'
-		}
-	}
+    doLast {
+        exec {
+            workingDir '.'
+            commandLine 'docker', 'build', '-t', "${imageName}", '--build-arg', "RELEASE_VERSION=${releaseVersion}", '.'
+        }
+    }
 }
 //def imageName = project.hasProperty('imageName') ? imageName : "api"
 //def releaseVersion = project.hasProperty('releaseVersion') ? releaseVersion : null
@@ -181,72 +181,72 @@ task buildDockerImage {
 
 
 subprojects {
-	apply plugin: 'java'
-	apply plugin: 'java-library'
-	apply plugin: 'org.springframework.boot'
-	apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'java'
+    apply plugin: 'java-library'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
 
 
-	group = 'com.necklife'
-	version = '0.0.1-SNAPSHOT'
-	sourceCompatibility = '17'
+    group = 'com.necklife'
+    version = '0.0.1-SNAPSHOT'
+    sourceCompatibility = '17'
 
-	configurations {
-		compileOnly {
-			extendsFrom annotationProcessor
-		}
-	}
+    configurations {
+        compileOnly {
+            extendsFrom annotationProcessor
+        }
+    }
 
-	repositories {
-		mavenCentral()
-	}
+    repositories {
+        mavenCentral()
+    }
 
-	allprojects {}
+    allprojects {}
 
-	dependencies {
-
-
-		// validation
-		implementation 'org.springframework.boot:spring-boot-starter-validation'
+    dependencies {
 
 
-		// test
-		testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	}
+        // validation
+        implementation 'org.springframework.boot:spring-boot-starter-validation'
 
-	test {
-		useJUnitPlatform()
-		testLogging {
-			events "failed"
-			exceptionFormat "full"
-		}
-	}
+
+        // test
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    }
+
+    test {
+        useJUnitPlatform()
+        testLogging {
+            events "failed"
+            exceptionFormat "full"
+        }
+    }
 }
 
 def moduleStaticPath = "/api/src/main/resources/static"
 swaggerSources {
-	sample {
-		setInputFile(file(rootProject.rootDir.toString() + moduleStaticPath + "/openapi3.yaml"))
-	}
+    sample {
+        setInputFile(file(rootProject.rootDir.toString() + moduleStaticPath + "/openapi3.yaml"))
+    }
 }
 
 tasks.withType(GenerateSwaggerUI) {
-	dependsOn 'openapi3'
+    dependsOn 'openapi3'
 }
 
 tasks.register('copySwaggerUI', Copy) {
-	dependsOn 'generateSwaggerUI'
-	def generateSwaggerUISampleTask = tasks.named('generateSwaggerUISample', GenerateSwaggerUI).get()
-	from("${generateSwaggerUISampleTask.outputDir}")
-	into(rootProject.rootDir.toString() + moduleStaticPath + "/docs/swagger-ui")
+    dependsOn 'generateSwaggerUI'
+    def generateSwaggerUISampleTask = tasks.named('generateSwaggerUISample', GenerateSwaggerUI).get()
+    from("${generateSwaggerUISampleTask.outputDir}")
+    into(rootProject.rootDir.toString() + moduleStaticPath + "/docs/swagger-ui")
 }
 
 
 allprojects {
 
-	apply from: rootProject.rootDir.toString() + '/tasks/formatting-task.gradle'
+    apply from: rootProject.rootDir.toString() + '/tasks/formatting-task.gradle'
 
-	repositories {
-		mavenCentral()
-	}
+    repositories {
+        mavenCentral()
+    }
 }

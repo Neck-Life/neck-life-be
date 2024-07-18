@@ -116,7 +116,7 @@ public class WebSecurityConfig {
 								"/openapi3.yaml",
 								"/reports/**",
 								"/**")
-						.requestMatchers(HttpMethod.POST, "/api/v1/members");
+						.requestMatchers(HttpMethod.POST, "/api/v1/members", "/api/v1/members/basic");
 	}
 
 	@Bean
