@@ -144,10 +144,10 @@ kakao:
 
 
 apple:
-  team-id: "{apple-team-id}"
-  login-key: "{apple-login-key}"
-  client-id: "{apple-client-id}"
-  redirect-url: "https://somart.co.kr/api/callback/apple"
-  key-path: "key/AuthKey.p8"
+  team-id: YBU3PRP9U5
+  login-key: SBWW6MR87N
+  client-id: com.api.somart.necklife
+  redirect-url: "https://necklife.shop/api/callback/apple"
+  key-path: "key/AuthKey_SBWW6MR87N.p8"
   oauth-uri : "https://appleid.apple.com"
 
