@@ -116,7 +116,8 @@ public class WebSecurityConfig {
 								"/openapi3.yaml",
 								"/reports/**",
 								"/**")
-						.requestMatchers(HttpMethod.POST, "/api/v1/members", "/api/v1/members/basic","/api/callback/apple");
+						.requestMatchers(
+								HttpMethod.POST, "/api/v1/members", "/api/v1/members/basic", "/api/callback/apple");
 	}
 
 	@Bean
@@ -144,7 +145,7 @@ public class WebSecurityConfig {
 		CorsConfiguration configuration = new CorsConfiguration();
 
 		configuration.addAllowedOriginPattern(corsProperties.getOriginPatterns());
-		configuration.addAllowedOrigin("https://appleid.apple.com");
+		//		configuration.addAllowedOrigin("https://appleid.apple.com");
 		configuration.addAllowedHeader(corsProperties.getAllowedHeaders());
 		configuration.addAllowedMethod(corsProperties.getAllowedMethods());
 		configuration.setAllowCredentials(corsProperties.getAllowCredentials());
