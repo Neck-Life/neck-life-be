@@ -144,6 +144,7 @@ public class WebSecurityConfig {
 		CorsConfiguration configuration = new CorsConfiguration();
 
 		configuration.addAllowedOriginPattern(corsProperties.getOriginPatterns());
+		configuration.addAllowedOrigin("https://appleid.apple.com");
 		configuration.addAllowedHeader(corsProperties.getAllowedHeaders());
 		configuration.addAllowedMethod(corsProperties.getAllowedMethods());
 		configuration.setAllowCredentials(corsProperties.getAllowCredentials());
