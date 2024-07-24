@@ -23,7 +23,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-@EnableWebSecurity(debug = true)
+@EnableWebSecurity
 @RequiredArgsConstructor
 @Configuration
 public class WebSecurityConfig {
@@ -68,14 +68,14 @@ public class WebSecurityConfig {
 				.httpBasic(AbstractHttpConfigurer::disable)
 				.cors(cors -> cors.configurationSource(corsConfigurationSource()));
 
-		http.authorizeHttpRequests(
-				authorize ->
-						authorize.requestMatchers("/api/v1/**").authenticated().anyRequest().denyAll());
-
 		http.addFilterBefore(
 						getTokenInvalidExceptionHandlerFilter(), AbstractPreAuthenticatedProcessingFilter.class)
 				.addFilterAt(
 						generateAuthenticationFilter(), AbstractPreAuthenticatedProcessingFilter.class);
+
+		http.authorizeHttpRequests(
+				authorize ->
+						authorize.requestMatchers("/api/v1/**").authenticated().anyRequest().denyAll());
 
 		http.exceptionHandling(
 				exceptionHandling ->
@@ -145,7 +145,6 @@ public class WebSecurityConfig {
 		CorsConfiguration configuration = new CorsConfiguration();
 
 		configuration.addAllowedOriginPattern(corsProperties.getOriginPatterns());
-		//		configuration.addAllowedOrigin("https://appleid.apple.com");
 		configuration.addAllowedHeader(corsProperties.getAllowedHeaders());
 		configuration.addAllowedMethod(corsProperties.getAllowedMethods());
 		configuration.setAllowCredentials(corsProperties.getAllowCredentials());
