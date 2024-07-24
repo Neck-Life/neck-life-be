@@ -13,4 +13,5 @@ public class PostMemberRepoResponse {
 	private String email;
 	private String provider;
 	private String status;
+	private boolean isNew;
 }
