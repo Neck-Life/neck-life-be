@@ -4,6 +4,7 @@ import com.necklife.api.entity.member.MemberEntity;
 import com.necklife.api.entity.member.OauthProvider;
 import com.necklife.api.repository.member.MemberRepository;
 import com.necklife.api.repository.member.dto.response.PostMemberRepoResponse;
+import java.util.concurrent.atomic.AtomicBoolean;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,9 +15,10 @@ public class BasicUserService {
 	private final MemberRepository memberRepository;
 
 	public PostMemberRepoResponse execute(String email, String password) {
+		AtomicBoolean isNew = new AtomicBoolean(false);
 		MemberEntity member =
 				memberRepository
-						.findByEmailAndOauthProvider(email, OauthProvider.valueOf("NONE"))
+						.findByEmailAndOauthProviderAndDeletedAtIsNull(email, OauthProvider.valueOf("NONE"))
 						.orElseGet(
 								() -> {
 									MemberEntity newMember =
@@ -27,6 +29,7 @@ public class BasicUserService {
 													.oauthProvider(OauthProvider.valueOf("NONE"))
 													.build();
 
+									isNew.set(true);
 									newMember.unpaid();
 
 									return memberRepository.save(newMember);
@@ -37,6 +40,7 @@ public class BasicUserService {
 				.email(member.getEmail())
 				.provider(member.getOauthProvider().toString())
 				.status(member.getStatus().name())
+				.isNew(isNew.get())
 				.build();
 	}
 }

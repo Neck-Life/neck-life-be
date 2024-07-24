@@ -16,9 +16,7 @@ public class PostMemberUseCase {
 	@Transactional(readOnly = false)
 	public PostMemberUseCaseResponse execute(String code, String provider) {
 
-		PostMemberRepoResponse savedMember =
-				oauth2UserService.findOrSaveMember(
-						code, provider); // Dummy provider, replace with actual logic
+		PostMemberRepoResponse savedMember = oauth2UserService.findOrSaveMember(code, provider);
 
 		return PostMemberUseCaseResponse.builder()
 				.id(savedMember.getId())

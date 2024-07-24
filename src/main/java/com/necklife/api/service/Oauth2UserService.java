@@ -6,7 +6,8 @@ import com.necklife.api.repository.member.dto.response.PostMemberRepoResponse;
 import com.necklife.api.service.oauth.AppleOauthService;
 import com.necklife.api.service.oauth.GoogleOauthService;
 import com.necklife.api.service.oauth.KaKaoOauthService;
-import com.necklife.api.web.client.member.dto.SocialMemberData;
+import com.necklife.api.web.client.member.dto.socialData.SocialMemberData;
+import java.util.concurrent.atomic.AtomicBoolean;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,9 +39,10 @@ public class Oauth2UserService {
 				throw new RuntimeException("제공하지 않는 인증기관입니다.");
 		}
 
+		AtomicBoolean isNew = new AtomicBoolean(false);
 		MemberEntity member =
 				memberRepository
-						.findByEmailAndOauthProvider(
+						.findByEmailAndOauthProviderAndDeletedAtIsNull(
 								socialMemberData.getEmail(), socialMemberData.getProvider())
 						.orElseGet(
 								() -> {
@@ -51,15 +53,18 @@ public class Oauth2UserService {
 													.oauthProvider(socialMemberData.getProvider())
 													.build();
 
+									isNew.set(true);
 									newMember.unpaid();
 									return memberRepository.save(newMember);
 								});
 
+		member.updateRefreshToken(socialMemberData.getRefreshToken());
 		return PostMemberRepoResponse.builder()
 				.id(member.getId())
 				.email(member.getEmail())
 				.provider(member.getOauthProvider().toString())
 				.status(member.getStatus().name())
+				.isNew(isNew.get())
 				.build();
 	}
 }

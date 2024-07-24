@@ -2,6 +2,7 @@ package com.necklife.api.web.controller.member;
 
 import com.necklife.api.security.authentication.authority.Roles;
 import com.necklife.api.security.authentication.token.TokenUserDetails;
+import com.necklife.api.security.authentication.token.TokenUserDetailsService;
 import com.necklife.api.security.token.AuthToken;
 import com.necklife.api.security.token.TokenGenerator;
 import com.necklife.api.security.token.TokenResolver;
@@ -15,12 +16,14 @@ import com.necklife.api.web.support.MessageCode;
 import com.necklife.api.web.usecase.*;
 import com.necklife.api.web.usecase.dto.response.*;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,6 +43,8 @@ public class MemberController {
 	private final GetMemberDetailUseCase getMemberDetailUseCase;
 	private final GetMemberTokenDetailUseCase getMemberTokenDetailUseCase;
 	private final PostBasicMemberUseCase postBasicMemberUseCase;
+
+	private final TokenUserDetailsService tokenUserDetailsService;
 
 	// todo usecase in/out 객체로 분리
 
@@ -84,11 +89,12 @@ public class MemberController {
 		return ApiResponseGenerator.success(response, HttpStatus.CREATED, MessageCode.RESOURCE_CREATED);
 	}
 
+	// todo @AuthenticationPrincipal TokenUserDetails userDetails로 교체
 	@DeleteMapping()
 	public ApiResponse<ApiResponse.SuccessBody<DeleteMemberResponse>> deleteMember(
-			@AuthenticationPrincipal TokenUserDetails userDetails) {
-		Long memberId = Long.valueOf(userDetails.getUsername());
-		//        Long memberId = 1L;
+			HttpServletRequest httpServletRequest) {
+		Long memberId = findMemberByToken(httpServletRequest);
+		//        Long memberId = 1L
 		DeleteMemberUseCaseResponse useCaseResponse = deleteMemberUseCase.execute(memberId);
 		DeleteMemberResponse response =
 				DeleteMemberResponse.builder()
@@ -131,5 +137,13 @@ public class MemberController {
 						.refreshToken(authToken.getRefreshToken())
 						.build();
 		return ApiResponseGenerator.success(response, HttpStatus.OK, MessageCode.SUCCESS);
+	}
+
+	private Long findMemberByToken(HttpServletRequest request) {
+		String authorization = request.getHeader("Authorization");
+		String substring = authorization.substring(7, authorization.length());
+		UserDetails userDetails = tokenUserDetailsService.loadUserByUsername(substring);
+		Long memberId = Long.parseLong(userDetails.getUsername());
+		return memberId;
 	}
 }
