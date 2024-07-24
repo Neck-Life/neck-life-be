@@ -10,7 +10,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     properties:
       hibernate:
 #        dialect: org.hibernate.dialect.MySQLDialect
@@ -145,9 +145,9 @@ kakao:
 
 apple:
   team-id: YBU3PRP9U5
-  login-key: SBWW6MR87N
-  client-id: com.api.somart.necklife
+  login-key: NVQCY93247
+  client-id: "necklife.shop.somart.com"
   redirect-url: "https://necklife.shop/api/callback/apple"
-  key-path: "key/AuthKey_SBWW6MR87N.p8"
+  key-path: "key/AuthKey_NVQCY93247.p8"
   oauth-uri : "https://appleid.apple.com"
 
