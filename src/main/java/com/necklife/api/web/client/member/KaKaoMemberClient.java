@@ -1,7 +1,6 @@
 package com.necklife.api.web.client.member;
 
 import com.necklife.api.web.client.exception.SocialClientException;
-import com.necklife.api.web.client.member.dto.SocialMemberToken;
 import com.necklife.api.web.client.property.KaKaoApiProperties;
 import com.necklife.api.web.client.util.HeadersFunction;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +21,7 @@ public class KaKaoMemberClient implements SocialMemberClient {
 	private final KaKaoApiProperties properties;
 
 	@Override
-	public SocialMemberToken execute(String targetId) {
+	public String execute(String targetId) {
 		String adminKey = properties.getAdminKey();
 
 		HttpHeaders headers = new HttpHeaders();
@@ -30,12 +29,12 @@ public class KaKaoMemberClient implements SocialMemberClient {
 		headers.add(HttpHeaders.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=utf-8");
 
 		String queryParameter = "?target_id_type=user_id&target_id=" + targetId;
-		ResponseEntity<SocialMemberToken> response =
+		ResponseEntity<String> response =
 				restTemplate.exchange(
 						properties.getUriMeInfo() + queryParameter,
 						HttpMethod.POST,
 						new HttpEntity<>(null, headers),
-						SocialMemberToken.class);
+						String.class);
 
 		if (response.getStatusCode().is4xxClientError()) {
 			throw new SocialClientException();

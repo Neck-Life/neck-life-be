@@ -1,8 +1,8 @@
 package com.necklife.api.web.client.member;
 
 import com.necklife.api.web.client.exception.SocialClientException;
-import com.necklife.api.web.client.member.dto.SocialMemberToken;
 import com.necklife.api.web.client.property.AppleTokenProperties;
+import com.necklife.api.web.exception.ExternalIntegrationException;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSHeader;
@@ -10,17 +10,15 @@ import com.nimbusds.jose.JWSSigner;
 import com.nimbusds.jose.crypto.ECDSASigner;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
+import java.security.interfaces.ECPrivateKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.Date;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.bouncycastle.jce.interfaces.ECPrivateKey;
 import org.bouncycastle.util.io.pem.PemObject;
 import org.bouncycastle.util.io.pem.PemReader;
 import org.springframework.core.io.ClassPathResource;
@@ -43,7 +41,7 @@ public class AppleMemberClient implements SocialMemberClient {
 	private final AppleTokenProperties appleTokenProperties;
 
 	@Override
-	public SocialMemberToken execute(String code) {
+	public String execute(String code) {
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-type", "application/x-www-form-urlencoded");
 
@@ -56,18 +54,42 @@ public class AppleMemberClient implements SocialMemberClient {
 
 		HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(params, headers);
 
-		ResponseEntity<SocialMemberToken> response =
+		ResponseEntity<String> response =
 				restTemplate.exchange(
 						appleTokenProperties.getOauthUri() + "/auth/token",
 						HttpMethod.POST,
 						httpEntity,
-						SocialMemberToken.class);
+						String.class);
 
 		if (response.getStatusCode().is4xxClientError()) {
 			throw new SocialClientException();
 		}
 
 		return response.getBody();
+	}
+
+	public void revokeToken(String refreshToken) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Content-type", "application/x-www-form-urlencoded");
+
+		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+		params.add("grant_type", "refresh_token");
+		params.add("client_id", appleTokenProperties.getClientId());
+		params.add("client_secret", createClientSecret());
+		params.add("token", refreshToken);
+
+		HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(params, headers);
+
+		ResponseEntity<String> response =
+				restTemplate.exchange(
+						appleTokenProperties.getOauthUri() + "/auth/revoke",
+						HttpMethod.POST,
+						httpEntity,
+						String.class);
+
+		if (response.getStatusCode().is4xxClientError()) {
+			throw new ExternalIntegrationException("400", "Apple revoke token error");
+		}
 	}
 
 	private String createClientSecret() {
@@ -80,7 +102,7 @@ public class AppleMemberClient implements SocialMemberClient {
 		claimsSet.setIssuer(appleTokenProperties.getTeamId());
 		claimsSet.setIssueTime(now);
 		claimsSet.setExpirationTime(new Date(now.getTime() + 3600000));
-		claimsSet.setAudience(appleTokenProperties.getOauthUri() + "/auth/token");
+		claimsSet.setAudience(appleTokenProperties.getOauthUri());
 		claimsSet.setSubject(appleTokenProperties.getClientId());
 
 		SignedJWT jwt = new SignedJWT(header, claimsSet);
@@ -90,7 +112,7 @@ public class AppleMemberClient implements SocialMemberClient {
 		try {
 			KeyFactory kf = KeyFactory.getInstance("EC");
 			ECPrivateKey ecPrivateKey = (ECPrivateKey) kf.generatePrivate(spec);
-			JWSSigner jwsSigner = new ECDSASigner(ecPrivateKey.getD());
+			JWSSigner jwsSigner = new ECDSASigner(ecPrivateKey.getS());
 			jwt.sign(jwsSigner);
 		} catch (JOSEException e) {
 			e.printStackTrace();
@@ -107,19 +129,13 @@ public class AppleMemberClient implements SocialMemberClient {
 	 * @return Private Key
 	 */
 	private static byte[] readPrivateKey(String keyPath) {
-
 		Resource resource = new ClassPathResource(keyPath);
-		byte[] content = null;
-
 		try (InputStream keyInputStream = resource.getInputStream();
-				InputStreamReader keyReader = new InputStreamReader(keyInputStream);
-				PemReader pemReader = new PemReader(keyReader)) {
+				PemReader pemReader = new PemReader(new InputStreamReader(keyInputStream))) {
 			PemObject pemObject = pemReader.readPemObject();
-			content = pemObject.getContent();
+			return pemObject.getContent();
 		} catch (IOException e) {
-			e.printStackTrace();
+			throw new UncheckedIOException("Failed to read private key", e);
 		}
-
-		return content;
 	}
 }

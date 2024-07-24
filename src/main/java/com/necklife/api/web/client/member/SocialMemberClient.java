@@ -1,6 +1,6 @@
 package com.necklife.api.web.client.member;
 
-import com.necklife.api.web.client.member.dto.SocialMemberToken;
+import java.text.ParseException;
 
 @FunctionalInterface
 public interface SocialMemberClient {
@@ -9,5 +9,5 @@ public interface SocialMemberClient {
 	 *
 	 * @param targetId social user id
 	 */
-	SocialMemberToken execute(String targetId);
+	String execute(String targetId) throws ParseException;
 }
