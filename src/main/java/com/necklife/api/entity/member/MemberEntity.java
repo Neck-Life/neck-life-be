@@ -15,10 +15,7 @@ import org.hibernate.annotations.SQLDelete;
 		uniqueConstraints = {
 			@UniqueConstraint(
 					name = "member_email_certificatonSubject_unique",
-					columnNames = {
-						"email",
-						"oauth_provider",
-					}),
+					columnNames = {"email", "oauth_provider", "deleted_At"}),
 		})
 @SQLDelete(sql = "UPDATE member SET deleted_At=CURRENT_DATE where id=?")
 public class MemberEntity extends BaseEntity {
@@ -47,6 +44,8 @@ public class MemberEntity extends BaseEntity {
 	@Column(nullable = false)
 	private MemberStatus status;
 
+	private String OauthRefreshToken;
+
 	public MemberEntity withDrawn() {
 		this.status = MemberStatus.WITHDRAWN;
 		return this;
@@ -65,5 +64,9 @@ public class MemberEntity extends BaseEntity {
 	public MemberEntity unpaid() {
 		this.status = MemberStatus.UNPAID;
 		return this;
+	}
+
+	public void updateRefreshToken(String oauthRefreshToken) {
+		this.OauthRefreshToken = oauthRefreshToken;
 	}
 }
