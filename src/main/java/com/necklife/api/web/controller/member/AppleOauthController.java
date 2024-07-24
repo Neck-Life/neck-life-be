@@ -19,7 +19,7 @@ public class AppleOauthController {
 	public ApiResponse<ApiResponse.SuccessBody<String>> postBasicMember(HttpServletRequest request) {
 		String postData = request.getParameter("code");
 
-		log.info("postData: {}", postData);
+		log.debug("postData: {}", postData);
 		return ApiResponseGenerator.success(postData, HttpStatus.OK, MessageCode.RESOURCE_CREATED);
 	}
 }
