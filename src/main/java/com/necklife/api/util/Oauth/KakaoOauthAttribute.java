@@ -6,7 +6,7 @@ import com.necklife.api.web.exception.JsonParsingException;
 import java.util.Map;
 import net.minidev.json.parser.JSONParser;
 import net.minidev.json.parser.ParseException;
-import org.json.JSONObject;
+import org.json.simple.JSONObject;
 
 public class KakaoOauthAttribute implements OauthAttribute {
 	private static final JSONParser parser = new JSONParser();

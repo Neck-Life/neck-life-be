@@ -3,10 +3,11 @@ package com.necklife.api.util.Oauth;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.necklife.api.web.exception.JsonParsingException;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
 import java.util.Map;
-import net.minidev.json.parser.JSONParser;
-import net.minidev.json.parser.ParseException;
-import org.json.JSONObject;
 
 public class GoogleOauthAttribute implements OauthAttribute {
 
@@ -18,11 +19,11 @@ public class GoogleOauthAttribute implements OauthAttribute {
 	}
 
 	private Map<String, Object> getStringObjectMap(String token) {
-		final Map<String, Object> attributes = null;
+		Map<String, Object> attributes = null;
 		JSONObject jsonBody = null;
 		try {
 			jsonBody = (JSONObject) parser.parse(token);
-			this.attributes = new ObjectMapper().readValue(jsonBody.toString(), Map.class);
+			attributes = new ObjectMapper().readValue(jsonBody.toString(), Map.class);
 
 		} catch (ParseException | JsonProcessingException e) {
 			throw new JsonParsingException(String.valueOf(e));
