@@ -3,11 +3,10 @@ package com.necklife.api.util.Oauth;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.necklife.api.web.exception.JsonParsingException;
+import java.util.Map;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-
-import java.util.Map;
 
 public class GoogleOauthAttribute implements OauthAttribute {
 
