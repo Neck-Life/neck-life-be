@@ -145,9 +145,9 @@ kakao:
 
 apple:
   team-id: YBU3PRP9U5
-  login-key: NVQCY93247
-  client-id: "necklife.shop.somart.com"
+  login-key: VG3M2A8X66
+  client-id: "com.somart.mocksum2"
   redirect-url: "https://necklife.shop/api/callback/apple"
-  key-path: "key/AuthKey_NVQCY93247.p8"
+  key-path: "key/AuthKey_VG3M2A8X66.p8"
   oauth-uri : "https://appleid.apple.com"
 
