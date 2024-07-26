@@ -1,9 +1,9 @@
-package com.necklife.api.web.usecase;
+package com.necklife.api.web.usecase.member;
 
 import com.necklife.api.entity.member.MemberEntity;
 import com.necklife.api.repository.member.MemberRepository;
 import com.necklife.api.web.client.member.AppleMemberClient;
-import com.necklife.api.web.usecase.dto.response.DeleteMemberUseCaseResponse;
+import com.necklife.api.web.usecase.dto.response.member.DeleteMemberUseCaseResponse;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;

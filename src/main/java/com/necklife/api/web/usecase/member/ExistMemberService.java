@@ -1,4 +1,4 @@
-package com.necklife.api.web.usecase;
+package com.necklife.api.web.usecase.member;
 
 import com.necklife.api.entity.member.MemberEntity;
 import com.necklife.api.repository.member.MemberRepository;

@@ -1,4 +1,4 @@
-package com.necklife.api.web.usecase.dto.response;
+package com.necklife.api.web.usecase.dto.response.member;
 
 import lombok.*;
 
@@ -8,7 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
-public class PostMemberUseCaseResponse {
+public class GetMemberDetailUseCaseResponse {
 	private Long id;
 	private String email;
 	private String provider;
