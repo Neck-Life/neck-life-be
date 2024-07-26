@@ -3,7 +3,6 @@ package com.necklife.api.service.oauth;
 import com.necklife.api.util.Oauth.GoogleOauthAttribute;
 import com.necklife.api.web.client.member.GoogleMemberClient;
 import com.necklife.api.web.client.member.dto.socialData.GoogleMemberData;
-import com.necklife.api.web.client.member.dto.socialData.KaKaoMemberData;
 import com.necklife.api.web.client.member.dto.socialData.SocialMemberData;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
