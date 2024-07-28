@@ -96,8 +96,8 @@ public class MemberController {
 	@DeleteMapping()
 	public ApiResponse<ApiResponse.SuccessBody<DeleteMemberResponse>> deleteMember(
 			HttpServletRequest httpServletRequest) {
-		Long memberId = findMemberByToken(httpServletRequest);
-		//        Long memberId = 1L
+				Long memberId = findMemberByToken(httpServletRequest);
+//		Long memberId = 1L;
 		DeleteMemberUseCaseResponse useCaseResponse = deleteMemberUseCase.execute(memberId);
 		DeleteMemberResponse response =
 				DeleteMemberResponse.builder()
@@ -109,9 +109,10 @@ public class MemberController {
 
 	@GetMapping()
 	public ApiResponse<ApiResponse.SuccessBody<GetMemberResponse>> getMember(
-			@AuthenticationPrincipal TokenUserDetails userDetails) {
-		Long memberId = Long.valueOf(userDetails.getUsername());
-		//        Long memberId = 1L;
+			HttpServletRequest httpServletRequest) {
+		Long memberId = findMemberByToken(httpServletRequest);
+//				Long memberId = Long.valueOf(userDetails.getUsername());
+//		Long memberId = 1L;
 		GetMemberDetailUseCaseResponse useCaseResponse = getMemberDetailUseCase.execute(memberId);
 		GetMemberResponse response =
 				GetMemberResponse.builder()
