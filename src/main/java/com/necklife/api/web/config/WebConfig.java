@@ -32,11 +32,10 @@ public class WebConfig extends WebMvcConfigurationSupport {
 	public void addCorsMappings(CorsRegistry registry) {
 		registry
 				.addMapping(corsProperties.getPathPattern())
-				// .allowedOriginPatterns(corsProperties.getOriginPattern())
-				.allowedOrigins(corsProperties.getOriginPatterns())
+				//				.allowedOrigins(corsProperties.getOriginPatterns())
 				.allowedMethods(corsProperties.getAllowedMethods())
 				.allowedHeaders(corsProperties.getAllowedHeaders())
-				.allowCredentials(corsProperties.getAllowCredentials())
+				//				.allowCredentials(corsProperties.getAllowCredentials())
 				.exposedHeaders(corsProperties.getExposedHeaders())
 				.maxAge(corsProperties.getMaxAge());
 	}

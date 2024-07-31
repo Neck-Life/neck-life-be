@@ -1,7 +1,6 @@
 package com.necklife.api.web.client.member;
 
 import com.necklife.api.web.client.exception.SocialClientException;
-import com.necklife.api.web.client.member.dto.SocialMemberToken;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
@@ -20,7 +19,7 @@ public class GoogleMemberClient implements SocialMemberClient {
 	private final RestTemplate restTemplate;
 
 	@Override
-	public SocialMemberToken execute(String targetId) {
+	public String execute(String targetId) {
 		HttpHeaders headers = new HttpHeaders();
 		HttpEntity<String> entity = new HttpEntity<>(headers);
 		String googleApi = "https://oauth2.googleapis.com/tokeninfo";
@@ -30,8 +29,8 @@ public class GoogleMemberClient implements SocialMemberClient {
 						.build()
 						.toUriString();
 
-		ResponseEntity<SocialMemberToken> response =
-				restTemplate.exchange(targetUrl, HttpMethod.GET, entity, SocialMemberToken.class);
+		ResponseEntity<String> response =
+				restTemplate.exchange(targetUrl, HttpMethod.GET, entity, String.class);
 
 		if (response.getStatusCode().is4xxClientError()) {
 			throw new SocialClientException();

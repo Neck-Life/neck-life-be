@@ -23,7 +23,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-@EnableWebSecurity(debug = true)
+@EnableWebSecurity
 @RequiredArgsConstructor
 @Configuration
 public class WebSecurityConfig {
@@ -68,14 +68,14 @@ public class WebSecurityConfig {
 				.httpBasic(AbstractHttpConfigurer::disable)
 				.cors(cors -> cors.configurationSource(corsConfigurationSource()));
 
-		http.authorizeHttpRequests(
-				authorize ->
-						authorize.requestMatchers("/api/v1/**").authenticated().anyRequest().denyAll());
-
 		http.addFilterBefore(
 						getTokenInvalidExceptionHandlerFilter(), AbstractPreAuthenticatedProcessingFilter.class)
 				.addFilterAt(
 						generateAuthenticationFilter(), AbstractPreAuthenticatedProcessingFilter.class);
+
+		http.authorizeHttpRequests(
+				authorize ->
+						authorize.requestMatchers("/api/v1/**").authenticated().anyRequest().denyAll());
 
 		http.exceptionHandling(
 				exceptionHandling ->
@@ -116,7 +116,8 @@ public class WebSecurityConfig {
 								"/openapi3.yaml",
 								"/reports/**",
 								"/**")
-						.requestMatchers(HttpMethod.POST, "/api/v1/members");
+						.requestMatchers(
+								HttpMethod.POST, "/api/v1/members", "/api/v1/members/basic", "/api/callback/apple");
 	}
 
 	@Bean

@@ -9,5 +9,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface MemberRepository extends JpaRepository<MemberEntity, Long> {
 
-	Optional<MemberEntity> findByEmailAndOauthProvider(String email, OauthProvider oauthProvider);
+	Optional<MemberEntity> findByEmailAndOauthProviderAndDeletedAtIsNull(
+			String email, OauthProvider oauthProvider);
 }

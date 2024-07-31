@@ -1,4 +1,4 @@
-package com.necklife.api.web.usecase.dto.response;
+package com.necklife.api.web.usecase.dto.response.member;
 
 import lombok.*;
 
