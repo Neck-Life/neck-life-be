@@ -1,6 +1,6 @@
 package com.necklife.api.service.oauth;
 
-import com.necklife.api.util.Oauth.AppleOauthAttribute;
+import com.necklife.api.service.oauth.util.AppleOauthAttribute;
 import com.necklife.api.web.client.member.AppleMemberClient;
 import com.necklife.api.web.client.member.dto.socialData.AppleMemberData;
 import com.necklife.api.web.client.member.dto.socialData.SocialMemberData;

@@ -1,4 +1,4 @@
-package com.necklife.api.util.Oauth;
+package com.necklife.api.service.oauth.util;
 
 public interface OauthAttribute {
 

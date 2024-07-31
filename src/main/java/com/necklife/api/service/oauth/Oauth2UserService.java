@@ -1,4 +1,4 @@
-package com.necklife.api.service;
+package com.necklife.api.service.oauth;
 
 import com.necklife.api.entity.member.MemberEntity;
 import com.necklife.api.repository.member.MemberRepository;

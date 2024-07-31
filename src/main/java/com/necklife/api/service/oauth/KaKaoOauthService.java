@@ -1,6 +1,6 @@
 package com.necklife.api.service.oauth;
 
-import com.necklife.api.util.Oauth.KakaoOauthAttribute;
+import com.necklife.api.service.oauth.util.KakaoOauthAttribute;
 import com.necklife.api.web.client.member.KaKaoMemberClient;
 import com.necklife.api.web.client.member.dto.socialData.KaKaoMemberData;
 import com.necklife.api.web.client.member.dto.socialData.SocialMemberData;
