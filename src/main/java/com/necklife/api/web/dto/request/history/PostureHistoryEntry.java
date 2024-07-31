@@ -1,6 +1,8 @@
 package com.necklife.api.web.dto.request.history;
 
 import java.time.LocalDateTime;
+import java.util.Date;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,7 +14,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PostureHistoryEntry {
 
-	private LocalDateTime startTime;
-	private int duration;
+	private Date startTime;
 	private String status;
 }

@@ -1,7 +1,7 @@
 package com.necklife.api.web.usecase.member;
 
 import com.necklife.api.repository.member.dto.response.PostMemberRepoResponse;
-import com.necklife.api.service.BasicUserService;
+import com.necklife.api.service.oauth.BasicUserService;
 import com.necklife.api.web.usecase.dto.response.member.PostMemberUseCaseResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
