@@ -10,7 +10,7 @@ import lombok.*;
 @Builder
 public class GetMemberResponse {
 
-	private Long id;
+	private String id;
 	private String email;
 	private String provider;
 	private String status;

@@ -29,14 +29,14 @@ public class TokenGenerator {
 	private static final String MEMBER_ID_CLAIM_KEY = "memberId";
 	private static final String MEMBER_ROLE_CLAIM_KEY = "memberRole";
 
-	public AuthToken generateAuthToken(Long memberId, List<Roles> memberRoles) {
+	public AuthToken generateAuthToken(String memberId, List<Roles> memberRoles) {
 		return AuthToken.builder()
 				.accessToken(generateAccessToken(memberId, memberRoles))
 				.refreshToken(generateRefreshToken(memberId, memberRoles))
 				.build();
 	}
 
-	public String generateAccessToken(Long memberId, List<Roles> memberRoles) {
+	public String generateAccessToken(String memberId, List<Roles> memberRoles) {
 		Date now = new Date();
 		List<String> roles = convertToStringList(memberRoles);
 
@@ -50,7 +50,7 @@ public class TokenGenerator {
 				.compact();
 	}
 
-	String generateRefreshToken(Long memberId, List<Roles> memberRoles) {
+	String generateRefreshToken(String memberId, List<Roles> memberRoles) {
 		Date now = new Date();
 		List<String> roles = convertToStringList(memberRoles);
 

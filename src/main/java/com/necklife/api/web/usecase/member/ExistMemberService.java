@@ -14,7 +14,7 @@ public class ExistMemberService {
 
 	private final MemberRepository memberRepository;
 
-	public boolean checkMemberExists(Long id) {
+	public boolean checkMemberExists(String id) {
 
 		Optional<MemberEntity> findMember = memberRepository.findById(id);
 		return findMember.isPresent();

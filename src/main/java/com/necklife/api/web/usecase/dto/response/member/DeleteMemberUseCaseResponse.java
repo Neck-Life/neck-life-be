@@ -10,6 +10,6 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 public class DeleteMemberUseCaseResponse {
-	private Long id;
+	private String id;
 	private LocalDateTime deletedAt;
 }

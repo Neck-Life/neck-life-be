@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
-public record PostHistoryRequest(Long memberId, Date startAt,Date endAt, List<PostSubHistoryDto> subHistories) {
+public record PostHistoryRequest(String memberId, Date startAt, Date endAt, List<PostSubHistoryDto> subHistories) {
 
     public PostHistoryRequest {
         Objects.requireNonNull(memberId);

@@ -2,9 +2,11 @@ package com.necklife.api.config;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
 @Configuration
 @ComponentScan(basePackages = ApiAppConfig.BASE_PACKAGE)
+@EnableMongoRepositories(basePackages = ApiAppConfig.BASE_PACKAGE)
 public class ApiAppConfig {
 
 	public static final String BASE_PACKAGE = "com.necklife.api";

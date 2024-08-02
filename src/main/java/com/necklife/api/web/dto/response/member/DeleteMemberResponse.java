@@ -11,6 +11,6 @@ import lombok.*;
 @Builder
 public class DeleteMemberResponse {
 
-	private Long id;
+	private String id;
 	private LocalDateTime deletedAt;
 }

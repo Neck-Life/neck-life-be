@@ -1,31 +1,41 @@
 server:
   port: 8080
+#
+## spring config
+#spring:
+#  config:
+#    activate:
+#      on-profile: "local"
+#
+#
+#  jpa:
+#    hibernate:
+#      ddl-auto: update
+#    properties:
+#      hibernate:
+##        dialect: org.hibernate.dialect.MySQLDialect
+#        format_sql: true
+#        order_inserts: true
+#        order_updates: true
+#        jdbc:
+#          batch_size: 100
+#
+#
+#  datasource:
+#    jdbc-url: jdbc:mysql://localhost:13306/api?allowPublicKeyRetrieval=true&rewriteBatchedStatements=true
+#    username: root
+#    password: root
+#    driver-class-name: com.mysql.cj.jdbc.Driver
 
-# spring config
+# mongoDB
 spring:
   config:
     activate:
       on-profile: "local"
 
-
-  jpa:
-    hibernate:
-      ddl-auto: update
-    properties:
-      hibernate:
-#        dialect: org.hibernate.dialect.MySQLDialect
-        format_sql: true
-        order_inserts: true
-        order_updates: true
-        jdbc:
-          batch_size: 100
-
-
-  datasource:
-    jdbc-url: jdbc:mysql://localhost:13306/api?allowPublicKeyRetrieval=true&rewriteBatchedStatements=true
-    username: root
-    password: root
-    driver-class-name: com.mysql.cj.jdbc.Driver
+  data:
+    mongodb:
+      uri: mongodb://root:root@localhost:27017/api
 
 
 # logging config

@@ -96,7 +96,7 @@ public class MemberController {
 	@DeleteMapping()
 	public ApiResponse<ApiResponse.SuccessBody<DeleteMemberResponse>> deleteMember(
 			HttpServletRequest httpServletRequest) {
-				Long memberId = findMemberByToken(httpServletRequest);
+		String memberId = findMemberByToken(httpServletRequest);
 //		Long memberId = 1L;
 		DeleteMemberUseCaseResponse useCaseResponse = deleteMemberUseCase.execute(memberId);
 		DeleteMemberResponse response =
@@ -110,7 +110,7 @@ public class MemberController {
 	@GetMapping()
 	public ApiResponse<ApiResponse.SuccessBody<GetMemberResponse>> getMember(
 			HttpServletRequest httpServletRequest) {
-		Long memberId = findMemberByToken(httpServletRequest);
+		String memberId = findMemberByToken(httpServletRequest);
 //				Long memberId = Long.valueOf(userDetails.getUsername());
 //		Long memberId = 1L;
 		GetMemberDetailUseCaseResponse useCaseResponse = getMemberDetailUseCase.execute(memberId);
@@ -127,7 +127,7 @@ public class MemberController {
 	@PostMapping("/token")
 	public ApiResponse<ApiResponse.SuccessBody<MemberTokenResponse>> refreshMemberAuthToken(
 			@Valid @RequestBody RefreshMemberAuthTokenBody memberAuthTokenBody) {
-		Long memberId =
+		String memberId =
 				tokenResolver
 						.resolveId(memberAuthTokenBody.getRefreshToken())
 						.orElseThrow(() -> new IllegalArgumentException("Invalid token"));
@@ -143,11 +143,10 @@ public class MemberController {
 		return ApiResponseGenerator.success(response, HttpStatus.OK, MessageCode.SUCCESS);
 	}
 
-	private Long findMemberByToken(HttpServletRequest request) {
+	private String findMemberByToken(HttpServletRequest request) {
 		String authorization = request.getHeader("Authorization");
 		String substring = authorization.substring(7, authorization.length());
 		UserDetails userDetails = tokenUserDetailsService.loadUserByUsername(substring);
-		Long memberId = Long.parseLong(userDetails.getUsername());
-		return memberId;
+        return userDetails.getUsername();
 	}
 }

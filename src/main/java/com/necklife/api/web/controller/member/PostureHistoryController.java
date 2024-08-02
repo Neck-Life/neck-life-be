@@ -42,13 +42,14 @@ public class PostureHistoryController {
 	public ApiResponse<ApiResponse.Success> postHistory(
 			@AuthenticationPrincipal TokenUserDetails userDetails,
 			@Valid @RequestBody PostPostureHistoryBody postureHistoryBody) {
-	    Long memberId = Long.valueOf(userDetails.getUsername());
+	    String memberId = userDetails.getUsername();
+
 		List<PostSubHistoryDto> subHistories = postureHistoryBody.getHistory().stream()
-				.map(subHistory -> new PostSubHistoryDto(subHistory.getStartTime(), PoseStatus.valueOf(subHistory.getStatus())))
+				.map(subHistory -> new PostSubHistoryDto(subHistory.getStartAt(), PoseStatus.valueOf(subHistory.getStatus())))
 				.collect(Collectors.toList());
 
-		PostHistoryRequest postHistoryRequest = new PostHistoryRequest(memberId, postureHistoryBody.getStartTime(),
-				postureHistoryBody.getEndTime(), subHistories);
+		PostHistoryRequest postHistoryRequest = new PostHistoryRequest(memberId, postureHistoryBody.getStartAt(),
+				postureHistoryBody.getEndAt(), subHistories);
 
 		postHistoryUseCase.execute(postHistoryRequest);
 
@@ -60,7 +61,7 @@ public class PostureHistoryController {
 			@AuthenticationPrincipal TokenUserDetails userDetails,
 			@RequestParam("year") Integer year,
 			@RequestParam("month") Integer month) {
-		Long memberId = Long.valueOf(userDetails.getUsername());
+		String memberId = userDetails.getUsername();
 		checkYearAndMonth(year, month);
         GetMonthlyDetailResponse monthDetailResponse =
 				getMonthlyDetailUseCase.execute(new GetMonthlyHistoryRequest(memberId, year, month));
@@ -71,7 +72,7 @@ public class PostureHistoryController {
 	@GetMapping("/year")
 	public ApiResponse<ApiResponse.SuccessBody<GetYearDetailResponse>> getYearHistory(
 			@AuthenticationPrincipal TokenUserDetails userDetails, @RequestParam("year") Integer year) {
-		Long memberId = Long.valueOf(userDetails.getUsername());
+		String memberId = userDetails.getUsername();
 		checkYear(year);
 
 		GetYearDetailResponse yearDetailResponse = getYearDetailUseCase.execute(new GetYearHistoryRequest(memberId, year));

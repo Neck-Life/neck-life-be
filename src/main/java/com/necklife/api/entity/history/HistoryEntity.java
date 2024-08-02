@@ -23,7 +23,7 @@ public class HistoryEntity {
     @JoinColumn(foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     private MemberEntity member;
 
-    @OneToMany(mappedBy = "sub_history_id")
+    @OneToMany(mappedBy = "history")
     private List<SubHistoryEntity> subHistory;
 
     @Column(nullable = false)

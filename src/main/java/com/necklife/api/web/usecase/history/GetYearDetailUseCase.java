@@ -29,7 +29,7 @@ public class GetYearDetailUseCase {
 			calendar.set(Calendar.DAY_OF_MONTH, 31);
 			Date endDate = calendar.getTime();
 
-			List<HistoryEntity> historyEntities = historyRepository.findAllByStartAtBetween(getYearHistoryRequest.memberId(), startDate, endDate);
+			List<HistoryEntity> historyEntities = historyRepository.findAllByMemberIdAndStartAtBetween(getYearHistoryRequest.memberId(), startDate, endDate);
 
 			Map<String, GetYearDetailResponse.Month.MonthBuilder> monthlyDataMap = new HashMap<>();
 

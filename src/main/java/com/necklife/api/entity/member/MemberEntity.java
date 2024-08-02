@@ -1,50 +1,50 @@
 package com.necklife.api.entity.member;
 
 import com.necklife.api.entity.BaseEntity;
-import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.*;
-import org.hibernate.annotations.SQLDelete;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.CompoundIndex;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.FieldType;
+import org.springframework.data.mongodb.core.mapping.MongoId;
+
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@Entity
 @Builder
-@Table(
-		name = "member",
-		uniqueConstraints = {
-			@UniqueConstraint(
-					name = "member_email_certificatonSubject_unique",
-					columnNames = {"email", "oauth_provider", "deleted_At"}),
-		})
-@SQLDelete(sql = "UPDATE member SET deleted_At=CURRENT_DATE where id=?")
+@Document(collection = "member")
+@CompoundIndex(name = "member_email_certificatonSubject_unique", def = "{'email': 1, 'oauthProvider': 1, 'deletedAt': 1}", unique = true)
 public class MemberEntity extends BaseEntity {
+
+
 
 	private Long providerId;
 
-	/* 소셜로그인과 일반로그인을 지원하기 때문에 이메일이 겹칠 수 있다. */
-	@Column(nullable = false, length = 50)
+	@NotBlank
+	@Size(max = 50)
+	@Email
+	@NotNull
 	private String email;
 
-	/* 일반 로그인을 통해 가입한 회원의 비밀번호 */
-	@Column(length = 50)
+	@Size(max = 50)
 	private String password;
 
-	@Column(nullable = false)
 	private boolean isSocial;
 
-	/* 소셜 로그인을 통해 가입한 회원의 인증 주체 */
-	@SuppressWarnings("FieldMayBeFinal")
-	@Enumerated(EnumType.STRING)
-	@Column(nullable = false, name = "oauth_provider")
+	@NotBlank
+	@NotNull
 	private OauthProvider oauthProvider = OauthProvider.NONE;
 
-	@SuppressWarnings("FieldMayBeFinal")
-	@Enumerated(EnumType.STRING)
-	@Column(nullable = false)
+	@NotBlank
+	@NotNull
 	private MemberStatus status;
 
-	private String OauthRefreshToken;
+	private String oauthRefreshToken;
 
 	public MemberEntity withDrawn() {
 		this.status = MemberStatus.WITHDRAWN;
@@ -67,6 +67,6 @@ public class MemberEntity extends BaseEntity {
 	}
 
 	public void updateRefreshToken(String oauthRefreshToken) {
-		this.OauthRefreshToken = oauthRefreshToken;
+		this.oauthRefreshToken = oauthRefreshToken;
 	}
 }

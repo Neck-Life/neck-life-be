@@ -31,7 +31,7 @@ public class TokenResolver {
 		}
 	}
 
-	public Optional<Long> resolveId(String token) {
+	public Optional<String> resolveId(String token) {
 		try {
 			return Optional.ofNullable(
 					Jwts.parserBuilder()
@@ -39,7 +39,7 @@ public class TokenResolver {
 							.build()
 							.parseClaimsJws(token)
 							.getBody()
-							.get(MEMBER_ID_CLAIM_KEY, Long.class));
+							.get(MEMBER_ID_CLAIM_KEY, String.class));
 		} catch (Exception e) {
 			log.warn("Failed to get memberId. token: {}", token);
 			return Optional.empty();

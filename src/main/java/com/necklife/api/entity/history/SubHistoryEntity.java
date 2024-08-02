@@ -13,9 +13,9 @@ import java.util.Date;
 @Table(name = "sub_history")
 public class SubHistoryEntity {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

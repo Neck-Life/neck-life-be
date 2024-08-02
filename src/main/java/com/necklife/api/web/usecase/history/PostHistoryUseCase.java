@@ -16,7 +16,7 @@ public class PostHistoryUseCase {
 
 	@Transactional
 	public void execute(PostHistoryRequest postHistoryRequest) {
-		Long requestMemberId = postHistoryRequest.memberId();
+		String requestMemberId = postHistoryRequest.memberId();
 
 		checkExistMember(requestMemberId);
 
@@ -26,7 +26,7 @@ public class PostHistoryUseCase {
 
 	}
 
-	private void checkExistMember(Long requestMemberId) {
+	private void checkExistMember(String requestMemberId) {
 		if (!memberRepository.existsById(requestMemberId)) {
 			throw new IllegalArgumentException("없는 멤버 입니다.");
 		}
