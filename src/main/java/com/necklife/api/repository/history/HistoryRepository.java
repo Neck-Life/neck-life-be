@@ -10,5 +10,8 @@ public interface HistoryRepository extends MongoRepository<HistoryEntity, String
 
 
 
-    List<HistoryEntity> findAllByMemberIdAndStartAtBetween(String memberId, Date startDate, Date endDate);
+    List<HistoryEntity> findByMemberIdAndYearAndMonth(String memberId, int year, int month);
+
+    List<HistoryEntity> findByMemberIdAndYear(String memberId, int year);
+
 }

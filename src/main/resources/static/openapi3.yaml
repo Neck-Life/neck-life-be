@@ -1,0 +1,561 @@
+openapi: 3.0.1
+info:
+  title: necklife-be
+  version: 1.0.0
+servers:
+- url: http://localhost:8080
+tags: []
+paths:
+  /api/v1/history:
+    post:
+      tags:
+      - PostureHistoryControllerTest
+      summary: 자세 기록을 추가한다.
+      description: 자세 기록을 추가한다.
+      operationId: post-history
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostPostureHistoryRequest'
+            examples:
+              post-history:
+                value: "{\"startTime\":\"2024-07-01T00:00:00\",\"endTime\":\"2024-07-25T23:59:59\"\
+                  ,\"history\":[{\"startTime\":\"2024-07-01T10:00:00\",\"duration\"\
+                  :1800,\"status\":\"forward\"}]}"
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostPostureHistoryResponse'
+              examples:
+                post-history:
+                  value: "{\"message\":\"성공\",\"code\":\"success\",\"timestamp\":\"\
+                    2024-07-26 14:51:43\"}"
+  /api/v1/members:
+    get:
+      tags:
+      - MemberControllerTest
+      summary: 회원 정보를 조회한다.
+      description: 회원 정보를 조회한다.
+      operationId: getMember
+      parameters:
+      - name: Authorization
+        in: header
+        description: Bearer 어세스 토큰
+        required: true
+        schema:
+          type: string
+          default: "{{accessToken}}"
+        example: "Bearer {{ accessToken }}"
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetMemberResponse'
+              examples:
+                getMember:
+                  value: "{\"data\":{\"id\":1,\"email\":\"nickname\",\"provider\"\
+                    :\"profile\",\"status\":\"unpaid\"},\"message\":\"성공\",\"code\"\
+                    :\"success\",\"timestamp\":\"2024-07-26 14:51:45\"}"
+    post:
+      tags:
+      - MemberControllerTest
+      summary: 회원 가입을 한다.
+      description: 회원 가입을 한다.
+      operationId: postMember
+      parameters:
+      - name: Authorization
+        in: header
+        description: Bearer 어세스 토큰
+        required: true
+        schema:
+          type: string
+          default: "{{accessToken}}"
+        example: "Bearer {{ accessToken }}"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostMemberRequest'
+            examples:
+              postMember:
+                value: "{\"code\":\"dsakfjdsakfj\",\"provider\":\"구글\"}"
+      responses:
+        "201":
+          description: "201"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostMemberResponse'
+              examples:
+                postMember:
+                  value: "{\"data\":{\"id\":1,\"email\":\"이메일\",\"provider\":\"제공자\
+                    \",\"status\":\"상태\",\"accessToken\":\"accessToken\",\"refreshToken\"\
+                    :\"refreshToken\"},\"message\":\"새로 생성되었습니다.\",\"code\":\"resource.created\"\
+                    ,\"timestamp\":\"2024-07-26 14:51:45\"}"
+    delete:
+      tags:
+      - MemberControllerTest
+      summary: 회원 탈퇴를 한다.
+      description: 회원 탈퇴를 한다.
+      operationId: deleteMember
+      parameters:
+      - name: Authorization
+        in: header
+        description: Bearer 어세스 토큰
+        required: true
+        schema:
+          type: string
+          default: "{{accessToken}}"
+        example: "Bearer {{ accessToken }}"
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteMemberResponse'
+              examples:
+                deleteMember:
+                  value: "{\"data\":{\"id\":1,\"deletedAt\":[2024,7,26,14,51,45,665613000]},\"\
+                    message\":\"삭제되었습니다.\",\"code\":\"resource.deleted\",\"timestamp\"\
+                    :\"2024-07-26 14:51:45\"}"
+  /api/v1/history/month:
+    get:
+      tags:
+      - PostureHistoryControllerTest
+      summary: 한 달 자세 기록을 조회한다.
+      description: 한 달 자세 기록을 조회한다.
+      operationId: get-month-history
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetMonthHistoryResponse'
+              examples:
+                get-month-history:
+                  value: "{\"data\":{\"month\":\"2024-07\",\"days\":[{\"date\":\"\
+                    2024-07-01\",\"totalMeasurementTime\":7200,\"totalForwardTime\"\
+                    :1800,\"totalBackwardTime\":1200,\"totalTiltedTime\":900,\"totalForwardCount\"\
+                    :2,\"totalBackwardCount\":2,\"totalTiltedCount\":1,\"statusChanges\"\
+                    :[{\"time\":\"2024-07-01T09:15:00Z\",\"duration\":600,\"status\"\
+                    :\"FORWARD\"}]}]},\"message\":\"성공\",\"code\":\"success\",\"timestamp\"\
+                    :\"2024-07-26 14:51:43\"}"
+  /api/v1/history/point:
+    get:
+      tags:
+      - PostureHistoryControllerTest
+      summary: 자세 점수를 조회한다.
+      description: 자세 점수를 조회한다.
+      operationId: get-history-point
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetHistoryPointResponse'
+              examples:
+                get-history-point:
+                  value: "{\"data\":{\"totalScore\":86,\"thisMonth\":{\"totalMeasurementTime\"\
+                    :72000,\"totalForwardTime\":18000,\"totalBackwardTime\":10800,\"\
+                    totalTiltedTime\":7200,\"totalForwardCount\":5,\"totalBackwardCount\"\
+                    :5,\"totalTiltedCount\":5},\"lastMonth\":{\"totalMeasurementTime\"\
+                    :64800,\"totalForwardTime\":21600,\"totalBackwardTime\":7200,\"\
+                    totalTiltedTime\":3600,\"totalForwardCount\":4,\"totalBackwardCount\"\
+                    :4,\"totalTiltedCount\":3}},\"message\":\"성공\",\"code\":\"success\"\
+                    ,\"timestamp\":\"2024-07-26 14:51:43\"}"
+  /api/v1/history/year:
+    get:
+      tags:
+      - PostureHistoryControllerTest
+      summary: 연간 자세 기록을 조회한다.
+      description: 연간 자세 기록을 조회한다.
+      operationId: get-year-history
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetYearHistoryResponse'
+              examples:
+                get-year-history:
+                  value: "{\"data\":{\"year\":\"2024\",\"months\":[{\"month\":\"2024-01\"\
+                    ,\"totalMeasurementTime\":72000,\"totalForwardTime\":18000,\"\
+                    totalBackwardTime\":10800,\"totalTiltedTime\":7200,\"totalForwardCount\"\
+                    :15,\"totalBackwardCount\":10,\"totalTiltedCount\":12}]},\"message\"\
+                    :\"성공\",\"code\":\"success\",\"timestamp\":\"2024-07-26 14:51:42\"\
+                    }"
+  /api/v1/members/token:
+    post:
+      tags:
+      - MemberControllerTest
+      summary: 회원 토큰을 갱신한다.
+      description: 회원 토큰을 갱신한다.
+      operationId: refreshMemberAuthToken
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshMemberAuthTokenRequest'
+            examples:
+              refreshMemberAuthToken:
+                value: "{\"refreshToken\":\"refresh\"}"
+      responses:
+        "200":
+          description: "200"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RefreshMemberAuthTokenResponse'
+              examples:
+                refreshMemberAuthToken:
+                  value: "{\"data\":{\"accessToken\":\"accessToken\",\"refreshToken\"\
+                    :\"refreshToken\"},\"message\":\"성공\",\"code\":\"success\",\"\
+                    timestamp\":\"2024-07-26 14:51:45\"}"
+components:
+  schemas:
+    PostPostureHistoryResponse:
+      title: PostPostureHistoryResponse
+      type: object
+      properties:
+        code:
+          type: string
+          description: Response code
+        message:
+          type: string
+          description: Response message
+        timestamp:
+          type: string
+          description: Timestamp of the response
+    GetMonthHistoryResponse:
+      title: GetMonthHistoryResponse
+      type: object
+      properties:
+        code:
+          type: string
+          description: Response code
+        data:
+          type: object
+          properties:
+            month:
+              type: string
+              description: The month of the history
+            days:
+              type: array
+              items:
+                type: object
+                properties:
+                  date:
+                    type: string
+                    description: The date of the history entry
+                  totalBackwardCount:
+                    type: number
+                    description: Total backward count
+                  totalTiltedTime:
+                    type: number
+                    description: Total tilted time in seconds
+                  totalMeasurementTime:
+                    type: number
+                    description: Total measurement time in seconds
+                  totalBackwardTime:
+                    type: number
+                    description: Total backward time in seconds
+                  totalForwardCount:
+                    type: number
+                    description: Total forward count
+                  totalForwardTime:
+                    type: number
+                    description: Total forward time in seconds
+                  statusChanges:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        duration:
+                          type: number
+                          description: The duration of the status change in seconds
+                        time:
+                          type: string
+                          description: The start time of the status change
+                        status:
+                          type: string
+                          description: The status of the posture
+                  totalTiltedCount:
+                    type: number
+                    description: Total tilted count
+        message:
+          type: string
+          description: Response message
+        timestamp:
+          type: string
+          description: Timestamp of the response
+    GetMemberResponse:
+      title: GetMemberResponse
+      type: object
+      properties:
+        code:
+          type: string
+          description: code
+        data:
+          type: object
+          properties:
+            provider:
+              type: string
+              description: 제공자
+            id:
+              type: number
+              description: id
+            email:
+              type: string
+              description: 회원 이메일
+            status:
+              type: string
+              description: 상태
+          description: 데이터
+        message:
+          type: string
+          description: message
+        timestamp:
+          type: string
+          description: 응답 시간
+    PostPostureHistoryRequest:
+      title: PostPostureHistoryRequest
+      type: object
+      properties:
+        startTime:
+          type: string
+          description: The start time of the history
+        history:
+          type: array
+          items:
+            type: object
+            properties:
+              duration:
+                type: number
+                description: The duration of the status in seconds
+              startTime:
+                type: string
+                description: The start time of the status
+              status:
+                type: string
+                description: The status of the posture
+        endTime:
+          type: string
+          description: The end time of the history
+    GetYearHistoryResponse:
+      title: GetYearHistoryResponse
+      type: object
+      properties:
+        code:
+          type: string
+          description: Response code
+        data:
+          type: object
+          properties:
+            months:
+              type: array
+              items:
+                type: object
+                properties:
+                  totalBackwardCount:
+                    type: number
+                    description: Total backward count
+                  totalTiltedTime:
+                    type: number
+                    description: Total tilted time in seconds
+                  totalMeasurementTime:
+                    type: number
+                    description: Total measurement time in seconds
+                  month:
+                    type: string
+                    description: The month of the history entry
+                  totalBackwardTime:
+                    type: number
+                    description: Total backward time in seconds
+                  totalForwardCount:
+                    type: number
+                    description: Total forward count
+                  totalForwardTime:
+                    type: number
+                    description: Total forward time in seconds
+                  totalTiltedCount:
+                    type: number
+                    description: Total tilted count
+            year:
+              type: string
+              description: The year of the history
+        message:
+          type: string
+          description: Response message
+        timestamp:
+          type: string
+          description: Timestamp of the response
+    PostMemberRequest:
+      title: PostMemberRequest
+      type: object
+    PostMemberResponse:
+      title: PostMemberResponse
+      type: object
+      properties:
+        code:
+          type: string
+          description: code
+        data:
+          type: object
+          properties:
+            provider:
+              type: string
+              description: 제공자
+            id:
+              type: number
+              description: 회원 ID
+            accessToken:
+              type: string
+              description: 액세스 토큰
+            email:
+              type: string
+              description: 이메일
+            refreshToken:
+              type: string
+              description: 리프레시 토큰
+            status:
+              type: string
+              description: 상태
+          description: 데이터
+        message:
+          type: string
+          description: message
+        timestamp:
+          type: string
+          description: 응답 시간
+    RefreshMemberAuthTokenResponse:
+      title: RefreshMemberAuthTokenResponse
+      type: object
+      properties:
+        code:
+          type: string
+          description: code
+        data:
+          type: object
+          properties:
+            accessToken:
+              type: string
+              description: 액세스 토큰
+            refreshToken:
+              type: string
+              description: 리프레시 토큰
+          description: 데이터
+        message:
+          type: string
+          description: message
+        timestamp:
+          type: string
+          description: 응답 시간
+    RefreshMemberAuthTokenRequest:
+      title: RefreshMemberAuthTokenRequest
+      type: object
+    DeleteMemberResponse:
+      title: DeleteMemberResponse
+      type: object
+      properties:
+        code:
+          type: string
+          description: code
+        data:
+          type: object
+          properties:
+            deletedAt:
+              type: array
+              description: 삭제 시간
+              items:
+                oneOf:
+                - type: object
+                - type: boolean
+                - type: string
+                - type: number
+            id:
+              type: number
+              description: 회원 ID
+          description: 데이터
+        message:
+          type: string
+          description: message
+        timestamp:
+          type: string
+          description: 응답 시간
+    GetHistoryPointResponse:
+      title: GetHistoryPointResponse
+      type: object
+      properties:
+        code:
+          type: string
+          description: Response code
+        data:
+          type: object
+          properties:
+            lastMonth:
+              type: object
+              properties:
+                totalBackwardCount:
+                  type: number
+                  description: Total backward count for last month
+                totalTiltedTime:
+                  type: number
+                  description: Total tilted time for last month in seconds
+                totalMeasurementTime:
+                  type: number
+                  description: Total measurement time for last month in seconds
+                totalBackwardTime:
+                  type: number
+                  description: Total backward time for last month in seconds
+                totalForwardCount:
+                  type: number
+                  description: Total forward count for last month
+                totalForwardTime:
+                  type: number
+                  description: Total forward time for last month in seconds
+                totalTiltedCount:
+                  type: number
+                  description: Total tilted count for last month
+            thisMonth:
+              type: object
+              properties:
+                totalBackwardCount:
+                  type: number
+                  description: Total backward count for this month
+                totalTiltedTime:
+                  type: number
+                  description: Total tilted time for this month in seconds
+                totalMeasurementTime:
+                  type: number
+                  description: Total measurement time for this month in seconds
+                totalBackwardTime:
+                  type: number
+                  description: Total backward time for this month in seconds
+                totalForwardCount:
+                  type: number
+                  description: Total forward count for this month
+                totalForwardTime:
+                  type: number
+                  description: Total forward time for this month in seconds
+                totalTiltedCount:
+                  type: number
+                  description: Total tilted count for this month
+            totalScore:
+              type: number
+              description: Total score
+        message:
+          type: string
+          description: Response message
+        timestamp:
+          type: string
+          description: Timestamp of the response

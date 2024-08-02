@@ -37,7 +37,7 @@ public class TokenUserDetailsService implements UserDetailsService {
 								() ->
 										new AccessTokenInvalidException("Invalid access token. accessToken: " + token));
 
-		Long id = claims.get(MEMBER_ID_CLAIM_KEY, Long.class);
+		String id = claims.get(MEMBER_ID_CLAIM_KEY, String.class);
 		String roles = claims.get(MEMBER_ROLE_CLAIM_KEY, String.class);
 
 		List<GrantedAuthority> authorities = toAuthorities(roles);
