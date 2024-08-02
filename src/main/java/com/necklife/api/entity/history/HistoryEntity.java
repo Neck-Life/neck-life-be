@@ -1,42 +1,46 @@
 package com.necklife.api.entity.history;
 
 import com.necklife.api.entity.member.MemberEntity;
-import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
-import java.util.Date;
-import java.util.List;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@Entity
 @Builder
-@Table(name = "history")
+@Document(collection = "history")
 public class HistoryEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+    @DBRef
     private MemberEntity member;
 
-    @OneToMany(mappedBy = "history")
-    private List<SubHistoryEntity> subHistory;
+    @Field("start_at")
+    private LocalDateTime startAt;
 
-    @Column(nullable = false)
-    private Date startAt;
+    @Field("end_at")
+    private LocalDateTime endAt;
 
-    @Column(nullable = false)
-    private Date endAt;
+    private int year;
+    private int month;
+
+    private double measuredTime;
+
+    private Map<LocalDateTime, PoseStatus> poseStatusMap ;
+
+    private Map<PoseStatus, Integer> poseCountMap ;
+
+    private Map<PoseStatus, Long> poseTimerMap;
 
 
-    public HistoryEntity updateSubHistory(List<SubHistoryEntity> subHistory) {
-        this.subHistory = subHistory;
-        return this;
-    }
 
 
 }
