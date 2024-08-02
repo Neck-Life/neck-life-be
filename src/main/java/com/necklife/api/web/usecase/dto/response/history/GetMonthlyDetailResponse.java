@@ -1,6 +1,9 @@
 package com.necklife.api.web.usecase.dto.response.history;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import com.necklife.api.entity.history.PoseStatus;
 import lombok.AllArgsConstructor;
@@ -11,29 +14,19 @@ import lombok.Data;
 @Builder
 public class GetMonthlyDetailResponse {
 
+	private String year;
 	private String month;
-	private List<Day> days;
+	private List<Day> daily;
 
 	@Data
 	@AllArgsConstructor
 	@Builder
 	public static class Day {
-		private String date;
-		private int MeasurementTime;
-		private int ForwardTime;
-		private int BackwardTime;
-		private int TiltedTime;
-		private int ForwardCount;
-		private int BackwardCount;
-		private int TiltedCount;
-		private int normalTime;
-		private List<StatusChange> statusChanges;
+		private double measurementTime;
+		private Map<PoseStatus, Integer> poseCountMap;
+		private Map<PoseStatus, Long> poseTimerMap;
+		private Map<LocalDateTime, PoseStatus> history;
 	}
 
-	@Data
-	@AllArgsConstructor
-	public static class StatusChange {
-		private String time;
-		private PoseStatus status;
-	}
+
 }

@@ -2,14 +2,15 @@ package com.necklife.api.web.usecase.history;
 
 import com.necklife.api.entity.history.HistoryEntity;
 import com.necklife.api.entity.history.PoseStatus;
-import com.necklife.api.entity.history.SubHistoryEntity;
 import com.necklife.api.repository.history.HistoryRepository;
 import com.necklife.api.web.usecase.dto.request.history.GetMonthlyHistoryRequest;
 import com.necklife.api.web.usecase.dto.response.history.GetMonthlyDetailResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -18,114 +19,56 @@ import java.util.stream.Collectors;
 public class GetMonthlyDetailUseCase {
 
 	private final HistoryRepository historyRepository;
-	private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
 	public GetMonthlyDetailResponse execute(GetMonthlyHistoryRequest getMonthlyHistoryRequest) {
+		String memberId = getMonthlyHistoryRequest.memberId();
+		Integer year = getMonthlyHistoryRequest.year();
+		Integer month = getMonthlyHistoryRequest.month();
 
-		Calendar calendar = Calendar.getInstance();
-		calendar.set(getMonthlyHistoryRequest.year(), getMonthlyHistoryRequest.month(), 1, 0, 0, 0);
-		Date startDate = calendar.getTime();
-		calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
-		Date endDate = calendar.getTime();
+		// 날짜 형식 설정
+		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-		List<HistoryEntity> historyEntities = historyRepository.findAllByMemberIdAndStartAtBetween(getMonthlyHistoryRequest.memberId(),startDate, endDate);
+		// 해당 멤버, 연도, 월에 대한 히스토리 데이터 조회
+		List<HistoryEntity> histories = historyRepository.findByMemberIdAndYearAndMonth(memberId, year, month);
 
-		Map<String, GetMonthlyDetailResponse.Day.DayBuilder> dailyDataMap = new HashMap<>();
+		// 일별 데이터 그룹화
+		Map<LocalDate, List<HistoryEntity>> groupedByDate = histories.stream()
+				.collect(Collectors.groupingBy(history -> history.getStartAt().toLocalDate()));
 
-		for (HistoryEntity historyEntity : historyEntities) {
-			String date = dateFormat.format(historyEntity.getStartAt());
-			GetMonthlyDetailResponse.Day.DayBuilder dailyDataBuilder = dailyDataMap.getOrDefault(date, GetMonthlyDetailResponse.Day.builder().date(date));
+		// 일별 데이터 변환
+		List<GetMonthlyDetailResponse.Day> daily = groupedByDate.entrySet().stream()
+				.map(entry -> {
+					List<HistoryEntity> dailyHistories = entry.getValue();
 
-			List<SubHistoryEntity> subHistories = historyEntity.getSubHistory();
+					// 측정 시간 계산
+					double measurementTime = dailyHistories.stream().mapToDouble(HistoryEntity::getMeasuredTime).sum();
 
-			int measurementTime = (int) ((historyEntity.getEndAt().getTime() - historyEntity.getStartAt().getTime()) / 1000);
-			int forwardTime = 0, backwardTime = 0, tiltedTime = 0, normalTime = 0;
-			int forwardCount = 0, backwardCount = 0, tiltedCount = 0;
+					// poseCountMap, poseTimerMap, history 설정
+					Map<PoseStatus, Integer> poseCountMap = new HashMap<>();
+					Map<PoseStatus, Long> poseTimerMap = new HashMap<>();
+					Map<LocalDateTime, PoseStatus> history = new TreeMap<>();
 
-			List<GetMonthlyDetailResponse.StatusChange> statusChanges = new ArrayList<>();
-			SubHistoryEntity previousSubHistory = null;
-
-			if (!subHistories.isEmpty()) {
-				// 첫 번째 SubHistoryEntity 이전의 시간을 정상 상태로 계산
-				SubHistoryEntity firstSubHistory = subHistories.get(0);
-				long initialDuration = (firstSubHistory.getChangedAt().getTime() - historyEntity.getStartAt().getTime()) / 1000;
-				normalTime += initialDuration;
-
-				statusChanges.add(new GetMonthlyDetailResponse.StatusChange(dateFormat.format(historyEntity.getStartAt()), PoseStatus.NORMAL));
-			}
-
-			for (SubHistoryEntity subHistory : subHistories) {
-				if (previousSubHistory != null) {
-					long duration = (subHistory.getChangedAt().getTime() - previousSubHistory.getChangedAt().getTime()) / 1000;
-
-					switch (previousSubHistory.getPoseStatus()) {
-						case FORWARD:
-							forwardTime += duration;
-							forwardCount++;
-							break;
-						case BACKWARD:
-							backwardTime += duration;
-							backwardCount++;
-							break;
-						case TILTED:
-							tiltedTime += duration;
-							tiltedCount++;
-							break;
-						case NORMAL:
-							normalTime += duration;
-							break;
+					for (HistoryEntity historyEntity : dailyHistories) {
+						historyEntity.getPoseCountMap().forEach((poseStatus, count) ->
+								poseCountMap.merge(poseStatus, count, Integer::sum));
+						historyEntity.getPoseTimerMap().forEach((poseStatus, time) ->
+								poseTimerMap.merge(poseStatus, time, Long::sum));
+                        history.putAll(historyEntity.getPoseStatusMap());
 					}
 
-					statusChanges.add(new GetMonthlyDetailResponse.StatusChange(dateFormat.format(previousSubHistory.getChangedAt()), previousSubHistory.getPoseStatus()));
-				}
-				previousSubHistory = subHistory;
-			}
-
-			// 마지막 상태의 지속 시간 계산
-			if (previousSubHistory != null) {
-				long duration = (historyEntity.getEndAt().getTime() - previousSubHistory.getChangedAt().getTime()) / 1000;
-				switch (previousSubHistory.getPoseStatus()) {
-					case FORWARD:
-						forwardTime += duration;
-						forwardCount++;
-						break;
-					case BACKWARD:
-						backwardTime += duration;
-						backwardCount++;
-						break;
-					case TILTED:
-						tiltedTime += duration;
-						tiltedCount++;
-						break;
-					case NORMAL:
-						normalTime += duration;
-						break;
-				}
-
-				statusChanges.add(new GetMonthlyDetailResponse.StatusChange(dateFormat.format(previousSubHistory.getChangedAt()), previousSubHistory.getPoseStatus()));
-			}
-
-			dailyDataBuilder
-					.MeasurementTime(dailyDataBuilder.build().getMeasurementTime() + measurementTime)
-					.ForwardTime(dailyDataBuilder.build().getForwardTime() + forwardTime)
-					.BackwardTime(dailyDataBuilder.build().getBackwardTime() + backwardTime)
-					.TiltedTime(dailyDataBuilder.build().getTiltedTime() + tiltedTime)
-					.ForwardCount(dailyDataBuilder.build().getForwardCount() + forwardCount)
-					.BackwardCount(dailyDataBuilder.build().getBackwardCount() + backwardCount)
-					.TiltedCount(dailyDataBuilder.build().getTiltedCount() + tiltedCount)
-					.normalTime(dailyDataBuilder.build().getNormalTime() + normalTime)
-					.statusChanges(statusChanges);
-
-			dailyDataMap.put(date, dailyDataBuilder);
-		}
-
-		List<GetMonthlyDetailResponse.Day> days = dailyDataMap.values().stream()
-				.map(GetMonthlyDetailResponse.Day.DayBuilder::build)
+					return GetMonthlyDetailResponse.Day.builder()
+							.measurementTime(measurementTime)
+							.poseCountMap(poseCountMap)
+							.poseTimerMap(poseTimerMap)
+							.history(history)
+							.build();
+				})
 				.collect(Collectors.toList());
 
 		return GetMonthlyDetailResponse.builder()
-				.month(getMonthlyHistoryRequest.year() + "-" + getMonthlyHistoryRequest.month())
-				.days(days)
+				.year(String.valueOf(year))
+				.month(String.valueOf(month))
+				.daily(daily)
 				.build();
 	}
 }

@@ -1,6 +1,9 @@
 package com.necklife.api.web.usecase.dto.response.history;
 
 import java.util.List;
+import java.util.Map;
+
+import com.necklife.api.entity.history.PoseStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,6 +13,7 @@ import lombok.ToString;
 @Builder
 @ToString
 public class GetYearDetailResponse {
+
 	private String year;
 	private List<Month> months;
 
@@ -18,13 +22,8 @@ public class GetYearDetailResponse {
 	@Builder
 	public static class Month {
 		private String month;
-		private int MeasurementTime;
-		private int ForwardTime;
-		private int BackwardTime;
-		private int TiltedTime;
-		private int ForwardCount;
-		private int BackwardCount;
-		private int TiltedCount;
-		private int NormalTime;
+		private double measurementTime;
+		private Map<PoseStatus, Integer> poseCountMap;
+		private Map<PoseStatus, Long> poseTimerMap;
 	}
 }

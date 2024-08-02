@@ -1,16 +1,5 @@
 package com.necklife.api.web.controller.member;
 
-import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.when;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -29,8 +18,6 @@ import com.necklife.api.web.usecase.member.DeleteMemberUseCase;
 import com.necklife.api.web.usecase.member.GetMemberDetailUseCase;
 import com.necklife.api.web.usecase.member.GetMemberTokenDetailUseCase;
 import com.necklife.api.web.usecase.member.PostMemberUseCase;
-import java.time.LocalDateTime;
-import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +31,17 @@ import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.time.LocalDateTime;
+import java.util.Optional;
+
+import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ActiveProfiles(value = "local")
 @AutoConfigureRestDocs
@@ -69,7 +67,7 @@ class MemberControllerTest {
 	@WithUserDetails(userDetailsServiceBeanName = "testTokenUserDetailsService")
 	void postMember() throws Exception {
 		when(postMemberUseCase.execute(any(), any()))
-				.thenReturn(new PostMemberUseCaseResponse(1L, "이메일", "제공자", "상태"));
+				.thenReturn(new PostMemberUseCaseResponse("1", "이메일", "제공자", "상태"));
 		when(tokenGenerator.generateAuthToken(any(), any()))
 				.thenReturn(new AuthToken("accessToken", "refreshToken"));
 
@@ -127,8 +125,8 @@ class MemberControllerTest {
 	@DisplayName("DELETE /api/v1/members 회원 탈퇴를 한다.")
 	@WithUserDetails(userDetailsServiceBeanName = "testTokenUserDetailsService")
 	void deleteMember() throws Exception {
-		when(deleteMemberUseCase.execute(anyLong()))
-				.thenReturn(new DeleteMemberUseCaseResponse(1L, LocalDateTime.now()));
+		when(deleteMemberUseCase.execute(any()))
+				.thenReturn(new DeleteMemberUseCaseResponse("1L", LocalDateTime.now()));
 
 		mockMvc
 				.perform(
@@ -166,8 +164,8 @@ class MemberControllerTest {
 	@DisplayName("GET /api/v1/members 회원 정보를 조회한다.")
 	@WithUserDetails(userDetailsServiceBeanName = "testTokenUserDetailsService")
 	void getMember() throws Exception {
-		when(getMemberDetailUseCase.execute(anyLong()))
-				.thenReturn(new GetMemberDetailUseCaseResponse(1L, "nickname", "profile", "unpaid"));
+		when(getMemberDetailUseCase.execute(any()))
+				.thenReturn(new GetMemberDetailUseCaseResponse("1L", "nickname", "profile", "unpaid"));
 
 		mockMvc
 				.perform(
@@ -211,10 +209,10 @@ class MemberControllerTest {
 	@DisplayName("POST /api/v1/members/token 회원 토큰을 갱신한다.")
 	@WithUserDetails(userDetailsServiceBeanName = "testTokenUserDetailsService")
 	void getMemberToken() throws Exception {
-		when(tokenResolver.resolveId(any())).thenReturn(Optional.of(1L));
+		when(tokenResolver.resolveId(any())).thenReturn(Optional.of("1L"));
 
-		when(getMemberTokenDetailUseCase.execute(anyLong()))
-				.thenReturn(new GetMemberTokenDetailUseCaseResponse(1L));
+		when(getMemberTokenDetailUseCase.execute(any()))
+				.thenReturn(new GetMemberTokenDetailUseCaseResponse("1L"));
 
 		when(tokenGenerator.generateAuthToken(any(), any()))
 				.thenReturn(new AuthToken("accessToken", "refreshToken"));
