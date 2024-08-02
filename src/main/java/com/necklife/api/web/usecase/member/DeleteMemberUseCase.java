@@ -19,7 +19,7 @@ public class DeleteMemberUseCase {
 	private final AppleMemberClient appleMemberClient;
 
 	@Transactional
-	public DeleteMemberUseCaseResponse execute(Long memberId) {
+	public DeleteMemberUseCaseResponse execute(String memberId) {
 		Optional<MemberEntity> findMember = memberRepository.findById(memberId);
 		if (findMember.isEmpty()) {
 			throw new IllegalArgumentException("존재하지 않는 회원입니다.");

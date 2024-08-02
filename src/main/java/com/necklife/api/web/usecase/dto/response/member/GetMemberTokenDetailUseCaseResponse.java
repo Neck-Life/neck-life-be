@@ -9,5 +9,5 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 public class GetMemberTokenDetailUseCaseResponse {
-	private Long id;
+	private String id;
 }

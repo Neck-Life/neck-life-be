@@ -12,7 +12,6 @@ import java.nio.file.AccessDeniedException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.TypeMismatchException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
@@ -45,7 +44,7 @@ public class ApiControllerExceptionHandler {
 
 	@ExceptionHandler({
 		MethodArgumentTypeMismatchException.class,
-		TypeMismatchException.class,
+//		TypeMismatchException.class,
 		ServletRequestBindingException.class,
 		BindException.class,
 		MethodArgumentNotValidException.class,

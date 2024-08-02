@@ -4,9 +4,11 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.ToString;
 
 @Data
 @Builder
+@ToString
 public class GetYearDetailResponse {
 	private String year;
 	private List<Month> months;

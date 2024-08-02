@@ -7,9 +7,11 @@ import com.necklife.api.repository.member.dto.response.PostMemberRepoResponse;
 import java.util.concurrent.atomic.AtomicBoolean;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class BasicUserService {
 
 	private final MemberRepository memberRepository;

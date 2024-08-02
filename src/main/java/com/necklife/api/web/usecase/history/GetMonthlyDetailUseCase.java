@@ -28,7 +28,7 @@ public class GetMonthlyDetailUseCase {
 		calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
 		Date endDate = calendar.getTime();
 
-		List<HistoryEntity> historyEntities = historyRepository.findAllByStartAtBetween(getMonthlyHistoryRequest.memberId(),startDate, endDate);
+		List<HistoryEntity> historyEntities = historyRepository.findAllByMemberIdAndStartAtBetween(getMonthlyHistoryRequest.memberId(),startDate, endDate);
 
 		Map<String, GetMonthlyDetailResponse.Day.DayBuilder> dailyDataMap = new HashMap<>();
 

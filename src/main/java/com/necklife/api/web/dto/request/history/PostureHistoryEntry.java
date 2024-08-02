@@ -14,6 +14,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PostureHistoryEntry {
 
-	private Date startTime;
+	private Date startAt;
 	private String status;
 }

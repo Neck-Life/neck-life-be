@@ -1,32 +1,37 @@
 package com.necklife.api.entity;
 
-import com.necklife.api.entity.listener.SoftDeleteListener;
-import jakarta.persistence.*;
-import java.time.LocalDateTime;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.data.mongodb.core.mapping.FieldType;
+import org.springframework.data.mongodb.core.mapping.MongoId;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.repository.Update;
+
+import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @ToString
-@MappedSuperclass
-@EntityListeners({AuditingEntityListener.class, SoftDeleteListener.class})
+@Document
 public abstract class BaseEntity {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	@MongoId(FieldType.OBJECT_ID)
+	private String id;
 
-	@Column(nullable = false, updatable = false)
 	@CreatedDate
+	@NotNull(message = "User's first name must not be null")
 	private LocalDateTime createdAt;
 
-	@Column(nullable = false)
 	@LastModifiedDate
+	@NotNull
 	private LocalDateTime updatedAt;
+
 
 	private LocalDateTime deletedAt;
 

@@ -16,7 +16,7 @@ public class GetMemberTokenDetailUseCase {
 
 	private final MemberRepository memberRepository;
 
-	public GetMemberTokenDetailUseCaseResponse execute(Long id) {
+	public GetMemberTokenDetailUseCaseResponse execute(String id) {
 
 		Optional<MemberEntity> findMember = memberRepository.findById(id);
 		findMember.orElseThrow(() -> new NotFoundException("Member not found"));
