@@ -1,11 +1,14 @@
 package com.necklife.api.web.usecase.history;
 
-import com.necklife.api.entity.history.SubHistoryEntity;
+import com.necklife.api.entity.member.MemberEntity;
 import com.necklife.api.repository.member.MemberRepository;
+import com.necklife.api.service.history.SaveHistoryService;
 import com.necklife.api.web.usecase.dto.request.history.PostHistoryRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -13,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class PostHistoryUseCase {
 
 	private final MemberRepository memberRepository;
+	private final SaveHistoryService saveHistoryService;
 
 	@Transactional
 	public void execute(PostHistoryRequest postHistoryRequest) {
@@ -21,7 +25,9 @@ public class PostHistoryUseCase {
 		checkExistMember(requestMemberId);
 
 
+		MemberEntity findMember = memberRepository.findById(postHistoryRequest.memberId()).get();
 
+		saveHistoryService.execute(findMember, postHistoryRequest.startAt(), postHistoryRequest.endAt(), postHistoryRequest.subHistories());
 
 
 	}

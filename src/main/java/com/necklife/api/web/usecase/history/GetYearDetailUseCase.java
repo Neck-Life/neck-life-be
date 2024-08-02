@@ -1,14 +1,14 @@
 package com.necklife.api.web.usecase.history;
 
 import com.necklife.api.entity.history.HistoryEntity;
-import com.necklife.api.entity.history.SubHistoryEntity;
+import com.necklife.api.entity.history.PoseStatus;
 import com.necklife.api.repository.history.HistoryRepository;
 import com.necklife.api.web.usecase.dto.request.history.GetYearHistoryRequest;
 import com.necklife.api.web.usecase.dto.response.history.GetYearDetailResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -17,109 +17,53 @@ import java.util.stream.Collectors;
 public class GetYearDetailUseCase {
 
 	private final HistoryRepository historyRepository;
-	private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
 	public GetYearDetailResponse execute(GetYearHistoryRequest getYearHistoryRequest) {
+		String memberId = getYearHistoryRequest.memberId();
+		Integer year = getYearHistoryRequest.year();
 
+		// 날짜 형식 설정
+		DateTimeFormatter monthFormatter = DateTimeFormatter.ofPattern("MM");
 
-			Calendar calendar = Calendar.getInstance();
-			calendar.set(getYearHistoryRequest.year(), Calendar.JANUARY, 1, 0, 0, 0);
-			Date startDate = calendar.getTime();
-			calendar.set(Calendar.MONTH, Calendar.DECEMBER);
-			calendar.set(Calendar.DAY_OF_MONTH, 31);
-			Date endDate = calendar.getTime();
+		// 해당 멤버, 연도에 대한 히스토리 데이터 조회
+		List<HistoryEntity> histories = historyRepository.findByMemberIdAndYear(memberId, year);
 
-			List<HistoryEntity> historyEntities = historyRepository.findAllByMemberIdAndStartAtBetween(getYearHistoryRequest.memberId(), startDate, endDate);
+		// 월별 데이터 그룹화
+		Map<String, List<HistoryEntity>> groupedByMonth = histories.stream()
+				.collect(Collectors.groupingBy(history -> history.getStartAt().format(monthFormatter)));
 
-			Map<String, GetYearDetailResponse.Month.MonthBuilder> monthlyDataMap = new HashMap<>();
+		// 월별 데이터 변환
+		List<GetYearDetailResponse.Month> months = groupedByMonth.entrySet().stream()
+				.map(entry -> {
+					String month = entry.getKey();
+					List<HistoryEntity> monthlyHistories = entry.getValue();
 
-			for (HistoryEntity historyEntity : historyEntities) {
-				String monthKey = String.format("%04d-%02d", getYearHistoryRequest.year(), historyEntity.getStartAt().getMonth() + 1);
-				GetYearDetailResponse.Month.MonthBuilder monthlyDataBuilder = monthlyDataMap.getOrDefault(monthKey, GetYearDetailResponse.Month.builder().month(monthKey));
+					// 측정 시간 계산
+					double measurementTime = monthlyHistories.stream().mapToDouble(HistoryEntity::getMeasuredTime).sum();
 
-				List<SubHistoryEntity> subHistories = historyEntity.getSubHistory();
+					// poseCountMap, poseTimerMap 설정
+					Map<PoseStatus, Integer> poseCountMap = new HashMap<>();
+					Map<PoseStatus, Long> poseTimerMap = new HashMap<>();
 
-				int measurementTime = (int) ((historyEntity.getEndAt().getTime() - historyEntity.getStartAt().getTime()) / 1000);
-				int forwardTime = 0, backwardTime = 0, tiltedTime = 0, normalTime = 0;
-				int forwardCount = 0, backwardCount = 0, tiltedCount = 0;
-
-				SubHistoryEntity previousSubHistory = null;
-
-				if (!subHistories.isEmpty()) {
-					// 첫 번째 SubHistoryEntity 이전의 시간을 정상 상태로 계산
-					SubHistoryEntity firstSubHistory = subHistories.get(0);
-					long initialDuration = (firstSubHistory.getChangedAt().getTime() - historyEntity.getStartAt().getTime()) / 1000;
-					normalTime += initialDuration;
-				}
-
-				for (SubHistoryEntity subHistory : subHistories) {
-					if (previousSubHistory != null) {
-						long duration = (subHistory.getChangedAt().getTime() - previousSubHistory.getChangedAt().getTime()) / 1000;
-
-						switch (previousSubHistory.getPoseStatus()) {
-							case FORWARD:
-								forwardTime += duration;
-								forwardCount++;
-								break;
-							case BACKWARD:
-								backwardTime += duration;
-								backwardCount++;
-								break;
-							case TILTED:
-								tiltedTime += duration;
-								tiltedCount++;
-								break;
-							case NORMAL:
-								normalTime += duration;
-								break;
-						}
+					for (HistoryEntity historyEntity : monthlyHistories) {
+						historyEntity.getPoseCountMap().forEach((poseStatus, count) ->
+								poseCountMap.merge(poseStatus, count, Integer::sum));
+						historyEntity.getPoseTimerMap().forEach((poseStatus, time) ->
+								poseTimerMap.merge(poseStatus, time, Long::sum));
 					}
-					previousSubHistory = subHistory;
-				}
 
-				// 마지막 상태의 지속 시간 계산
-				if (previousSubHistory != null) {
-					long duration = (historyEntity.getEndAt().getTime() - previousSubHistory.getChangedAt().getTime()) / 1000;
-					switch (previousSubHistory.getPoseStatus()) {
-						case FORWARD:
-							forwardTime += duration;
-							forwardCount++;
-							break;
-						case BACKWARD:
-							backwardTime += duration;
-							backwardCount++;
-							break;
-						case TILTED:
-							tiltedTime += duration;
-							tiltedCount++;
-							break;
-						case NORMAL:
-							normalTime += duration;
-							break;
-					}
-				}
+					return GetYearDetailResponse.Month.builder()
+							.month(month)
+							.measurementTime(measurementTime)
+							.poseCountMap(poseCountMap)
+							.poseTimerMap(poseTimerMap)
+							.build();
+				})
+				.collect(Collectors.toList());
 
-				monthlyDataBuilder
-						.MeasurementTime(monthlyDataBuilder.build().getMeasurementTime() + measurementTime)
-						.ForwardTime(monthlyDataBuilder.build().getForwardTime() + forwardTime)
-						.BackwardTime(monthlyDataBuilder.build().getBackwardTime() + backwardTime)
-						.TiltedTime(monthlyDataBuilder.build().getTiltedTime() + tiltedTime)
-						.NormalTime(monthlyDataBuilder.build().getNormalTime() + normalTime)
-						.ForwardCount(monthlyDataBuilder.build().getForwardCount() + forwardCount)
-						.BackwardCount(monthlyDataBuilder.build().getBackwardCount() + backwardCount)
-						.TiltedCount(monthlyDataBuilder.build().getTiltedCount() + tiltedCount);
-
-				monthlyDataMap.put(monthKey, monthlyDataBuilder);
-			}
-
-			List<GetYearDetailResponse.Month> months = monthlyDataMap.values().stream()
-					.map(GetYearDetailResponse.Month.MonthBuilder::build)
-					.collect(Collectors.toList());
-
-			return GetYearDetailResponse.builder()
-					.year(String.valueOf(getYearHistoryRequest.year()))
-					.months(months)
-					.build();
-		}
+		return GetYearDetailResponse.builder()
+				.year(String.valueOf(year))
+				.months(months)
+				.build();
 	}
-
+}
