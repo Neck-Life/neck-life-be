@@ -6,22 +6,19 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.FieldType;
-import org.springframework.data.mongodb.core.mapping.MongoId;
-
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
 @Document(collection = "member")
-@CompoundIndex(name = "member_email_certificatonSubject_unique", def = "{'email': 1, 'oauthProvider': 1, 'deletedAt': 1}", unique = true)
+@CompoundIndex(
+		name = "member_email_certificatonSubject_unique",
+		def = "{'email': 1, 'oauthProvider': 1, 'deletedAt': 1}",
+		unique = true)
 public class MemberEntity extends BaseEntity {
-
-
 
 	private Long providerId;
 
@@ -36,13 +33,9 @@ public class MemberEntity extends BaseEntity {
 
 	private boolean isSocial;
 
-	@NotBlank
-	@NotNull
-	private OauthProvider oauthProvider = OauthProvider.NONE;
+	@NotBlank @NotNull private OauthProvider oauthProvider = OauthProvider.NONE;
 
-	@NotBlank
-	@NotNull
-	private MemberStatus status;
+	@NotBlank @NotNull private MemberStatus status;
 
 	private String oauthRefreshToken;
 

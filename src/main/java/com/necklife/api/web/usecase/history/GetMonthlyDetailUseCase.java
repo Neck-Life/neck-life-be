@@ -5,14 +5,13 @@ import com.necklife.api.entity.history.PoseStatus;
 import com.necklife.api.repository.history.HistoryRepository;
 import com.necklife.api.web.usecase.dto.request.history.GetMonthlyHistoryRequest;
 import com.necklife.api.web.usecase.dto.response.history.GetMonthlyDetailResponse;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
@@ -29,41 +28,51 @@ public class GetMonthlyDetailUseCase {
 		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
 		// 해당 멤버, 연도, 월에 대한 히스토리 데이터 조회
-		List<HistoryEntity> histories = historyRepository.findByMemberIdAndYearAndMonth(memberId, year, month);
+		List<HistoryEntity> histories =
+				historyRepository.findByMemberIdAndYearAndMonth(memberId, year, month);
 
 		// 일별 데이터 그룹화
-		Map<LocalDate, List<HistoryEntity>> groupedByDate = histories.stream()
-				.collect(Collectors.groupingBy(history -> history.getStartAt().toLocalDate()));
+		Map<LocalDate, List<HistoryEntity>> groupedByDate =
+				histories.stream()
+						.collect(Collectors.groupingBy(history -> history.getStartAt().toLocalDate()));
 
 		// 일별 데이터 변환
-		List<GetMonthlyDetailResponse.Day> daily = groupedByDate.entrySet().stream()
-				.map(entry -> {
-					List<HistoryEntity> dailyHistories = entry.getValue();
+		List<GetMonthlyDetailResponse.Day> daily =
+				groupedByDate.entrySet().stream()
+						.map(
+								entry -> {
+									List<HistoryEntity> dailyHistories = entry.getValue();
 
-					// 측정 시간 계산
-					double measurementTime = dailyHistories.stream().mapToDouble(HistoryEntity::getMeasuredTime).sum();
+									// 측정 시간 계산
+									double measurementTime =
+											dailyHistories.stream().mapToDouble(HistoryEntity::getMeasuredTime).sum();
 
-					// poseCountMap, poseTimerMap, history 설정
-					Map<PoseStatus, Integer> poseCountMap = new HashMap<>();
-					Map<PoseStatus, Long> poseTimerMap = new HashMap<>();
-					Map<LocalDateTime, PoseStatus> history = new TreeMap<>();
+									// poseCountMap, poseTimerMap, history 설정
+									Map<PoseStatus, Integer> poseCountMap = new HashMap<>();
+									Map<PoseStatus, Long> poseTimerMap = new HashMap<>();
+									Map<LocalDateTime, PoseStatus> history = new TreeMap<>();
 
-					for (HistoryEntity historyEntity : dailyHistories) {
-						historyEntity.getPoseCountMap().forEach((poseStatus, count) ->
-								poseCountMap.merge(poseStatus, count, Integer::sum));
-						historyEntity.getPoseTimerMap().forEach((poseStatus, time) ->
-								poseTimerMap.merge(poseStatus, time, Long::sum));
-                        history.putAll(historyEntity.getPoseStatusMap());
-					}
+									for (HistoryEntity historyEntity : dailyHistories) {
+										historyEntity
+												.getPoseCountMap()
+												.forEach(
+														(poseStatus, count) ->
+																poseCountMap.merge(poseStatus, count, Integer::sum));
+										historyEntity
+												.getPoseTimerMap()
+												.forEach(
+														(poseStatus, time) -> poseTimerMap.merge(poseStatus, time, Long::sum));
+										history.putAll(historyEntity.getPoseStatusMap());
+									}
 
-					return GetMonthlyDetailResponse.Day.builder()
-							.measurementTime(measurementTime)
-							.poseCountMap(poseCountMap)
-							.poseTimerMap(poseTimerMap)
-							.history(history)
-							.build();
-				})
-				.collect(Collectors.toList());
+									return GetMonthlyDetailResponse.Day.builder()
+											.measurementTime(measurementTime)
+											.poseCountMap(poseCountMap)
+											.poseTimerMap(poseTimerMap)
+											.history(history)
+											.build();
+								})
+						.collect(Collectors.toList());
 
 		return GetMonthlyDetailResponse.builder()
 				.year(String.valueOf(year))

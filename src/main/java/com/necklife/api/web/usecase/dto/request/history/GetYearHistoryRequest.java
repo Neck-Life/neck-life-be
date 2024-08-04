@@ -4,9 +4,8 @@ import java.util.Objects;
 
 public record GetYearHistoryRequest(String memberId, Integer year) {
 
-    public GetYearHistoryRequest {
-        Objects.requireNonNull(memberId);
-        Objects.requireNonNull(year);
-
-    }
+	public GetYearHistoryRequest {
+		Objects.requireNonNull(memberId);
+		Objects.requireNonNull(year);
+	}
 }

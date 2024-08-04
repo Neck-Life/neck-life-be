@@ -1,11 +1,9 @@
 package com.necklife.api.web.usecase.dto.response.history;
 
+import com.necklife.api.entity.history.PoseStatus;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
-import com.necklife.api.entity.history.PoseStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -27,6 +25,4 @@ public class GetMonthlyDetailResponse {
 		private Map<PoseStatus, Long> poseTimerMap;
 		private Map<LocalDateTime, PoseStatus> history;
 	}
-
-
 }

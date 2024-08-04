@@ -8,8 +8,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
 @Service
 @Transactional
 @AllArgsConstructor
@@ -24,12 +22,13 @@ public class PostHistoryUseCase {
 
 		checkExistMember(requestMemberId);
 
-
 		MemberEntity findMember = memberRepository.findById(postHistoryRequest.memberId()).get();
 
-		saveHistoryService.execute(findMember, postHistoryRequest.startAt(), postHistoryRequest.endAt(), postHistoryRequest.subHistories());
-
-
+		saveHistoryService.execute(
+				findMember,
+				postHistoryRequest.startAt(),
+				postHistoryRequest.endAt(),
+				postHistoryRequest.subHistories());
 	}
 
 	private void checkExistMember(String requestMemberId) {
@@ -37,5 +36,4 @@ public class PostHistoryUseCase {
 			throw new IllegalArgumentException("없는 멤버 입니다.");
 		}
 	}
-
 }

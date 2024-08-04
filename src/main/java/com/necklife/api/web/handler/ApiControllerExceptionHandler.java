@@ -44,7 +44,7 @@ public class ApiControllerExceptionHandler {
 
 	@ExceptionHandler({
 		MethodArgumentTypeMismatchException.class,
-//		TypeMismatchException.class,
+		//		TypeMismatchException.class,
 		ServletRequestBindingException.class,
 		BindException.class,
 		MethodArgumentNotValidException.class,

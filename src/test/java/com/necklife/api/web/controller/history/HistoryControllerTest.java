@@ -1,50 +1,50 @@
-//package com.necklife.api.web.controller.history;
+// package com.necklife.api.web.controller.history;
 //
-//import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
-//import static org.mockito.Mockito.when;
-//import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-//import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-//import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
-//import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-//import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+// import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
+// import static org.mockito.Mockito.when;
+// import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+// import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+// import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+// import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+// import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 //
-//import com.epages.restdocs.apispec.ResourceSnippetParameters;
-//import com.epages.restdocs.apispec.Schema;
-//import com.fasterxml.jackson.databind.ObjectMapper;
-//import com.necklife.api.ApiApplication;
-//import com.necklife.api.web.dto.request.history.PostPostureHistoryBody;
-//import com.necklife.api.web.dto.request.history.PostureHistoryEntry;
-//import com.necklife.api.web.usecase.dto.response.history.GetHistoryPointResponse;
-//import com.necklife.api.web.usecase.dto.response.history.GetMonthlyDetailResponse;
-//import com.necklife.api.web.usecase.dto.response.history.GetYearDetailResponse;
-//import com.necklife.api.web.usecase.dto.response.history.PostureStatus;
-//import com.necklife.api.web.usecase.history.GetHistoryPointUseCase;
-//import com.necklife.api.web.usecase.history.GetMonthlyDetailUseCase;
-//import com.necklife.api.web.usecase.history.GetYearDetailUseCase;
-//import com.necklife.api.web.usecase.history.PostHistoryUseCase;
-//import java.time.LocalDateTime;
-//import java.util.Collections;
-//import java.util.Date;
+// import com.epages.restdocs.apispec.ResourceSnippetParameters;
+// import com.epages.restdocs.apispec.Schema;
+// import com.fasterxml.jackson.databind.ObjectMapper;
+// import com.necklife.api.ApiApplication;
+// import com.necklife.api.web.dto.request.history.PostPostureHistoryBody;
+// import com.necklife.api.web.dto.request.history.PostureHistoryEntry;
+// import com.necklife.api.web.usecase.dto.response.history.GetHistoryPointResponse;
+// import com.necklife.api.web.usecase.dto.response.history.GetMonthlyDetailResponse;
+// import com.necklife.api.web.usecase.dto.response.history.GetYearDetailResponse;
+// import com.necklife.api.web.usecase.dto.response.history.PostureStatus;
+// import com.necklife.api.web.usecase.history.GetHistoryPointUseCase;
+// import com.necklife.api.web.usecase.history.GetMonthlyDetailUseCase;
+// import com.necklife.api.web.usecase.history.GetYearDetailUseCase;
+// import com.necklife.api.web.usecase.history.PostHistoryUseCase;
+// import java.time.LocalDateTime;
+// import java.util.Collections;
+// import java.util.Date;
 //
-//import org.junit.jupiter.api.DisplayName;
-//import org.junit.jupiter.api.Test;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
-//import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-//import org.springframework.boot.test.context.SpringBootTest;
-//import org.springframework.boot.test.mock.mockito.MockBean;
-//import org.springframework.http.MediaType;
-//import org.springframework.restdocs.payload.FieldDescriptor;
-//import org.springframework.restdocs.payload.JsonFieldType;
-//import org.springframework.security.test.context.support.WithMockUser;
-//import org.springframework.test.context.ActiveProfiles;
-//import org.springframework.test.web.servlet.MockMvc;
+// import org.junit.jupiter.api.DisplayName;
+// import org.junit.jupiter.api.Test;
+// import org.springframework.beans.factory.annotation.Autowired;
+// import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
+// import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+// import org.springframework.boot.test.context.SpringBootTest;
+// import org.springframework.boot.test.mock.mockito.MockBean;
+// import org.springframework.http.MediaType;
+// import org.springframework.restdocs.payload.FieldDescriptor;
+// import org.springframework.restdocs.payload.JsonFieldType;
+// import org.springframework.security.test.context.support.WithMockUser;
+// import org.springframework.test.context.ActiveProfiles;
+// import org.springframework.test.web.servlet.MockMvc;
 //
-//@ActiveProfiles(value = "local")
-//@AutoConfigureRestDocs
-//@AutoConfigureMockMvc(addFilters = false)
-//@SpringBootTest(classes = ApiApplication.class)
-//public class HistoryControllerTest {
+// @ActiveProfiles(value = "local")
+// @AutoConfigureRestDocs
+// @AutoConfigureMockMvc(addFilters = false)
+// @SpringBootTest(classes = ApiApplication.class)
+// public class HistoryControllerTest {
 //
 //	@Autowired private MockMvc mockMvc;
 //
@@ -363,4 +363,4 @@
 //														})
 //												.build())));
 //	}
-//}
+// }
