@@ -1,7 +1,6 @@
 package com.necklife.api.web.controller.member;
 
 import com.necklife.api.security.authentication.authority.Roles;
-import com.necklife.api.security.authentication.token.TokenUserDetails;
 import com.necklife.api.security.authentication.token.TokenUserDetailsService;
 import com.necklife.api.security.token.AuthToken;
 import com.necklife.api.security.token.TokenGenerator;
@@ -25,7 +24,6 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -97,7 +95,7 @@ public class MemberController {
 	public ApiResponse<ApiResponse.SuccessBody<DeleteMemberResponse>> deleteMember(
 			HttpServletRequest httpServletRequest) {
 		String memberId = findMemberByToken(httpServletRequest);
-//		Long memberId = 1L;
+		//		Long memberId = 1L;
 		DeleteMemberUseCaseResponse useCaseResponse = deleteMemberUseCase.execute(memberId);
 		DeleteMemberResponse response =
 				DeleteMemberResponse.builder()
@@ -111,8 +109,8 @@ public class MemberController {
 	public ApiResponse<ApiResponse.SuccessBody<GetMemberResponse>> getMember(
 			HttpServletRequest httpServletRequest) {
 		String memberId = findMemberByToken(httpServletRequest);
-//				Long memberId = Long.valueOf(userDetails.getUsername());
-//		Long memberId = 1L;
+		//				Long memberId = Long.valueOf(userDetails.getUsername());
+		//		Long memberId = 1L;
 		GetMemberDetailUseCaseResponse useCaseResponse = getMemberDetailUseCase.execute(memberId);
 		GetMemberResponse response =
 				GetMemberResponse.builder()
@@ -147,6 +145,6 @@ public class MemberController {
 		String authorization = request.getHeader("Authorization");
 		String substring = authorization.substring(7, authorization.length());
 		UserDetails userDetails = tokenUserDetailsService.loadUserByUsername(substring);
-        return userDetails.getUsername();
+		return userDetails.getUsername();
 	}
 }

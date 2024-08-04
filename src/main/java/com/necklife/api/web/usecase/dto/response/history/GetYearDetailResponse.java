@@ -1,9 +1,8 @@
 package com.necklife.api.web.usecase.dto.response.history;
 
+import com.necklife.api.entity.history.PoseStatus;
 import java.util.List;
 import java.util.Map;
-
-import com.necklife.api.entity.history.PoseStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

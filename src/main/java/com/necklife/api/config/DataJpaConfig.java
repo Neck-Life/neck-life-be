@@ -1,24 +1,24 @@
-//package com.necklife.api.config;
+// package com.necklife.api.config;
 //
-//import static com.necklife.api.config.ApiAppConfig.BEAN_NAME_PREFIX;
+// import static com.necklife.api.config.ApiAppConfig.BEAN_NAME_PREFIX;
 //
-//import java.util.Map;
-//import org.springframework.beans.factory.ObjectProvider;
-//import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-//import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
-//import org.springframework.boot.autoconfigure.orm.jpa.HibernateProperties;
-//import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
-//import org.springframework.boot.context.properties.ConfigurationProperties;
-//import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
-//import org.springframework.context.annotation.Bean;
-//import org.springframework.context.annotation.Configuration;
-//import org.springframework.orm.jpa.JpaVendorAdapter;
-//import org.springframework.orm.jpa.persistenceunit.PersistenceUnitManager;
-//import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+// import java.util.Map;
+// import org.springframework.beans.factory.ObjectProvider;
+// import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+// import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
+// import org.springframework.boot.autoconfigure.orm.jpa.HibernateProperties;
+// import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
+// import org.springframework.boot.context.properties.ConfigurationProperties;
+// import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
+// import org.springframework.context.annotation.Bean;
+// import org.springframework.context.annotation.Configuration;
+// import org.springframework.orm.jpa.JpaVendorAdapter;
+// import org.springframework.orm.jpa.persistenceunit.PersistenceUnitManager;
+// import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 //
-//@Configuration
-//@EnableAutoConfiguration(exclude = HibernateJpaAutoConfiguration.class)
-//public class DataJpaConfig {
+// @Configuration
+// @EnableAutoConfiguration(exclude = HibernateJpaAutoConfiguration.class)
+// public class DataJpaConfig {
 //
 //	public static final String JPA_PROPERTIES = BEAN_NAME_PREFIX + "JpaProperties";
 //	public static final String HIBERNATE_PROPERTIES = BEAN_NAME_PREFIX + "HibernateProperties";
@@ -50,4 +50,4 @@
 //		return new EntityManagerFactoryBuilder(
 //				jpaVendorAdapter(), jpaPropertyMap, persistenceUnitManager.getIfAvailable());
 //	}
-//}
+// }

@@ -10,13 +10,14 @@ import org.springframework.data.mongodb.core.SimpleMongoClientDatabaseFactory;
 @Configuration
 public class MongoConfig {
 
-    @Bean
-    public MongoDatabaseFactory mongoDbFactory() {
-        return new SimpleMongoClientDatabaseFactory(MongoClients.create("mongodb://root:root@localhost:27017/api"), "api");
-    }
+	@Bean
+	public MongoDatabaseFactory mongoDbFactory() {
+		return new SimpleMongoClientDatabaseFactory(
+				MongoClients.create("mongodb://root:root@localhost:27017/api"), "api");
+	}
 
-    @Bean
-    public MongoTemplate mongoTemplate() {
-        return new MongoTemplate(mongoDbFactory());
-    }
+	@Bean
+	public MongoTemplate mongoTemplate() {
+		return new MongoTemplate(mongoDbFactory());
+	}
 }
