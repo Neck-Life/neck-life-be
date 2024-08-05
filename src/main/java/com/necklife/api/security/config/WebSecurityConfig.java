@@ -132,7 +132,8 @@ public class WebSecurityConfig {
 								"/reports/**",
 								"/api/v1/**",
 								"/swagger")
-						.requestMatchers(HttpMethod.POST, "/api/v1/members","/api/v1/members/basic", "/api/callback/apple");
+						.requestMatchers(
+								HttpMethod.POST, "/api/v1/members", "/api/v1/members/basic", "/api/callback/apple");
 	}
 
 	@Bean

@@ -16,8 +16,7 @@ public class MongoConfig {
 
 	@Bean
 	public MongoDatabaseFactory mongoDbFactory() {
-		return new SimpleMongoClientDatabaseFactory(
-				MongoClients.create(uri), "necklife-db");
+		return new SimpleMongoClientDatabaseFactory(MongoClients.create(uri), "necklife-db");
 	}
 
 	@Bean
