@@ -35,7 +35,7 @@ spring:
 
   data:
     mongodb:
-      uri: mongodb://root:root@localhost:27017/api
+      uri: mongodb+srv://dudtkd665:vkflwl0722@necklife-db.dauntck.mongodb.net/
 
 
 # logging config

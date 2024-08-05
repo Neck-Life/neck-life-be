@@ -63,29 +63,24 @@ public class WebSecurityConfig {
 	@Profile(value = "prod")
 	public SecurityFilterChain prodSecurityFilterChain(HttpSecurity http) throws Exception {
 
-		http.csrf(AbstractHttpConfigurer::disable)
+		http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
+				.csrf(AbstractHttpConfigurer::disable)
 				.formLogin(AbstractHttpConfigurer::disable)
 				.httpBasic(AbstractHttpConfigurer::disable)
-				.cors(cors -> cors.configurationSource(corsConfigurationSource()));
-
-		http.addFilterBefore(
+				.authorizeHttpRequests(
+						authorize ->
+								authorize.requestMatchers("/api/v1/**").authenticated().anyRequest().permitAll())
+				.addFilterBefore(
 						getTokenInvalidExceptionHandlerFilter(), AbstractPreAuthenticatedProcessingFilter.class)
-				.addFilterAt(
-						generateAuthenticationFilter(), AbstractPreAuthenticatedProcessingFilter.class);
-
-		http.authorizeHttpRequests(
-				authorize ->
-						authorize.requestMatchers("/api/v1/**").authenticated().anyRequest().denyAll());
-
-		http.exceptionHandling(
-				exceptionHandling ->
-						exceptionHandling
-								.authenticationEntryPoint(authenticationEntryPoint)
-								.accessDeniedHandler(accessDeniedHandler));
-
-		http.sessionManagement(
-				sessionManagement ->
-						sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+				.addFilterAt(generateAuthenticationFilter(), AbstractPreAuthenticatedProcessingFilter.class)
+				.exceptionHandling(
+						exceptionHandling ->
+								exceptionHandling
+										.authenticationEntryPoint(authenticationEntryPoint)
+										.accessDeniedHandler(accessDeniedHandler))
+				.sessionManagement(
+						sessionManagement ->
+								sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
 		return http.build();
 	}
@@ -137,7 +132,7 @@ public class WebSecurityConfig {
 								"/reports/**",
 								"/api/v1/**",
 								"/swagger")
-						.requestMatchers(HttpMethod.POST, "/api/v1/members");
+						.requestMatchers(HttpMethod.POST, "/api/v1/members","/api/v1/members/basic", "/api/callback/apple");
 	}
 
 	@Bean

@@ -7,23 +7,9 @@ spring:
     activate:
       on-profile: "prod"
 
-  jpa:
-    hibernate:
-      ddl-auto: update
-    properties:
-      hibernate:
-        format_sql: true
-        order_inserts: true
-        order_updates: true
-        jdbc:
-          batch_size: ${JDBC_BATCH_SIZE:50}
-
-api:
-  datasource:
-    jdbc-url: ${DB_HOSTNAME}/api?allowPublicKeyRetrieval=true&rewriteBatchedStatements=true
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
-    driver-class-name: com.mysql.cj.jdbc.Driver
+  data:
+    mongodb:
+      uri: ${MONGODB_URI}
 
 
 
@@ -67,3 +53,14 @@ springdoc:
   swagger-ui:
     url: /docs/openapi3.yaml
     path: /swagger
+
+
+apple:
+  team-id: ${APPLE_TEAM_ID}
+  login-key: ${APPLE_LOGIN_KEY}
+  client-id: ${APPLE_CLIENT_ID}
+  redirect-url: ${APPLE_REDIRECT_URL}
+  key-path: ${APPLE_KEY_PATH}
+  oauth-uri : ${APPLE_OAUTH_URI}
+
+
