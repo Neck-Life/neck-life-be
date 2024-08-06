@@ -5,17 +5,12 @@ import com.necklife.api.security.authentication.token.TokenUserDetailsService;
 import com.necklife.api.security.token.AuthToken;
 import com.necklife.api.security.token.TokenGenerator;
 import com.necklife.api.security.token.TokenResolver;
-import com.necklife.api.web.dto.request.member.PostBasicMemberBody;
-import com.necklife.api.web.dto.request.member.PostOauthMemberBody;
-import com.necklife.api.web.dto.request.member.RefreshMemberAuthTokenBody;
+import com.necklife.api.web.dto.request.member.*;
 import com.necklife.api.web.dto.response.member.*;
 import com.necklife.api.web.support.ApiResponse;
 import com.necklife.api.web.support.ApiResponseGenerator;
 import com.necklife.api.web.support.MessageCode;
-import com.necklife.api.web.usecase.dto.response.member.DeleteMemberUseCaseResponse;
-import com.necklife.api.web.usecase.dto.response.member.GetMemberDetailUseCaseResponse;
-import com.necklife.api.web.usecase.dto.response.member.GetMemberTokenDetailUseCaseResponse;
-import com.necklife.api.web.usecase.dto.response.member.PostMemberUseCaseResponse;
+import com.necklife.api.web.usecase.dto.response.member.*;
 import com.necklife.api.web.usecase.member.*;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
@@ -44,6 +39,9 @@ public class MemberController {
 	private final GetMemberDetailUseCase getMemberDetailUseCase;
 	private final GetMemberTokenDetailUseCase getMemberTokenDetailUseCase;
 	private final PostBasicMemberUseCase postBasicMemberUseCase;
+
+	private final PostPaymentUseCase postPaymentUseCase;
+	private final PostRefoundPaymentUseCase postRefoundPaymentUseCase;
 
 	private final TokenUserDetailsService tokenUserDetailsService;
 
@@ -140,6 +138,40 @@ public class MemberController {
 						.build();
 		return ApiResponseGenerator.success(response, HttpStatus.OK, MessageCode.SUCCESS);
 	}
+
+
+	@PostMapping("/payment")
+	public ApiResponse<ApiResponse.SuccessBody<PostPaymentUseCaseResponse>> postPayment (
+			HttpServletRequest httpServletRequest,
+			PostPaymentRequest postPaymentRequest) {
+
+		String memberId = findMemberByToken(httpServletRequest);
+		//				Long memberId = Long.valueOf(userDetails.getUsername());
+		//		Long memberId = 1L;
+		PostPaymentUseCaseResponse response = postPaymentUseCase.execute(memberId,
+				postPaymentRequest.getDate(),
+				postPaymentRequest.getMonths(),
+				postPaymentRequest.getWon());
+
+		return ApiResponseGenerator.success(response, HttpStatus.OK, MessageCode.SUCCESS);
+	}
+
+	@PostMapping("/refound")
+	public ApiResponse<ApiResponse.SuccessBody<PostRefoundPaymentUseCaseResponse>> refoundPayment (
+			HttpServletRequest httpServletRequest,
+			PostRefoundPaymentRequest postRefoundPaymentRequest) {
+
+		String memberId = findMemberByToken(httpServletRequest);
+		//				Long memberId = Long.valueOf(userDetails.getUsername());
+		//		Long memberId = 1L;
+		PostRefoundPaymentUseCaseResponse response = postRefoundPaymentUseCase.execute(memberId,
+				postRefoundPaymentRequest.getReason(),
+				postRefoundPaymentRequest.getRefoundWon());
+
+
+		return ApiResponseGenerator.success(response, HttpStatus.OK, MessageCode.SUCCESS);
+	}
+
 
 	private String findMemberByToken(HttpServletRequest request) {
 		String authorization = request.getHeader("Authorization");
