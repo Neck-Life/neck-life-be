@@ -45,7 +45,7 @@ public class PostureHistoryController {
 			@Valid @RequestBody PostPostureHistoryBody postureHistoryBody) {
 		String memberId = findMemberByToken(httpServletRequest);
 
-		Map<LocalDateTime, PoseStatus> convertedMap = new TreeMap<>();
+		TreeMap<LocalDateTime, PoseStatus> convertedMap = new TreeMap<>();
 
 		for (Map.Entry<LocalDateTime, String> entry : postureHistoryBody.getHistory().entrySet()) {
 			LocalDateTime key = entry.getKey();
@@ -55,7 +55,6 @@ public class PostureHistoryController {
 
 			try {
 				poseStatus = PoseStatus.valueOf(value.toUpperCase());
-				System.out.println(poseStatus);
 			} catch (IllegalArgumentException e) {
 				throw new IllegalArgumentException("잘못된 PoseStatus입니다.");
 			}
@@ -65,7 +64,7 @@ public class PostureHistoryController {
 
 		PostHistoryRequest postHistoryRequest =
 				new PostHistoryRequest(
-						memberId, postureHistoryBody.getStartAt(), postureHistoryBody.getEndAt(), convertedMap);
+						memberId, convertedMap);
 
 		postHistoryUseCase.execute(postHistoryRequest);
 

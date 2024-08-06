@@ -26,8 +26,6 @@ public class PostHistoryUseCase {
 
 		saveHistoryService.execute(
 				findMember,
-				postHistoryRequest.startAt(),
-				postHistoryRequest.endAt(),
 				postHistoryRequest.subHistories());
 	}
 

@@ -22,15 +22,19 @@ public class SaveHistoryService {
 
 	public void execute(
 			MemberEntity memberEntity,
-			LocalDateTime startAt,
-			LocalDateTime endAt,
-			Map<LocalDateTime, PoseStatus> history) {
+			TreeMap<LocalDateTime, PoseStatus> history) {
 
 		// subHistories 정리하기
 
 		Map<LocalDateTime, PoseStatus> poseStatusMap = new TreeMap<>();
 		Map<PoseStatus, Integer> poseCountMap = new HashMap<>();
 		Map<PoseStatus, Long> poseTimeMap = new HashMap<>();
+
+		LocalDateTime startAt = history.firstKey();
+		LocalDateTime endAt = history.lastKey();
+
+		history.remove(startAt);
+		history.remove(endAt);
 
 		// history 만들기
 		HistoryEntity newHistory =
