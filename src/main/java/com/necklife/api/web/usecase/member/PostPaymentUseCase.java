@@ -2,6 +2,7 @@ package com.necklife.api.web.usecase.member;
 
 import com.necklife.api.entity.member.MemberEntity;
 import com.necklife.api.entity.member.MemberStatus;
+import com.necklife.api.entity.member.PaymentEntity;
 import com.necklife.api.repository.member.MemberRepository;
 import com.necklife.api.service.payment.AddPaymentService;
 import com.necklife.api.web.usecase.dto.response.member.PostPaymentUseCaseResponse;
@@ -26,13 +27,14 @@ public class PostPaymentUseCase {
 
         validatePayment(findMember);
 
-        //addPaymentService.execute(memberId, null    , null, won);
+        PaymentEntity savedPayment = addPaymentService.execute(findMember.get(), date, months, won);
+
 
 
         return PostPaymentUseCaseResponse.builder()
                 .memberId(memberId)
-                .status("SUCCESS")
-                .serviceEndDate(null)
+                .status(savedPayment.getStatus())
+                .serviceEndDate(savedPayment.getEndAt())
                 .build();
     }
 

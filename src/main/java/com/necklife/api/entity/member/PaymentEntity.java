@@ -21,17 +21,18 @@ public class PaymentEntity {
     @DBRef
     private MemberEntity member;
 
-    @Field("payment_at")
-    private LocalDateTime paymentAt;
+    @Field("updated_at")
+    private LocalDateTime updatedAt;
 
-    @Field("refound_at")
-    private LocalDateTime refoundAt;
-
+    private String status;
 
     @Field("end_at")
     private LocalDateTime endAt;
 
+    //for payment
     private double paymentWon;
+
+    //for Refound
 
     private double refoundWon;
 

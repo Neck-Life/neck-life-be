@@ -165,6 +165,7 @@ public class MemberController {
 		//				Long memberId = Long.valueOf(userDetails.getUsername());
 		//		Long memberId = 1L;
 		PostRefoundPaymentUseCaseResponse response = postRefoundPaymentUseCase.execute(memberId,
+				postRefoundPaymentRequest.getDate(),
 				postRefoundPaymentRequest.getReason(),
 				postRefoundPaymentRequest.getRefoundWon());
 

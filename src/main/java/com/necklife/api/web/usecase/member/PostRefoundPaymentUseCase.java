@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.webjars.NotFoundException;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -20,15 +21,14 @@ public class PostRefoundPaymentUseCase {
     private final RefoundPaymentService refoundPaymentService;
 
     @Transactional
-    public PostRefoundPaymentUseCaseResponse execute(String memberId,String reason,
+    public PostRefoundPaymentUseCaseResponse execute(String memberId,LocalDateTime date, String reason,
                                                      Double refoundWon) {
 
         Optional<MemberEntity> findMember = memberRepository.findById(memberId);
 
         validateRefound(findMember);
-        findMember.get();
 
-//        refoundPaymentServicetService.execute(memberId, null, null, refoundWon);
+        refoundPaymentService.execute(findMember.get(),date , reason, refoundWon);
 
         return PostRefoundPaymentUseCaseResponse.builder()
                 .memberId(memberId)
