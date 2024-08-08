@@ -5,7 +5,10 @@ public enum PoseStatus {
 	BACKWARD("BACKWARD"),
 	TILTED("TILTED"),
 	NORMAL("NORMAL"),
-	UNKNOWN("UNKNOWN");
+	UNKNOWN("UNKNOWN"),
+
+	START("START"),
+	END("END");
 
 	private final String status;
 
