@@ -17,7 +17,7 @@ public class RefoundPaymentService {
 	public void execute(
 			MemberEntity member, LocalDateTime dateTime, String refoundReason, Double won) {
 
-		Optional<PaymentEntity> recentUpdate = paymentRepository.findByTopOrderByUpdatedAtDesc(member);
+		Optional<PaymentEntity> recentUpdate = paymentRepository.findByOrderByUpdatedAtDesc(member);
 		LocalDateTime now = LocalDateTime.now();
 
 		// 이전 결제 정보가 없는 경우, 또는 이미 만료한 경우, 또는 결제상태가 없는 경우

@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -14,10 +15,11 @@ public class AddPaymentService {
 
 	private final PaymentRepository paymentRepository;
 
+	@Transactional
 	public PaymentEntity execute(
 			MemberEntity member, LocalDateTime dateTime, Long months, Double won) {
 
-		Optional<PaymentEntity> recentUpdate = paymentRepository.findByTopOrderByUpdatedAtDesc(member);
+		Optional<PaymentEntity> recentUpdate = paymentRepository.findByOrderByUpdatedAtDesc(member);
 		LocalDateTime now = LocalDateTime.now();
 
 		// 이전 결제 정보가 없는 경우

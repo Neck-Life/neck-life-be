@@ -7,5 +7,5 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface PaymentRepository extends MongoRepository<PaymentEntity, String> {
 
-	Optional<PaymentEntity> findByTopOrderByUpdatedAtDesc(MemberEntity member);
+	Optional<PaymentEntity> findByOrderByUpdatedAtDesc(MemberEntity member);
 }
