@@ -62,9 +62,7 @@ public class PostureHistoryController {
 			convertedMap.put(key, poseStatus);
 		}
 
-		PostHistoryRequest postHistoryRequest =
-				new PostHistoryRequest(
-						memberId, convertedMap);
+		PostHistoryRequest postHistoryRequest = new PostHistoryRequest(memberId, convertedMap);
 
 		postHistoryUseCase.execute(postHistoryRequest);
 

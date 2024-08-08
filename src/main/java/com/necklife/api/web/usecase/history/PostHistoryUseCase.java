@@ -24,9 +24,7 @@ public class PostHistoryUseCase {
 
 		MemberEntity findMember = memberRepository.findById(postHistoryRequest.memberId()).get();
 
-		saveHistoryService.execute(
-				findMember,
-				postHistoryRequest.subHistories());
+		saveHistoryService.execute(findMember, postHistoryRequest.subHistories());
 	}
 
 	private void checkExistMember(String requestMemberId) {

@@ -10,6 +10,6 @@ import lombok.*;
 @Builder
 public class PostRefoundPaymentUseCaseResponse {
 
-    private String memberId;
-    private String status;
+	private String memberId;
+	private String status;
 }

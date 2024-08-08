@@ -20,9 +20,7 @@ public class SaveHistoryService {
 
 	private final HistoryRepository historyRepository;
 
-	public void execute(
-			MemberEntity memberEntity,
-			TreeMap<LocalDateTime, PoseStatus> history) {
+	public void execute(MemberEntity memberEntity, TreeMap<LocalDateTime, PoseStatus> history) {
 
 		// subHistories 정리하기
 

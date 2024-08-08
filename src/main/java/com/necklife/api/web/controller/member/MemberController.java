@@ -139,40 +139,39 @@ public class MemberController {
 		return ApiResponseGenerator.success(response, HttpStatus.OK, MessageCode.SUCCESS);
 	}
 
-
 	@PostMapping("/payment")
-	public ApiResponse<ApiResponse.SuccessBody<PostPaymentUseCaseResponse>> postPayment (
-			HttpServletRequest httpServletRequest,
-			PostPaymentRequest postPaymentRequest) {
+	public ApiResponse<ApiResponse.SuccessBody<PostPaymentUseCaseResponse>> postPayment(
+			HttpServletRequest httpServletRequest, PostPaymentRequest postPaymentRequest) {
 
 		String memberId = findMemberByToken(httpServletRequest);
 		//				Long memberId = Long.valueOf(userDetails.getUsername());
 		//		Long memberId = 1L;
-		PostPaymentUseCaseResponse response = postPaymentUseCase.execute(memberId,
-				postPaymentRequest.getDate(),
-				postPaymentRequest.getMonths(),
-				postPaymentRequest.getWon());
+		PostPaymentUseCaseResponse response =
+				postPaymentUseCase.execute(
+						memberId,
+						postPaymentRequest.getDate(),
+						postPaymentRequest.getMonths(),
+						postPaymentRequest.getWon());
 
 		return ApiResponseGenerator.success(response, HttpStatus.OK, MessageCode.SUCCESS);
 	}
 
 	@PostMapping("/refound")
-	public ApiResponse<ApiResponse.SuccessBody<PostRefoundPaymentUseCaseResponse>> refoundPayment (
-			HttpServletRequest httpServletRequest,
-			PostRefoundPaymentRequest postRefoundPaymentRequest) {
+	public ApiResponse<ApiResponse.SuccessBody<PostRefoundPaymentUseCaseResponse>> refoundPayment(
+			HttpServletRequest httpServletRequest, PostRefoundPaymentRequest postRefoundPaymentRequest) {
 
 		String memberId = findMemberByToken(httpServletRequest);
 		//				Long memberId = Long.valueOf(userDetails.getUsername());
 		//		Long memberId = 1L;
-		PostRefoundPaymentUseCaseResponse response = postRefoundPaymentUseCase.execute(memberId,
-				postRefoundPaymentRequest.getDate(),
-				postRefoundPaymentRequest.getReason(),
-				postRefoundPaymentRequest.getRefoundWon());
-
+		PostRefoundPaymentUseCaseResponse response =
+				postRefoundPaymentUseCase.execute(
+						memberId,
+						postRefoundPaymentRequest.getDate(),
+						postRefoundPaymentRequest.getReason(),
+						postRefoundPaymentRequest.getRefoundWon());
 
 		return ApiResponseGenerator.success(response, HttpStatus.OK, MessageCode.SUCCESS);
 	}
-
 
 	private String findMemberByToken(HttpServletRequest request) {
 		String authorization = request.getHeader("Authorization");

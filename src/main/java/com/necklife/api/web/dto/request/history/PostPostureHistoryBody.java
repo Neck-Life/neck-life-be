@@ -13,6 +13,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PostPostureHistoryBody {
 
-
 	private Map<LocalDateTime, String> history;
 }

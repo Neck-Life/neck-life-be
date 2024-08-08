@@ -1,9 +1,7 @@
 package com.necklife.api.web.usecase.dto.response.member;
 
-
-import lombok.*;
-
 import java.time.LocalDateTime;
+import lombok.*;
 
 @Getter
 @ToString
@@ -13,7 +11,7 @@ import java.time.LocalDateTime;
 @Builder
 public class PostPaymentUseCaseResponse {
 
-    private String memberId;
-    private String status;
-    private LocalDateTime serviceEndDate;
+	private String memberId;
+	private String status;
+	private LocalDateTime serviceEndDate;
 }

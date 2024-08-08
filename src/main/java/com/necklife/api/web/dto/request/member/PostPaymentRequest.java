@@ -1,9 +1,7 @@
 package com.necklife.api.web.dto.request.member;
 
-
-import lombok.*;
-
 import java.time.LocalDateTime;
+import lombok.*;
 
 @Getter
 @ToString
@@ -13,8 +11,7 @@ import java.time.LocalDateTime;
 @Builder
 public class PostPaymentRequest {
 
-    private LocalDateTime date;
-    private Long months;
-    private Double won;
-
+	private LocalDateTime date;
+	private Long months;
+	private Double won;
 }

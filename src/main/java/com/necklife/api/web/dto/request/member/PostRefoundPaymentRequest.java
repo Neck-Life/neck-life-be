@@ -1,8 +1,7 @@
 package com.necklife.api.web.dto.request.member;
 
-import lombok.*;
-
 import java.time.LocalDateTime;
+import lombok.*;
 
 @Getter
 @ToString
@@ -12,8 +11,7 @@ import java.time.LocalDateTime;
 @Builder
 public class PostRefoundPaymentRequest {
 
-    private LocalDateTime date;
-    private String reason;
-    private Double refoundWon;
-
+	private LocalDateTime date;
+	private String reason;
+	private Double refoundWon;
 }
