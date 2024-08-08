@@ -3,8 +3,6 @@ package com.necklife.api.entity.history;
 import com.necklife.api.entity.member.MemberEntity;
 import java.time.LocalDateTime;
 import java.util.*;
-
-import jakarta.persistence.Index;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;

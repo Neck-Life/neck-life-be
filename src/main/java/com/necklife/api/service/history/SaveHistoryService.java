@@ -4,11 +4,10 @@ import com.necklife.api.entity.history.HistoryEntity;
 import com.necklife.api.entity.history.PoseStatus;
 import com.necklife.api.entity.member.MemberEntity;
 import com.necklife.api.repository.history.HistoryRepository;
+import com.necklife.api.web.exception.NotSupportHistoryException;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
-
-import com.necklife.api.web.exception.NotSupportHistoryException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,7 +33,8 @@ public class SaveHistoryService {
 			LocalDateTime startAt = subHistory.firstKey();
 			LocalDateTime endAt = subHistory.lastKey();
 
-			if (subHistory.get(startAt) != PoseStatus.valueOf("START") || subHistory.get(endAt) != PoseStatus.valueOf("END")) {
+			if (subHistory.get(startAt) != PoseStatus.valueOf("START")
+					|| subHistory.get(endAt) != PoseStatus.valueOf("END")) {
 
 				throw new NotSupportHistoryException();
 			}
@@ -75,7 +75,8 @@ public class SaveHistoryService {
 
 			// 마지막은 따로 더하기
 			long duration = ChronoUnit.SECONDS.between(beforeStateTime, endAt);
-			poseTimeMap.put(beforeState, poseTimeMap.getOrDefault(beforeState, 0L) + (int) duration / 1000);
+			poseTimeMap.put(
+					beforeState, poseTimeMap.getOrDefault(beforeState, 0L) + (int) duration / 1000);
 
 			// history 저장
 
@@ -83,8 +84,5 @@ public class SaveHistoryService {
 		}
 
 		historyRepository.saveAll(forSaveHistoryEntity);
-
-
-
 	}
 }

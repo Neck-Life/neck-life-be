@@ -51,7 +51,7 @@ public class PostureHistoryController {
 
 		for (Map<LocalDateTime, String> subHistory : postureHistoryBody.getHistorys()) {
 
-			TreeMap<LocalDateTime,PoseStatus> convertedMap = new TreeMap<>();
+			TreeMap<LocalDateTime, PoseStatus> convertedMap = new TreeMap<>();
 			for (Map.Entry<LocalDateTime, String> entry : subHistory.entrySet()) {
 				LocalDateTime key = entry.getKey();
 
@@ -68,7 +68,6 @@ public class PostureHistoryController {
 			}
 			convertedMapList.add(convertedMap);
 		}
-
 
 		PostHistoryRequest postHistoryRequest = new PostHistoryRequest(memberId, convertedMapList);
 

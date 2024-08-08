@@ -55,8 +55,6 @@ public class GetMonthlyDetailUseCase {
 									Map<PoseStatus, Long> poseTimerMap = new HashMap<>();
 									TreeMap<LocalDateTime, PoseStatus> history = new TreeMap<>();
 
-
-
 									for (HistoryEntity historyEntity : dailyHistories) {
 										historyEntity
 												.getPoseCountMap()
@@ -75,15 +73,14 @@ public class GetMonthlyDetailUseCase {
 										date = history.firstKey();
 									}
 
-									int point = DEFAULT_POINT+
-											(int)(poseTimerMap.getOrDefault(PoseStatus.NORMAL, 0L) / 60) +
-											poseCountMap.getOrDefault(PoseStatus.NORMAL,0) *POINT_WEIGHT;
+									int point =
+											DEFAULT_POINT
+													+ (int) (poseTimerMap.getOrDefault(PoseStatus.NORMAL, 0L) / 60)
+													+ poseCountMap.getOrDefault(PoseStatus.NORMAL, 0) * POINT_WEIGHT;
 
-									for (int count: poseCountMap.values()) {
+									for (int count : poseCountMap.values()) {
 										point -= count * POINT_WEIGHT;
 									}
-
-
 
 									return GetMonthlyDetailResponse.Day.builder()
 											.date(date.getDayOfMonth())

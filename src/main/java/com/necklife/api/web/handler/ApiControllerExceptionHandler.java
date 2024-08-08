@@ -50,7 +50,6 @@ public class ApiControllerExceptionHandler {
 		return ApiResponseGenerator.fail(FAIL.getCode(), ex.getMessage(), HttpStatus.BAD_REQUEST);
 	}
 
-
 	@ExceptionHandler({
 		MethodArgumentTypeMismatchException.class,
 		//		TypeMismatchException.class,

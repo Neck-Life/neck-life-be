@@ -15,7 +15,4 @@ import lombok.NoArgsConstructor;
 public class PostPostureHistoryBody {
 
 	private List<Map<LocalDateTime, String>> historys;
-
-
-
 }
