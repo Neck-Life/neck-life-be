@@ -36,6 +36,7 @@ spring:
   data:
     mongodb:
       uri: mongodb+srv://dudtkd665:vkflwl0722@necklife-db.dauntck.mongodb.net/
+      auto-index-creation: true
 
 
 # logging config

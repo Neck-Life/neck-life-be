@@ -1,13 +1,18 @@
 package com.necklife.api.entity.member;
 
-import com.necklife.api.entity.BaseEntity;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.FieldType;
+import org.springframework.data.mongodb.core.mapping.MongoId;
+
+import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -18,7 +23,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 		name = "member_email_certificatonSubject_unique",
 		def = "{'email': 1, 'oauthProvider': 1, 'deletedAt': 1}",
 		unique = true)
-public class MemberEntity extends BaseEntity {
+public class MemberEntity {
 
 	private Long providerId;
 
@@ -38,6 +43,22 @@ public class MemberEntity extends BaseEntity {
 	@NotBlank @NotNull private MemberStatus status;
 
 	private String oauthRefreshToken;
+
+	@MongoId(FieldType.OBJECT_ID)
+	private String id;
+
+	@CreatedDate
+	@NotNull(message = "User's first name must not be null")
+	private LocalDateTime createdAt;
+
+	@LastModifiedDate
+	@NotNull private LocalDateTime updatedAt;
+
+	private LocalDateTime deletedAt;
+
+	public void delete() {
+		this.deletedAt = LocalDateTime.now();
+	}
 
 	public MemberEntity withDrawn() {
 		this.status = MemberStatus.WITHDRAWN;

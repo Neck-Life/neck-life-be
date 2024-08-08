@@ -17,6 +17,8 @@ import com.necklife.api.web.usecase.history.PostHistoryUseCase;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import lombok.RequiredArgsConstructor;
@@ -45,24 +47,30 @@ public class PostureHistoryController {
 			@Valid @RequestBody PostPostureHistoryBody postureHistoryBody) {
 		String memberId = findMemberByToken(httpServletRequest);
 
-		TreeMap<LocalDateTime, PoseStatus> convertedMap = new TreeMap<>();
+		List<TreeMap<LocalDateTime, PoseStatus>> convertedMapList = new ArrayList<>();
 
-		for (Map.Entry<LocalDateTime, String> entry : postureHistoryBody.getHistory().entrySet()) {
-			LocalDateTime key = entry.getKey();
+		for (Map<LocalDateTime, String> subHistory : postureHistoryBody.getHistorys()) {
 
-			String value = entry.getValue();
-			PoseStatus poseStatus;
+			TreeMap<LocalDateTime,PoseStatus> convertedMap = new TreeMap<>();
+			for (Map.Entry<LocalDateTime, String> entry : subHistory.entrySet()) {
+				LocalDateTime key = entry.getKey();
 
-			try {
-				poseStatus = PoseStatus.valueOf(value.toUpperCase());
-			} catch (IllegalArgumentException e) {
-				throw new IllegalArgumentException("잘못된 PoseStatus입니다.");
+				String value = entry.getValue();
+				PoseStatus poseStatus;
+
+				try {
+					poseStatus = PoseStatus.valueOf(value.toUpperCase());
+				} catch (IllegalArgumentException e) {
+					throw new IllegalArgumentException("잘못된 PoseStatus입니다.");
+				}
+
+				convertedMap.put(key, poseStatus);
 			}
-
-			convertedMap.put(key, poseStatus);
+			convertedMapList.add(convertedMap);
 		}
 
-		PostHistoryRequest postHistoryRequest = new PostHistoryRequest(memberId, convertedMap);
+
+		PostHistoryRequest postHistoryRequest = new PostHistoryRequest(memberId, convertedMapList);
 
 		postHistoryUseCase.execute(postHistoryRequest);
 

@@ -2,6 +2,7 @@ package com.necklife.api.web.handler;
 
 import static com.necklife.api.web.handler.ExceptionMessage.*;
 
+import com.necklife.api.web.exception.NotSupportHistoryException;
 import com.necklife.api.web.support.ApiResponse;
 import com.necklife.api.web.support.ApiResponse.FailureBody;
 import com.necklife.api.web.support.ApiResponseGenerator;
@@ -41,6 +42,14 @@ public class ApiControllerExceptionHandler {
 		loggingHandler.writeLog(ex, request);
 		return ApiResponseGenerator.fail(FAIL.getCode(), FAIL.getMessage(), HttpStatus.BAD_REQUEST);
 	}
+
+	@ExceptionHandler(NotSupportHistoryException.class)
+	public final ApiResponse<FailureBody> notSupportHistory(
+			final IllegalArgumentException ex, final HttpServletRequest request) {
+		loggingHandler.writeLog(ex, request);
+		return ApiResponseGenerator.fail(FAIL.getCode(), ex.getMessage(), HttpStatus.BAD_REQUEST);
+	}
+
 
 	@ExceptionHandler({
 		MethodArgumentTypeMismatchException.class,

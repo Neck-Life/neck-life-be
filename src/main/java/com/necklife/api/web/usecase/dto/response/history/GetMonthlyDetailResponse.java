@@ -20,7 +20,9 @@ public class GetMonthlyDetailResponse {
 	@AllArgsConstructor
 	@Builder
 	public static class Day {
+		private Integer date;
 		private double measurementTime;
+		private int point;
 		private Map<PoseStatus, Integer> poseCountMap;
 		private Map<PoseStatus, Long> poseTimerMap;
 		private Map<LocalDateTime, PoseStatus> history;

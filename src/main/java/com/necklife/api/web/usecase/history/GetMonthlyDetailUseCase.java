@@ -19,6 +19,9 @@ public class GetMonthlyDetailUseCase {
 
 	private final HistoryRepository historyRepository;
 
+	private final int POINT_WEIGHT = 3;
+	private final int DEFAULT_POINT = 30;
+
 	public GetMonthlyDetailResponse execute(GetMonthlyHistoryRequest getMonthlyHistoryRequest) {
 		String memberId = getMonthlyHistoryRequest.memberId();
 		Integer year = getMonthlyHistoryRequest.year();
@@ -50,7 +53,9 @@ public class GetMonthlyDetailUseCase {
 									// poseCountMap, poseTimerMap, history 설정
 									Map<PoseStatus, Integer> poseCountMap = new HashMap<>();
 									Map<PoseStatus, Long> poseTimerMap = new HashMap<>();
-									Map<LocalDateTime, PoseStatus> history = new TreeMap<>();
+									TreeMap<LocalDateTime, PoseStatus> history = new TreeMap<>();
+
+
 
 									for (HistoryEntity historyEntity : dailyHistories) {
 										historyEntity
@@ -65,8 +70,25 @@ public class GetMonthlyDetailUseCase {
 										history.putAll(historyEntity.getPoseStatusMap());
 									}
 
+									LocalDateTime date = null;
+									if (!history.isEmpty()) {
+										date = history.firstKey();
+									}
+
+									int point = DEFAULT_POINT+
+											(int)(poseTimerMap.getOrDefault(PoseStatus.NORMAL, 0L) / 60) +
+											poseCountMap.getOrDefault(PoseStatus.NORMAL,0) *POINT_WEIGHT;
+
+									for (int count: poseCountMap.values()) {
+										point -= count * POINT_WEIGHT;
+									}
+
+
+
 									return GetMonthlyDetailResponse.Day.builder()
+											.date(date.getDayOfMonth())
 											.measurementTime(measurementTime)
+											.point(point)
 											.poseCountMap(poseCountMap)
 											.poseTimerMap(poseTimerMap)
 											.history(history)
