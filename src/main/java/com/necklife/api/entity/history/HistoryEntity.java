@@ -1,6 +1,7 @@
 package com.necklife.api.entity.history;
 
 import com.necklife.api.entity.member.MemberEntity;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import lombok.*;
@@ -28,8 +29,7 @@ public class HistoryEntity {
 	@Field("end_at")
 	private LocalDateTime endAt;
 
-	private int year;
-	private int month;
+	@Indexed private LocalDate date;
 
 	private double measuredTime;
 
@@ -38,4 +38,11 @@ public class HistoryEntity {
 	private Map<PoseStatus, Integer> poseCountMap;
 
 	private Map<PoseStatus, Long> poseTimerMap;
+
+	private Integer historyPoint;
+
+	public HistoryEntity updateHistoryPoint(Integer historyPoint) {
+		this.historyPoint = historyPoint;
+		return this;
+	}
 }
