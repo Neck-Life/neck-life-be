@@ -1,10 +1,13 @@
 package com.necklife.api.service.history;
 
 import com.necklife.api.entity.history.HistoryEntity;
+import com.necklife.api.entity.history.HistorySummaryEntity;
 import com.necklife.api.entity.history.PoseStatus;
 import com.necklife.api.entity.member.MemberEntity;
 import com.necklife.api.repository.history.HistoryRepository;
+import com.necklife.api.repository.history.HistorySummaryRepository;
 import com.necklife.api.web.exception.NotSupportHistoryException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -18,11 +21,17 @@ import org.springframework.transaction.annotation.Transactional;
 public class SaveHistoryService {
 
 	private final HistoryRepository historyRepository;
+	private final HistorySummaryRepository historySummaryRepository;
+
+	private final int POINT_WEIGHT = 3;
+	private final int DEFAULT_POINT = 30;
 
 	@Transactional
 	public void execute(MemberEntity memberEntity, List<TreeMap<LocalDateTime, PoseStatus>> history) {
 
 		List<HistoryEntity> forSaveHistoryEntity = new ArrayList<>();
+		Map<LocalDate, List<HistoryEntity>> historySummaryMap = new HashMap<>();
+		List<HistorySummaryEntity> forSaveHistorySummaryEntity = new ArrayList<>();
 
 		// subHistories 정리하기
 		for (TreeMap<LocalDateTime, PoseStatus> subHistory : history) {
@@ -39,6 +48,11 @@ public class SaveHistoryService {
 				throw new NotSupportHistoryException();
 			}
 
+			LocalDate startDate = startAt.toLocalDate();
+
+			poseStatusMap.put(startAt, PoseStatus.valueOf("START"));
+			poseStatusMap.put(endAt, PoseStatus.valueOf("END"));
+
 			subHistory.remove(startAt);
 			subHistory.remove(endAt);
 
@@ -49,8 +63,7 @@ public class SaveHistoryService {
 							.measuredTime(ChronoUnit.SECONDS.between(startAt, endAt))
 							.startAt(startAt)
 							.endAt(endAt)
-							.year(startAt.getYear())
-							.month(startAt.getMonthValue())
+							.date(startDate)
 							.poseStatusMap(poseStatusMap)
 							.poseCountMap(poseCountMap)
 							.poseTimerMap(poseTimeMap)
@@ -66,8 +79,7 @@ public class SaveHistoryService {
 				poseCountMap.put(neckEventStatus, poseCountMap.getOrDefault(neckEventStatus, 0) + 1);
 
 				long duration = ChronoUnit.SECONDS.between(beforeStateTime, neckEventDate);
-				poseTimeMap.put(
-						beforeState, (poseTimeMap.getOrDefault(beforeState, 0L) + (int) duration / 1000));
+				poseTimeMap.put(beforeState, (poseTimeMap.getOrDefault(beforeState, 0L) + (int) duration));
 
 				beforeState = neckEventStatus;
 				beforeStateTime = neckEventDate;
@@ -75,14 +87,70 @@ public class SaveHistoryService {
 
 			// 마지막은 따로 더하기
 			long duration = ChronoUnit.SECONDS.between(beforeStateTime, endAt);
-			poseTimeMap.put(
-					beforeState, poseTimeMap.getOrDefault(beforeState, 0L) + (int) duration / 1000);
+			poseTimeMap.put(beforeState, poseTimeMap.getOrDefault(beforeState, 0L) + (int) duration);
+
+			int point =
+					DEFAULT_POINT
+							+ (int) (poseTimeMap.getOrDefault(PoseStatus.NORMAL, 0L) / 60)
+							+ poseCountMap.getOrDefault(PoseStatus.NORMAL, 0) * POINT_WEIGHT;
+
+			for (int count : poseCountMap.values()) {
+				point -= count * POINT_WEIGHT;
+			}
+			newHistory.updateHistoryPoint(point);
 
 			// history 저장
-
 			forSaveHistoryEntity.add(newHistory);
+			historySummaryMap.put(
+					startDate, historySummaryMap.getOrDefault(startDate, new ArrayList<>()));
+			historySummaryMap.get(startDate).add(newHistory);
 		}
 
+		saveSummaryHistory(memberEntity, historySummaryMap, forSaveHistorySummaryEntity);
+
 		historyRepository.saveAll(forSaveHistoryEntity);
+		historySummaryRepository.saveAll(forSaveHistorySummaryEntity);
+	}
+
+	private void saveSummaryHistory(
+			MemberEntity memberEntity,
+			Map<LocalDate, List<HistoryEntity>> historySummaryMap,
+			List<HistorySummaryEntity> forSaveHistorySummaryEntity) {
+		for (Map.Entry<LocalDate, List<HistoryEntity>> entry : historySummaryMap.entrySet()) {
+			LocalDate date = entry.getKey();
+			List<HistoryEntity> histories = entry.getValue();
+
+			double measuredTime = histories.stream().mapToDouble(HistoryEntity::getMeasuredTime).sum();
+
+			Map<PoseStatus, Integer> poseCountMap = new HashMap<>();
+			Map<PoseStatus, Long> poseTimerMap = new HashMap<>();
+			Map<LocalDateTime, PoseStatus> totalPoseStatusMap = new TreeMap<>();
+
+			for (HistoryEntity historyEntity : histories) {
+				historyEntity
+						.getPoseCountMap()
+						.forEach((poseStatus, count) -> poseCountMap.merge(poseStatus, count, Integer::sum));
+				historyEntity
+						.getPoseTimerMap()
+						.forEach((poseStatus, time) -> poseTimerMap.merge(poseStatus, time, Long::sum));
+			}
+
+			for (HistoryEntity historyEntity : histories) {
+				totalPoseStatusMap.putAll(historyEntity.getPoseStatusMap());
+			}
+
+			int totalHistoryPoint = histories.stream().mapToInt(HistoryEntity::getHistoryPoint).sum();
+
+			HistorySummaryEntity historySummaryEntity =
+					historySummaryRepository
+							.findByMemberAndDate(memberEntity.getId(), date)
+							.orElse(HistorySummaryEntity.builder().member(memberEntity).date(date).build());
+
+			historySummaryEntity.updateMeasuredTime(measuredTime);
+			historySummaryEntity.updateSummary(totalPoseStatusMap, poseCountMap, poseTimerMap);
+			historySummaryEntity.updateHistoryPoint(totalHistoryPoint);
+
+			forSaveHistorySummaryEntity.add(historySummaryEntity);
+		}
 	}
 }

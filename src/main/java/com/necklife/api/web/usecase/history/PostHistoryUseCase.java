@@ -1,6 +1,5 @@
 package com.necklife.api.web.usecase.history;
 
-import com.necklife.api.entity.member.MemberEntity;
 import com.necklife.api.repository.member.MemberRepository;
 import com.necklife.api.service.history.SaveHistoryService;
 import com.necklife.api.web.usecase.dto.request.history.PostHistoryRequest;
@@ -21,10 +20,12 @@ public class PostHistoryUseCase {
 		String requestMemberId = postHistoryRequest.memberId();
 
 		checkExistMember(requestMemberId);
-
-		MemberEntity findMember = memberRepository.findById(postHistoryRequest.memberId()).get();
-
-		saveHistoryService.execute(findMember, postHistoryRequest.subHistories());
+		memberRepository
+				.findById(requestMemberId)
+				.ifPresent(
+						memberEntity -> {
+							saveHistoryService.execute(memberEntity, postHistoryRequest.subHistories());
+						});
 	}
 
 	private void checkExistMember(String requestMemberId) {
