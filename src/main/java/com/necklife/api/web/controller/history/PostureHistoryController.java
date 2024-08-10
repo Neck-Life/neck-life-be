@@ -9,8 +9,10 @@ import com.necklife.api.web.support.MessageCode;
 import com.necklife.api.web.usecase.dto.request.history.GetMonthlyHistoryRequest;
 import com.necklife.api.web.usecase.dto.request.history.GetYearHistoryRequest;
 import com.necklife.api.web.usecase.dto.request.history.PostHistoryRequest;
+import com.necklife.api.web.usecase.dto.response.history.GetHistoryPointResponse;
 import com.necklife.api.web.usecase.dto.response.history.GetMonthlyDetailResponse;
 import com.necklife.api.web.usecase.dto.response.history.GetYearDetailResponse;
+import com.necklife.api.web.usecase.history.GetHistoryPointUseCase;
 import com.necklife.api.web.usecase.history.GetMonthlyDetailUseCase;
 import com.necklife.api.web.usecase.history.GetYearDetailUseCase;
 import com.necklife.api.web.usecase.history.PostHistoryUseCase;
@@ -40,6 +42,7 @@ public class PostureHistoryController {
 	private final PostHistoryUseCase postHistoryUseCase;
 	private final GetYearDetailUseCase getYearDetailUseCase;
 	private final GetMonthlyDetailUseCase getMonthlyDetailUseCase;
+	private final GetHistoryPointUseCase getHistoryPointUseCase;
 
 	@PostMapping
 	public ApiResponse<ApiResponse.Success> postHistory(
@@ -100,7 +103,19 @@ public class PostureHistoryController {
 		return ApiResponseGenerator.success(yearDetailResponse, HttpStatus.OK, MessageCode.SUCCESS);
 	}
 
+	@GetMapping("/point")
+	public ApiResponse<ApiResponse.SuccessBody<GetHistoryPointResponse>> getPoint(
+			HttpServletRequest httpServletRequest) {
+		String memberId = findMemberByToken(httpServletRequest);
+
+		GetHistoryPointResponse getHistoryPointResponse = getHistoryPointUseCase.execute(memberId);
+
+		return ApiResponseGenerator.success(
+				getHistoryPointResponse, HttpStatus.OK, MessageCode.SUCCESS);
+	}
+
 	private static void checkYearAndMonth(Integer year, Integer month) {
+
 		if (year < 2023 || month < 1 || month > 12) {
 			throw new IllegalArgumentException("잘못된 Request Parameter입니다.");
 		}
