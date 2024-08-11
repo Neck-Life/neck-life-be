@@ -16,11 +16,7 @@ import com.necklife.api.web.usecase.steak.GetMemberStreakUseCase;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-
-import java.time.LocalDate;
 import java.util.List;
-import java.util.TreeMap;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -123,7 +119,6 @@ public class GoalController {
 		return ApiResponseGenerator.success(response, HttpStatus.OK, MessageCode.RESOURCE_DELETED);
 	}
 
-
 	@GetMapping("/history")
 	public ApiResponse<ApiResponse.SuccessBody<GoalHistoryResponse>> getGoalHistory(
 			HttpServletRequest httpServletRequest) {
@@ -133,7 +128,6 @@ public class GoalController {
 		GoalHistoryResponse response = getGoalsHistoryUsecase.execute(memberId);
 		return ApiResponseGenerator.success(response, HttpStatus.OK, MessageCode.SUCCESS);
 	}
-
 
 	@GetMapping("/streak")
 	public ApiResponse<ApiResponse.SuccessBody<StreakResponse>> getGoalsStreak(

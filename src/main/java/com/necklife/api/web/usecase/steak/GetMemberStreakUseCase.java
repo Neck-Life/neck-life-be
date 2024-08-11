@@ -4,9 +4,8 @@ import com.necklife.api.entity.member.MemberEntity;
 import com.necklife.api.entity.streak.StreakEntity;
 import com.necklife.api.repository.member.MemberRepository;
 import com.necklife.api.service.streak.GetStreakService;
-import java.util.Optional;
-
 import com.necklife.api.web.usecase.dto.response.streak.StreakResponse;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

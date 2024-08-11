@@ -4,12 +4,11 @@ import com.necklife.api.entity.history.HistorySummaryEntity;
 import com.necklife.api.repository.history.HistorySummaryRepository;
 import com.necklife.api.repository.member.MemberRepository;
 import com.necklife.api.web.usecase.dto.response.goal.GoalHistoryResponse;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
 import java.util.List;
 import java.util.TreeMap;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
@@ -32,9 +31,6 @@ public class GetGoalsHistoryUseCase {
 			goalHistoryMap.put(historySummaryEntity.getDate(), historySummaryEntity.getGoalAchivedRate());
 		}
 
-		return	GoalHistoryResponse.builder()
-				.goalHistories(goalHistoryMap).build();
-
-
+		return GoalHistoryResponse.builder().goalHistories(goalHistoryMap).build();
 	}
 }

@@ -45,7 +45,8 @@ public class GetGoalsUseCase {
 													GoalResponse.GoalDetailResponseDTO.builder()
 															.order(goalDetail.getOrders())
 															.type(goalDetail.getType())
-															.description(goalDetail.getType().getDescription(goalDetail.getTargetValue()))
+															.description(
+																	goalDetail.getType().getDescription(goalDetail.getTargetValue()))
 															.targetValue(goalDetail.getTargetValue())
 															.build())
 									.toList())
