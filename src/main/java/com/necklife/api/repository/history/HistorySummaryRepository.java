@@ -15,4 +15,7 @@ public interface HistorySummaryRepository extends MongoRepository<HistorySummary
 	// 특정 년도에 해당하는 데이터를 가져오는 쿼리
 	List<HistorySummaryEntity> findByMemberIdAndDateBetweenOrderByDate(
 			String memberId, LocalDate startDate, LocalDate endDate);
+
+	// 가장 최근 데이터를 가져오는 쿼리
+	Optional<HistorySummaryEntity> findTopByMemberIdOrderByDateDesc(String memberId);
 }
