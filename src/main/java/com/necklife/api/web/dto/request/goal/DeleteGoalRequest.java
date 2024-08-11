@@ -1,8 +1,7 @@
 package com.necklife.api.web.dto.request.goal;
 
-import lombok.*;
-
 import java.util.List;
+import lombok.*;
 
 @Data
 @Builder
@@ -10,5 +9,5 @@ import java.util.List;
 @NoArgsConstructor
 public class DeleteGoalRequest {
 
-    private List<Integer> goalIds;
+	private List<Integer> goalIds;
 }

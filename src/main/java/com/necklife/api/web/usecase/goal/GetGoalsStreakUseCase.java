@@ -1,6 +1,5 @@
 package com.necklife.api.web.usecase.goal;
 
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -8,7 +7,5 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class GetGoalsStreakUseCase {
 
-    public void execute() {
-
-    }
+	public void execute() {}
 }

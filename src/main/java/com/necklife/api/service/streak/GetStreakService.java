@@ -12,17 +12,19 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class GetStreakService {
 
-    private final StreakRepository streakRepository;
+	private final StreakRepository streakRepository;
 
-    public StreakEntity execute(MemberEntity member) {
-        return streakRepository.findByMember(member)
-                .orElseGet(() -> StreakEntity.builder()
-                        .member(member)
-                        .currentGoalStreak(0)
-                        .maxGoalStreak(0)
-                        .currentHistoryStreak(0)
-                        .maxHistoryStreak(0)
-                        .build());
-    }
-
+	public StreakEntity execute(MemberEntity member) {
+		return streakRepository
+				.findByMember(member)
+				.orElseGet(
+						() ->
+								StreakEntity.builder()
+										.member(member)
+										.currentGoalStreak(0)
+										.maxGoalStreak(0)
+										.currentHistoryStreak(0)
+										.maxHistoryStreak(0)
+										.build());
+	}
 }

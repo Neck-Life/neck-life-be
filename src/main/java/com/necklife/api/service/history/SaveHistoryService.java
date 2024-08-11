@@ -28,7 +28,6 @@ public class SaveHistoryService {
 	private final GetActiveGoalService getActiveGoalService;
 	private final UpdateStreakService updateStreakService;
 
-
 	private final int POINT_WEIGHT = 3;
 	private final int DEFAULT_POINT = 30;
 
@@ -112,14 +111,9 @@ public class SaveHistoryService {
 			historySummaryMap.put(
 					startDate, historySummaryMap.getOrDefault(startDate, new ArrayList<>()));
 			historySummaryMap.get(startDate).add(newHistory);
-
-
-
 		}
 
 		saveSummaryHistory(memberEntity, historySummaryMap, forSaveHistorySummaryEntity);
-
-
 
 		historyRepository.saveAll(forSaveHistoryEntity);
 		historySummaryRepository.saveAll(forSaveHistorySummaryEntity);
@@ -128,10 +122,7 @@ public class SaveHistoryService {
 	private void saveSummaryHistory(
 			MemberEntity memberEntity,
 			Map<LocalDate, List<HistoryEntity>> historySummaryMap,
-			List<HistorySummaryEntity> forSaveHistorySummaryEntity
-			) {
-
-
+			List<HistorySummaryEntity> forSaveHistorySummaryEntity) {
 
 		for (Map.Entry<LocalDate, List<HistoryEntity>> entry : historySummaryMap.entrySet()) {
 			LocalDate date = entry.getKey();
@@ -158,35 +149,35 @@ public class SaveHistoryService {
 
 			int totalHistoryPoint = histories.stream().mapToInt(HistoryEntity::getHistoryPoint).sum();
 
-
-			Optional<GoalEntity> activeGoal = getActiveGoalService.execute(memberEntity.getId(), totalPoseStatusMap.firstKey());
-			Optional<HistorySummaryEntity> findSummary = historySummaryRepository
-					.findByMemberAndDate(memberEntity.getId(), date);
+			Optional<GoalEntity> activeGoal =
+					getActiveGoalService.execute(memberEntity.getId(), totalPoseStatusMap.firstKey());
+			Optional<HistorySummaryEntity> findSummary =
+					historySummaryRepository.findByMemberAndDate(memberEntity.getId(), date);
 
 			HistorySummaryEntity historySummaryEntity;
 			if (findSummary.isEmpty()) {
 				if (activeGoal.isEmpty()) {
-					historySummaryEntity = HistorySummaryEntity.builder().member(memberEntity)
-							.date(date).build();
+					historySummaryEntity =
+							HistorySummaryEntity.builder().member(memberEntity).date(date).build();
 
 				} else {
-					historySummaryEntity = HistorySummaryEntity.builder().member(memberEntity)
-							.goal(activeGoal.get()).date(date).build();
+					historySummaryEntity =
+							HistorySummaryEntity.builder()
+									.member(memberEntity)
+									.goal(activeGoal.get())
+									.date(date)
+									.build();
 				}
 
-			}else
-			{
+			} else {
 				historySummaryEntity = findSummary.get();
 			}
-
-
 
 			historySummaryEntity.updateMeasuredTime(measuredTime);
 			historySummaryEntity.updateSummary(totalPoseStatusMap, poseCountMap, poseTimerMap);
 			historySummaryEntity.updateHistoryPoint(totalHistoryPoint);
 			historySummaryEntity.calculateAchievements();
 			updateStreakService.execute(memberEntity, historySummaryEntity);
-
 
 			forSaveHistorySummaryEntity.add(historySummaryEntity);
 		}
