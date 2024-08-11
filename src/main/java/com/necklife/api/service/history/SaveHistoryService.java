@@ -1,11 +1,14 @@
 package com.necklife.api.service.history;
 
+import com.necklife.api.entity.goal.GoalEntity;
 import com.necklife.api.entity.history.HistoryEntity;
 import com.necklife.api.entity.history.HistorySummaryEntity;
 import com.necklife.api.entity.history.PoseStatus;
 import com.necklife.api.entity.member.MemberEntity;
 import com.necklife.api.repository.history.HistoryRepository;
 import com.necklife.api.repository.history.HistorySummaryRepository;
+import com.necklife.api.service.goal.GetActiveGoalService;
+import com.necklife.api.service.streak.UpdateStreakService;
 import com.necklife.api.web.exception.NotSupportHistoryException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -22,6 +25,9 @@ public class SaveHistoryService {
 
 	private final HistoryRepository historyRepository;
 	private final HistorySummaryRepository historySummaryRepository;
+	private final GetActiveGoalService getActiveGoalService;
+	private final UpdateStreakService updateStreakService;
+
 
 	private final int POINT_WEIGHT = 3;
 	private final int DEFAULT_POINT = 30;
@@ -30,8 +36,10 @@ public class SaveHistoryService {
 	public void execute(MemberEntity memberEntity, List<TreeMap<LocalDateTime, PoseStatus>> history) {
 
 		List<HistoryEntity> forSaveHistoryEntity = new ArrayList<>();
-		Map<LocalDate, List<HistoryEntity>> historySummaryMap = new HashMap<>();
+		Map<LocalDate, List<HistoryEntity>> historySummaryMap = new TreeMap<>();
 		List<HistorySummaryEntity> forSaveHistorySummaryEntity = new ArrayList<>();
+
+		history.sort(Comparator.comparing(o -> o.firstKey()));
 
 		// subHistories 정리하기
 		for (TreeMap<LocalDateTime, PoseStatus> subHistory : history) {
@@ -104,9 +112,14 @@ public class SaveHistoryService {
 			historySummaryMap.put(
 					startDate, historySummaryMap.getOrDefault(startDate, new ArrayList<>()));
 			historySummaryMap.get(startDate).add(newHistory);
+
+
+
 		}
 
 		saveSummaryHistory(memberEntity, historySummaryMap, forSaveHistorySummaryEntity);
+
+
 
 		historyRepository.saveAll(forSaveHistoryEntity);
 		historySummaryRepository.saveAll(forSaveHistorySummaryEntity);
@@ -115,7 +128,11 @@ public class SaveHistoryService {
 	private void saveSummaryHistory(
 			MemberEntity memberEntity,
 			Map<LocalDate, List<HistoryEntity>> historySummaryMap,
-			List<HistorySummaryEntity> forSaveHistorySummaryEntity) {
+			List<HistorySummaryEntity> forSaveHistorySummaryEntity
+			) {
+
+
+
 		for (Map.Entry<LocalDate, List<HistoryEntity>> entry : historySummaryMap.entrySet()) {
 			LocalDate date = entry.getKey();
 			List<HistoryEntity> histories = entry.getValue();
@@ -124,7 +141,7 @@ public class SaveHistoryService {
 
 			Map<PoseStatus, Integer> poseCountMap = new HashMap<>();
 			Map<PoseStatus, Long> poseTimerMap = new HashMap<>();
-			Map<LocalDateTime, PoseStatus> totalPoseStatusMap = new TreeMap<>();
+			TreeMap<LocalDateTime, PoseStatus> totalPoseStatusMap = new TreeMap<>();
 
 			for (HistoryEntity historyEntity : histories) {
 				historyEntity
@@ -141,14 +158,35 @@ public class SaveHistoryService {
 
 			int totalHistoryPoint = histories.stream().mapToInt(HistoryEntity::getHistoryPoint).sum();
 
-			HistorySummaryEntity historySummaryEntity =
-					historySummaryRepository
-							.findByMemberAndDate(memberEntity.getId(), date)
-							.orElse(HistorySummaryEntity.builder().member(memberEntity).date(date).build());
+
+			Optional<GoalEntity> activeGoal = getActiveGoalService.execute(memberEntity.getId(), totalPoseStatusMap.firstKey());
+			Optional<HistorySummaryEntity> findSummary = historySummaryRepository
+					.findByMemberAndDate(memberEntity.getId(), date);
+
+			HistorySummaryEntity historySummaryEntity;
+			if (findSummary.isEmpty()) {
+				if (activeGoal.isEmpty()) {
+					historySummaryEntity = HistorySummaryEntity.builder().member(memberEntity)
+							.date(date).build();
+
+				} else {
+					historySummaryEntity = HistorySummaryEntity.builder().member(memberEntity)
+							.goal(activeGoal.get()).date(date).build();
+				}
+
+			}else
+			{
+				historySummaryEntity = findSummary.get();
+			}
+
+
 
 			historySummaryEntity.updateMeasuredTime(measuredTime);
 			historySummaryEntity.updateSummary(totalPoseStatusMap, poseCountMap, poseTimerMap);
 			historySummaryEntity.updateHistoryPoint(totalHistoryPoint);
+			historySummaryEntity.calculateAchievements();
+			updateStreakService.execute(memberEntity, historySummaryEntity);
+
 
 			forSaveHistorySummaryEntity.add(historySummaryEntity);
 		}
