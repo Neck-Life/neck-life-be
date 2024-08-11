@@ -54,8 +54,9 @@ public class MemberEntity {
 
 	private LocalDateTime deletedAt;
 
-	public void delete() {
+	public MemberEntity delete() {
 		this.deletedAt = LocalDateTime.now();
+		return withDrawn();
 	}
 
 	public MemberEntity withDrawn() {

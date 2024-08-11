@@ -25,7 +25,7 @@ public class SetNewGoalService {
 	private final HistorySummaryRepository historySummaryRepository;
 	private final MemberRepository memberRepository;
 
-	public HistorySummaryEntity execute(
+	public GoalEntity execute(
 			String memberId, LocalDateTime date, List<GoalEntity.GoalDetail> newGoalDetails) {
 
 		MemberEntity member =
@@ -65,7 +65,9 @@ public class SetNewGoalService {
 			goalRepository.save(newGoalEntity);
 
 			// 현재 진행중인 일정의 목표를 수정
-			return updateNewGoalOnHistorySummary(member, newGoalEntity);
+			updateNewGoalOnHistorySummary(member, newGoalEntity);
+
+			return newGoalEntity;
 
 		} else {
 			// 유효한 목표가 없으면 새로운 목표 리스트로 시작
@@ -80,20 +82,26 @@ public class SetNewGoalService {
 									.effectiveTo(null)
 									.build());
 
-			return updateNewGoalOnHistorySummary(member, savedGoal);
+			updateNewGoalOnHistorySummary(member, savedGoal);
+			return savedGoal;
 		}
 	}
 
-	private HistorySummaryEntity updateNewGoalOnHistorySummary(
+	private void updateNewGoalOnHistorySummary(
 			MemberEntity member, GoalEntity newGoalEntity) {
 
-		HistorySummaryEntity historySummaryEntity =
+		Optional<HistorySummaryEntity> historySummaryEntity =
 				historySummaryRepository
-						.findTopByMemberIdOrderByDateDesc(member.getId())
-						.orElseThrow(() -> new IllegalArgumentException("HistorySummary not found"));
+						.findTopByMemberIdOrderByDateDesc(member.getId());
 
-		historySummaryEntity.changeGoals(newGoalEntity);
-		historySummaryEntity.calculateAchievements();
-		return historySummaryRepository.save(historySummaryEntity);
+		if (historySummaryEntity.isEmpty()) {
+			return;
+		}
+		else {
+			HistorySummaryEntity findHistorySummary = historySummaryEntity.get();
+			findHistorySummary.changeGoals(newGoalEntity);
+			findHistorySummary.calculateAchievements();
+			historySummaryRepository.save(findHistorySummary);
+		}
 	}
 }
