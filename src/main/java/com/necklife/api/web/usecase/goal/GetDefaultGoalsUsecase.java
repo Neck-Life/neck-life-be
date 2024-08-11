@@ -18,7 +18,7 @@ public class GetDefaultGoalsUsecase {
 				GoalDetailResponseDTO.builder()
 						.order(1)
 						.type(GoalType.MEASUREMENT)
-						.description("하루에 2시간 이상 측정하기")
+						.description(String.format("하루에 %.1f시간 이상 측정하기", 2.0))
 						.targetValue(2.0)
 						.build();
 
@@ -26,7 +26,7 @@ public class GetDefaultGoalsUsecase {
 				GoalDetailResponseDTO.builder()
 						.order(2)
 						.type(GoalType.SCORE)
-						.description("오늘의 자세 점수 80점 이상")
+						.description(String.format("하루에 %.1f점 이상 획득하기", 80.0))
 						.targetValue(80.0)
 						.build();
 

@@ -111,10 +111,10 @@ public class HistorySummaryEntity {
 				case MEASUREMENT:
 					achieved = measuredTime >= goalDetail.getTargetValue();
 					break;
-					//				case SCORE:
-					//					achieved = score >= goalDetail.getTargetValue();
-					//					break;
-					//				// 다른 목표 유형에 대한 처리 추가 가능
+				case SCORE:
+				achieved = totalHistoryPoint >= goalDetail.getTargetValue();
+				break;
+									// 다른 목표 유형에 대한 처리 추가 가능
 			}
 
 			// 결과를 goalAchievements 맵에 저장
