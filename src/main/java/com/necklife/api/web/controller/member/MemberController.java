@@ -173,6 +173,14 @@ public class MemberController {
 		return ApiResponseGenerator.success(response, HttpStatus.OK, MessageCode.SUCCESS);
 	}
 
+	@GetMapping("/streak")
+	public ApiResponse<ApiResponse.SuccessBody<Void>> getMemberStreak(
+			HttpServletRequest httpServletRequest) {
+		String memberId = findMemberByToken(httpServletRequest);
+		//		Long memberId = 1L;
+		return ApiResponseGenerator.success(null, HttpStatus.OK, MessageCode.RESOURCE_DELETED);
+	}
+
 	private String findMemberByToken(HttpServletRequest request) {
 		String authorization = request.getHeader("Authorization");
 		String substring = authorization.substring(7, authorization.length());
