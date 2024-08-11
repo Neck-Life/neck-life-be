@@ -7,7 +7,5 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class GetGoalsHistoryUseCase {
 
-    public void execute() {
-
-    }
+	public void execute() {}
 }

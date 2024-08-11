@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
-
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -29,8 +28,7 @@ public class HistorySummaryEntity {
 
 	@Indexed private LocalDate date;
 
-	@DBRef
-	private GoalEntity goal; // 이 히스토리 요약과 연관된 목표 (특정 버전)
+	@DBRef private GoalEntity goal; // 이 히스토리 요약과 연관된 목표 (특정 버전)
 
 	private Map<GoalType, Boolean> goalAchievements;
 
@@ -89,10 +87,9 @@ public class HistorySummaryEntity {
 		}
 	}
 
-
 	public void changeGoals(GoalEntity goal) {
 		this.goal = goal;
-		//todo
+		// todo
 	}
 
 	public void calculateAchievements() {
@@ -114,17 +111,16 @@ public class HistorySummaryEntity {
 				case MEASUREMENT:
 					achieved = measuredTime >= goalDetail.getTargetValue();
 					break;
-//				case SCORE:
-//					achieved = score >= goalDetail.getTargetValue();
-//					break;
-//				// 다른 목표 유형에 대한 처리 추가 가능
+					//				case SCORE:
+					//					achieved = score >= goalDetail.getTargetValue();
+					//					break;
+					//				// 다른 목표 유형에 대한 처리 추가 가능
 			}
 
 			// 결과를 goalAchievements 맵에 저장
 			goalAchievements.put(type, achieved);
 			goalAchivedRate += achieved ? 1 : 0;
 		}
-		goalAchivedRate/=goal.getGoals().size();
+		goalAchivedRate /= goal.getGoals().size();
 	}
-
 }
