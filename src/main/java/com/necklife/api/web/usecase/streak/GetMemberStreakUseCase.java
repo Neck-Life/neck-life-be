@@ -1,4 +1,4 @@
-package com.necklife.api.web.usecase.steak;
+package com.necklife.api.web.usecase.streak;
 
 import com.necklife.api.entity.member.MemberEntity;
 import com.necklife.api.entity.streak.StreakEntity;

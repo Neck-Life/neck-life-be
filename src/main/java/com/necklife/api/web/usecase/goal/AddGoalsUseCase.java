@@ -17,10 +17,10 @@ public class AddGoalsUseCase {
 
 	public GoalResponse execute(String MemberId, List<GoalEntity.GoalDetail> newGoalDetails) {
 		LocalDateTime now = LocalDateTime.now();
-		HistorySummaryEntity changedHistory = addGoalService.execute(MemberId, now, newGoalDetails);
+		GoalEntity savedGoal = addGoalService.execute(MemberId, now, newGoalDetails);
 
 		List<GoalResponse.GoalDetailResponseDTO> changedGoals =
-				changedHistory.getGoal().getGoals().stream()
+				savedGoal.getGoals().stream()
 						.map(
 								goal ->
 										GoalResponse.GoalDetailResponseDTO.builder()

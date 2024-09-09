@@ -12,7 +12,7 @@ import com.necklife.api.web.usecase.dto.response.goal.GoalHistoryResponse;
 import com.necklife.api.web.usecase.dto.response.goal.GoalResponse;
 import com.necklife.api.web.usecase.dto.response.streak.StreakResponse;
 import com.necklife.api.web.usecase.goal.*;
-import com.necklife.api.web.usecase.steak.GetMemberStreakUseCase;
+import com.necklife.api.web.usecase.streak.GetMemberStreakUseCase;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
