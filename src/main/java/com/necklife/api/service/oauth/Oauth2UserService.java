@@ -48,6 +48,7 @@ public class Oauth2UserService {
 													.email(socialMemberData.getEmail())
 													.isSocial(true)
 													.oauthProvider(socialMemberData.getProvider())
+													.oauthRefreshToken(socialMemberData.getRefreshToken())
 													.build();
 
 									isNew.set(true);
