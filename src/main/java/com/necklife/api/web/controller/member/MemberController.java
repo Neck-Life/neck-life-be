@@ -43,6 +43,8 @@ public class MemberController {
 	private final PostPaymentUseCase postPaymentUseCase;
 	private final PostRefoundPaymentUseCase postRefoundPaymentUseCase;
 
+	private final DeleteMemberUseCase.PostInquiryUseCase postInquiryUseCase;
+
 	private final TokenUserDetailsService tokenUserDetailsService;
 
 	// todo usecase in/out 객체로 분리
@@ -91,10 +93,11 @@ public class MemberController {
 	// todo @AuthenticationPrincipal TokenUserDetails userDetails로 교체
 	@DeleteMapping()
 	public ApiResponse<ApiResponse.SuccessBody<DeleteMemberResponse>> deleteMember(
-			HttpServletRequest httpServletRequest) {
+			HttpServletRequest httpServletRequest, @Valid @RequestBody DeleteMemberBody deleteMemberBody) {
 		String memberId = findMemberByToken(httpServletRequest);
 		//		Long memberId = 1L;
-		DeleteMemberUseCaseResponse useCaseResponse = deleteMemberUseCase.execute(memberId);
+		String withDrawReason = deleteMemberBody.getWithDrawReason();
+		DeleteMemberUseCaseResponse useCaseResponse = deleteMemberUseCase.execute(memberId,withDrawReason);
 		DeleteMemberResponse response =
 				DeleteMemberResponse.builder()
 						.id(useCaseResponse.getId())
@@ -181,10 +184,35 @@ public class MemberController {
 		return ApiResponseGenerator.success(null, HttpStatus.OK, MessageCode.RESOURCE_DELETED);
 	}
 
+	@PostMapping("/inquiry")
+	public ApiResponse<ApiResponse.SuccessBody<String>> postInquiry(
+			HttpServletRequest httpServletRequest, PostInquiryBody postInquiryBody) {
+
+		String memberId = findMemberByToken(httpServletRequest);
+		//				Long memberId = Long.valueOf(userDetails.getUsername());
+		//		Long memberId = 1L;
+
+		postInquiryUseCase.execute(
+						memberId,
+						postInquiryBody.getTitle(),
+						postInquiryBody.getTitle());
+
+
+		return ApiResponseGenerator.success("접수되었습니다.", HttpStatus.OK, MessageCode.SUCCESS);
+	}
+
+
+
+
 	private String findMemberByToken(HttpServletRequest request) {
 		String authorization = request.getHeader("Authorization");
 		String substring = authorization.substring(7, authorization.length());
 		UserDetails userDetails = tokenUserDetailsService.loadUserByUsername(substring);
 		return userDetails.getUsername();
 	}
+
+
+
+
+
 }
