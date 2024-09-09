@@ -53,10 +53,11 @@ public class DeleteMemberUseCase {
 				throw new RuntimeException("제공하지 않는 인증기관입니다.");
 		}
 
-		MemberEntity delete = member.delete();
-		LocalDateTime deletedAt = delete.getDeletedAt();
+		MemberEntity deletedMember = member.delete();
+		LocalDateTime deletedAt = deletedMember.getDeletedAt();
+		memberRepository.save(deletedMember);
 
-		return new DeleteMemberUseCaseResponse(delete.getId(), deletedAt);
+		return new DeleteMemberUseCaseResponse(deletedMember.getId(), deletedAt);
 	}
 
 	private String isEmptyString(String string) {
