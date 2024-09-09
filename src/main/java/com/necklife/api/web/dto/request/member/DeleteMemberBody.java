@@ -10,6 +10,5 @@ import lombok.*;
 @Builder
 public class DeleteMemberBody {
 
-    String withDrawReason;
-
+	String withDrawReason;
 }

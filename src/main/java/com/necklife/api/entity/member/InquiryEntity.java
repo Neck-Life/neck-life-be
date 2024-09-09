@@ -10,8 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "inquiry")
 public class InquiryEntity {
 
-    private MemberEntity member;
-    private String title;
-    private String content;
-
+	private MemberEntity member;
+	private String title;
+	private String content;
 }

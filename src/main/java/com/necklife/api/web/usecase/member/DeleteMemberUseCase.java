@@ -25,7 +25,7 @@ public class DeleteMemberUseCase {
 	private final WithDrawReasonRepository withDrawReasonRepository;
 
 	@Transactional
-	public DeleteMemberUseCaseResponse execute(String memberId,String withDrawReason) {
+	public DeleteMemberUseCaseResponse execute(String memberId, String withDrawReason) {
 		Optional<MemberEntity> findMember = memberRepository.findById(memberId);
 		withDrawReason = isEmptyString(withDrawReason);
 
@@ -33,9 +33,8 @@ public class DeleteMemberUseCase {
 			throw new IllegalArgumentException("존재하지 않는 회원입니다.");
 		}
 
-		withDrawReasonRepository.save(WithDrawReason.builder()
-				.member(findMember.get())
-				.withDrawReason(withDrawReason).build());
+		withDrawReasonRepository.save(
+				WithDrawReason.builder().member(findMember.get()).withDrawReason(withDrawReason).build());
 
 		MemberEntity member = findMember.get();
 		switch (member.getOauthProvider().toString()) {
@@ -84,13 +83,8 @@ public class DeleteMemberUseCase {
 				throw new IllegalArgumentException("Member not found");
 			}
 
-
-			inquiryRepository.save(InquiryEntity.builder()
-					.member(findMember.get())
-					.title(title)
-					.content(content).build());
-
+			inquiryRepository.save(
+					InquiryEntity.builder().member(findMember.get()).title(title).content(content).build());
 		}
-
 	}
 }

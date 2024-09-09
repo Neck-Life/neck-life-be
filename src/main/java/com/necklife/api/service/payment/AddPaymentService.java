@@ -22,7 +22,6 @@ public class AddPaymentService {
 		Optional<PaymentEntity> recentUpdate = paymentRepository.findByOrderByUpdatedAtDesc(member);
 		LocalDateTime now = LocalDateTime.now();
 
-
 		// 이전 결제 정보가 없는 경우
 		if (recentUpdate.isEmpty()) {
 			member.paid();
@@ -33,7 +32,6 @@ public class AddPaymentService {
 							.endAt(dateTime.plusMonths(months))
 							.paymentWon(won)
 							.build());
-
 
 			// 이전 결제가 있지만 만료 또는 추가 결제인 경우
 		} else if (recentUpdate.get().getEndAt().isBefore(now)) {

@@ -12,9 +12,7 @@ import lombok.*;
 @Builder
 public class PostInquiryBody {
 
-    @NotEmpty @NotNull
-    String title;
+	@NotEmpty @NotNull String title;
 
-    @NotEmpty @NotNull
-    String content;
+	@NotEmpty @NotNull String content;
 }

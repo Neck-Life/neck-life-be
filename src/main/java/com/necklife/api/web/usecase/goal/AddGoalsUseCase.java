@@ -1,7 +1,6 @@
 package com.necklife.api.web.usecase.goal;
 
 import com.necklife.api.entity.goal.GoalEntity;
-import com.necklife.api.entity.history.HistorySummaryEntity;
 import com.necklife.api.service.goal.SetNewGoalService;
 import com.necklife.api.web.usecase.dto.response.goal.GoalResponse;
 import java.time.LocalDateTime;

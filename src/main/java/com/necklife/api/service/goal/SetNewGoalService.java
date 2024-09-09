@@ -87,17 +87,14 @@ public class SetNewGoalService {
 		}
 	}
 
-	private void updateNewGoalOnHistorySummary(
-			MemberEntity member, GoalEntity newGoalEntity) {
+	private void updateNewGoalOnHistorySummary(MemberEntity member, GoalEntity newGoalEntity) {
 
 		Optional<HistorySummaryEntity> historySummaryEntity =
-				historySummaryRepository
-						.findTopByMemberIdOrderByDateDesc(member.getId());
+				historySummaryRepository.findTopByMemberIdOrderByDateDesc(member.getId());
 
 		if (historySummaryEntity.isEmpty()) {
 			return;
-		}
-		else {
+		} else {
 			HistorySummaryEntity findHistorySummary = historySummaryEntity.get();
 			findHistorySummary.changeGoals(newGoalEntity);
 			findHistorySummary.calculateAchievements();

@@ -1,6 +1,5 @@
 package com.necklife.api.entity.member;
 
-
 import lombok.*;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -12,12 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "withDrawReason")
 public class WithDrawReason {
 
-    @DBRef
-    private MemberEntity member;
+	@DBRef private MemberEntity member;
 
-    private String withDrawReason;
-
-
-
-
+	private String withDrawReason;
 }

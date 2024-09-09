@@ -93,11 +93,13 @@ public class MemberController {
 	// todo @AuthenticationPrincipal TokenUserDetails userDetails로 교체
 	@DeleteMapping()
 	public ApiResponse<ApiResponse.SuccessBody<DeleteMemberResponse>> deleteMember(
-			HttpServletRequest httpServletRequest, @Valid @RequestBody DeleteMemberBody deleteMemberBody) {
+			HttpServletRequest httpServletRequest,
+			@Valid @RequestBody DeleteMemberBody deleteMemberBody) {
 		String memberId = findMemberByToken(httpServletRequest);
 		//		Long memberId = 1L;
 		String withDrawReason = deleteMemberBody.getWithDrawReason();
-		DeleteMemberUseCaseResponse useCaseResponse = deleteMemberUseCase.execute(memberId,withDrawReason);
+		DeleteMemberUseCaseResponse useCaseResponse =
+				deleteMemberUseCase.execute(memberId, withDrawReason);
 		DeleteMemberResponse response =
 				DeleteMemberResponse.builder()
 						.id(useCaseResponse.getId())
@@ -192,17 +194,10 @@ public class MemberController {
 		//				Long memberId = Long.valueOf(userDetails.getUsername());
 		//		Long memberId = 1L;
 
-		postInquiryUseCase.execute(
-						memberId,
-						postInquiryBody.getTitle(),
-						postInquiryBody.getTitle());
-
+		postInquiryUseCase.execute(memberId, postInquiryBody.getTitle(), postInquiryBody.getTitle());
 
 		return ApiResponseGenerator.success("접수되었습니다.", HttpStatus.OK, MessageCode.SUCCESS);
 	}
-
-
-
 
 	private String findMemberByToken(HttpServletRequest request) {
 		String authorization = request.getHeader("Authorization");
@@ -210,9 +205,4 @@ public class MemberController {
 		UserDetails userDetails = tokenUserDetailsService.loadUserByUsername(substring);
 		return userDetails.getUsername();
 	}
-
-
-
-
-
 }
