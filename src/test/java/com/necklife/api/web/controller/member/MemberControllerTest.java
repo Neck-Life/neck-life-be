@@ -124,7 +124,7 @@ class MemberControllerTest {
 	@DisplayName("DELETE /api/v1/members 회원 탈퇴를 한다.")
 	@WithUserDetails(userDetailsServiceBeanName = "testTokenUserDetailsService")
 	void deleteMember() throws Exception {
-		when(deleteMemberUseCase.execute(any()))
+		when(deleteMemberUseCase.execute(any(), any()))
 				.thenReturn(new DeleteMemberUseCaseResponse("1L", LocalDateTime.now()));
 
 		mockMvc

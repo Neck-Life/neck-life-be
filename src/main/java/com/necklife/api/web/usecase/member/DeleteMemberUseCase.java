@@ -1,9 +1,7 @@
 package com.necklife.api.web.usecase.member;
 
-import com.necklife.api.entity.member.InquiryEntity;
 import com.necklife.api.entity.member.MemberEntity;
 import com.necklife.api.entity.member.WithDrawReason;
-import com.necklife.api.repository.member.InquiryRepository;
 import com.necklife.api.repository.member.MemberRepository;
 import com.necklife.api.repository.member.WithDrawReasonRepository;
 import com.necklife.api.web.client.member.AppleMemberClient;
@@ -68,24 +66,6 @@ public class DeleteMemberUseCase {
 			return string;
 		} else {
 			return "";
-		}
-	}
-
-	@Service
-	@RequiredArgsConstructor
-	public static class PostInquiryUseCase {
-
-		private final InquiryRepository inquiryRepository;
-		private final MemberRepository memberRepository;
-
-		public void execute(String memberId, String title, String content) {
-			Optional<MemberEntity> findMember = memberRepository.findById(memberId);
-			if (findMember.isEmpty()) {
-				throw new IllegalArgumentException("Member not found");
-			}
-
-			inquiryRepository.save(
-					InquiryEntity.builder().member(findMember.get()).title(title).content(content).build());
 		}
 	}
 }

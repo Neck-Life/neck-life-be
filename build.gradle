@@ -55,6 +55,11 @@ plugins {
 
     // lombok
     id "io.freefair.lombok" version "8.6"
+
+    //sentry
+    id "io.sentry.jvm.gradle" version "4.11.0"
+
+
 }
 
 apply from: './tasks/install-git-hooks.gradle'
@@ -75,6 +80,10 @@ java {
 configurations {
     compileOnly {
         extendsFrom annotationProcessor
+    }
+
+    all {
+        exclude group: 'commons-logging', module: 'commons-logging'
     }
 }
 
@@ -156,6 +165,10 @@ dependencies {
 
     // test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    //java mail
+    implementation 'org.springframework.boot:spring-boot-starter-mail:3.1.5'
+
 }
 
 test {
@@ -243,6 +256,19 @@ tasks.register('copySwaggerUI', Copy) {
     from("${generateSwaggerUISampleTask.outputDir}")
     into(rootProject.rootDir.toString() + moduleStaticPath + "/docs/swagger-ui")
 }
+
+
+sentry {
+    // Generates a JVM (Java, Kotlin, etc.) source bundle and uploads your source code to Sentry.
+    // This enables source context, allowing you to see your source
+    // code as part of your stack traces in Sentry.
+    includeSourceContext = true
+
+    org = "somart-n4"
+    projectName = "java-spring-boot"
+    authToken = "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"
+}
+
 
 
 allprojects {

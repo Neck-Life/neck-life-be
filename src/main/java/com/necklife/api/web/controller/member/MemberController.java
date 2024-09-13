@@ -5,6 +5,7 @@ import com.necklife.api.security.authentication.token.TokenUserDetailsService;
 import com.necklife.api.security.token.AuthToken;
 import com.necklife.api.security.token.TokenGenerator;
 import com.necklife.api.security.token.TokenResolver;
+import com.necklife.api.service.inquiry.PostInquiryService;
 import com.necklife.api.web.dto.request.member.*;
 import com.necklife.api.web.dto.response.member.*;
 import com.necklife.api.web.support.ApiResponse;
@@ -43,7 +44,7 @@ public class MemberController {
 	private final PostPaymentUseCase postPaymentUseCase;
 	private final PostRefoundPaymentUseCase postRefoundPaymentUseCase;
 
-	private final DeleteMemberUseCase.PostInquiryUseCase postInquiryUseCase;
+	private final PostInquiryService postInquiryService;
 
 	private final TokenUserDetailsService tokenUserDetailsService;
 
@@ -194,7 +195,7 @@ public class MemberController {
 		//				Long memberId = Long.valueOf(userDetails.getUsername());
 		//		Long memberId = 1L;
 
-		postInquiryUseCase.execute(memberId, postInquiryBody.getTitle(), postInquiryBody.getTitle());
+		postInquiryService.execute(memberId, postInquiryBody.getTitle(), postInquiryBody.getTitle());
 
 		return ApiResponseGenerator.success("접수되었습니다.", HttpStatus.OK, MessageCode.SUCCESS);
 	}

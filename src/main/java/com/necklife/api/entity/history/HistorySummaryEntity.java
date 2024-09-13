@@ -67,13 +67,17 @@ public class HistorySummaryEntity {
 		if (this.totalPoseCountMap == null) {
 			this.totalPoseCountMap = totalPoseCountMap;
 		} else {
-			this.totalPoseCountMap.putAll(totalPoseCountMap);
+
+			totalPoseCountMap.forEach(
+					((poseStatus, count) -> this.totalPoseCountMap.merge(poseStatus, count, Integer::sum)));
 		}
 
 		if (this.totalPoseTimerMap == null) {
 			this.totalPoseTimerMap = totalPoseTimerMap;
 		} else {
-			this.totalPoseTimerMap.putAll(totalPoseTimerMap);
+
+			totalPoseTimerMap.forEach(
+					((poseStatus, count) -> this.totalPoseTimerMap.merge(poseStatus, count, Long::sum)));
 		}
 
 		return this;
