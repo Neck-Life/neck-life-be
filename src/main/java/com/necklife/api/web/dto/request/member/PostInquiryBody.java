@@ -1,7 +1,5 @@
 package com.necklife.api.web.dto.request.member;
 
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Getter
@@ -12,7 +10,7 @@ import lombok.*;
 @Builder
 public class PostInquiryBody {
 
-	@NotEmpty @NotNull String title;
+	private String title;
 
-	@NotEmpty @NotNull String content;
+	private String content;
 }

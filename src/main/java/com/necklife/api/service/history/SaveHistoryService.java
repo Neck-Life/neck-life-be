@@ -28,9 +28,6 @@ public class SaveHistoryService {
 	private final GetActiveGoalService getActiveGoalService;
 	private final UpdateStreakService updateStreakService;
 
-	private final int POINT_WEIGHT = 3;
-	private final int DEFAULT_POINT = 30;
-
 	@Transactional
 	public void execute(MemberEntity memberEntity, List<TreeMap<LocalDateTime, PoseStatus>> history) {
 
@@ -38,7 +35,7 @@ public class SaveHistoryService {
 		Map<LocalDate, List<HistoryEntity>> historySummaryMap = new TreeMap<>();
 		List<HistorySummaryEntity> forSaveHistorySummaryEntity = new ArrayList<>();
 
-		history.sort(Comparator.comparing(o -> o.firstKey()));
+		history.sort(Comparator.comparing(TreeMap::firstKey));
 
 		// subHistories 정리하기
 		for (TreeMap<LocalDateTime, PoseStatus> subHistory : history) {
@@ -96,15 +93,7 @@ public class SaveHistoryService {
 			long duration = ChronoUnit.SECONDS.between(beforeStateTime, endAt);
 			poseTimeMap.put(beforeState, poseTimeMap.getOrDefault(beforeState, 0L) + (int) duration);
 
-			int point =
-					DEFAULT_POINT
-							+ (int) (poseTimeMap.getOrDefault(PoseStatus.NORMAL, 0L) / 60)
-							+ poseCountMap.getOrDefault(PoseStatus.NORMAL, 0) * POINT_WEIGHT;
-
-			for (int count : poseCountMap.values()) {
-				point -= count * POINT_WEIGHT;
-			}
-			newHistory.updateHistoryPoint(point);
+			newHistory.updateHistoryPoint();
 
 			// history 저장
 			forSaveHistoryEntity.add(newHistory);
@@ -147,8 +136,6 @@ public class SaveHistoryService {
 				totalPoseStatusMap.putAll(historyEntity.getPoseStatusMap());
 			}
 
-			int totalHistoryPoint = histories.stream().mapToInt(HistoryEntity::getHistoryPoint).sum();
-
 			Optional<GoalEntity> activeGoal =
 					getActiveGoalService.execute(memberEntity.getId(), totalPoseStatusMap.firstKey());
 			Optional<HistorySummaryEntity> findSummary =
@@ -175,7 +162,7 @@ public class SaveHistoryService {
 
 			historySummaryEntity.updateMeasuredTime(measuredTime);
 			historySummaryEntity.updateSummary(totalPoseStatusMap, poseCountMap, poseTimerMap);
-			historySummaryEntity.updateHistoryPoint(totalHistoryPoint);
+			historySummaryEntity.updateHistoryPoint();
 			historySummaryEntity.calculateAchievements();
 			updateStreakService.execute(memberEntity, historySummaryEntity);
 

@@ -1,6 +1,7 @@
 package com.necklife.api.web.controller.member;
 
 import com.necklife.api.security.authentication.authority.Roles;
+import com.necklife.api.security.authentication.token.TokenUserDetails;
 import com.necklife.api.security.authentication.token.TokenUserDetailsService;
 import com.necklife.api.security.token.AuthToken;
 import com.necklife.api.security.token.TokenGenerator;
@@ -20,6 +21,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -147,7 +149,8 @@ public class MemberController {
 
 	@PostMapping("/payment")
 	public ApiResponse<ApiResponse.SuccessBody<PostPaymentUseCaseResponse>> postPayment(
-			HttpServletRequest httpServletRequest, PostPaymentRequest postPaymentRequest) {
+			HttpServletRequest httpServletRequest,
+			@Valid @RequestBody PostPaymentRequest postPaymentRequest) {
 
 		String memberId = findMemberByToken(httpServletRequest);
 		//				Long memberId = Long.valueOf(userDetails.getUsername());
@@ -164,7 +167,8 @@ public class MemberController {
 
 	@PostMapping("/refound")
 	public ApiResponse<ApiResponse.SuccessBody<PostRefoundPaymentUseCaseResponse>> refoundPayment(
-			HttpServletRequest httpServletRequest, PostRefoundPaymentRequest postRefoundPaymentRequest) {
+			HttpServletRequest httpServletRequest,
+			@Valid @RequestBody PostRefoundPaymentRequest postRefoundPaymentRequest) {
 
 		String memberId = findMemberByToken(httpServletRequest);
 		//				Long memberId = Long.valueOf(userDetails.getUsername());
@@ -189,12 +193,14 @@ public class MemberController {
 
 	@PostMapping("/inquiry")
 	public ApiResponse<ApiResponse.SuccessBody<String>> postInquiry(
-			HttpServletRequest httpServletRequest, PostInquiryBody postInquiryBody) {
+			@AuthenticationPrincipal TokenUserDetails userDetails,
+			@Valid @RequestBody PostInquiryBody postInquiryBody) {
 
-		String memberId = findMemberByToken(httpServletRequest);
-		//				Long memberId = Long.valueOf(userDetails.getUsername());
+		//		String memberId = findMemberByToken(httpServletRequest);
+		String memberId = (userDetails.getUsername());
 		//		Long memberId = 1L;
 
+		System.out.println(userDetails);
 		postInquiryService.execute(memberId, postInquiryBody.getTitle(), postInquiryBody.getTitle());
 
 		return ApiResponseGenerator.success("접수되었습니다.", HttpStatus.OK, MessageCode.SUCCESS);

@@ -1,6 +1,7 @@
 package com.necklife.api.entity.member;
 
 import lombok.*;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Getter
@@ -10,7 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "inquiry")
 public class InquiryEntity {
 
-	private MemberEntity member;
+	@DBRef private MemberEntity member;
 	private String title;
 	private String content;
 }

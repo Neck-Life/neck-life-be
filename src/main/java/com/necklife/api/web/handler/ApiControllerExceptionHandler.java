@@ -2,6 +2,7 @@ package com.necklife.api.web.handler;
 
 import static com.necklife.api.web.handler.ExceptionMessage.*;
 
+import com.necklife.api.web.exception.ExternalIntegrationException;
 import com.necklife.api.web.exception.NotSupportHistoryException;
 import com.necklife.api.web.support.ApiResponse;
 import com.necklife.api.web.support.ApiResponse.FailureBody;
@@ -62,10 +63,12 @@ public class ApiControllerExceptionHandler {
 		HttpMessageNotReadableException.class,
 		MissingServletRequestParameterException.class,
 		ConstraintViolationException.class,
-		ValidationException.class
+		ValidationException.class,
+		ExternalIntegrationException.class
 	})
 	public final ApiResponse<FailureBody> handleBadRequest(
 			final Exception ex, final HttpServletRequest request) {
+
 		loggingHandler.writeLog(ex, request);
 		return handleRequestDetails(ex);
 	}

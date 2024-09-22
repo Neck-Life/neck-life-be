@@ -7,9 +7,11 @@ import com.necklife.api.repository.member.MemberRepository;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class PostInquiryService {
 
 	private final InquiryRepository inquiryRepository;
@@ -24,7 +26,8 @@ public class PostInquiryService {
 		}
 		//        mailClient.sendEmail("ccnoi1532@naver.com",title,content);
 
-		inquiryRepository.save(
-				InquiryEntity.builder().member(findMember.get()).title(title).content(content).build());
+		InquiryEntity inquiry =
+				InquiryEntity.builder().member(findMember.get()).title(title).content(content).build();
+		inquiryRepository.save(inquiry);
 	}
 }

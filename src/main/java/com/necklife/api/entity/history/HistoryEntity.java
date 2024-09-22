@@ -41,8 +41,37 @@ public class HistoryEntity {
 
 	private Integer historyPoint;
 
-	public HistoryEntity updateHistoryPoint(Integer historyPoint) {
-		this.historyPoint = historyPoint;
+	public HistoryEntity updateHistoryPoint() {
+		double baseScore =
+				100
+						* (poseTimerMap.getOrDefault(PoseStatus.NORMAL, 0L) / (double) 60
+								+ poseCountMap.getOrDefault(PoseStatus.NORMAL, 0))
+						/ (measuredTime / (double) 60
+								+ poseCountMap.getOrDefault(PoseStatus.FORWARD, 0)
+								+ poseCountMap.getOrDefault(PoseStatus.NORMAL, 0));
+
+		// 점수 상승 계산 (정상 시간이 많을수록 빠르게 상승)
+		double scoreIncrease =
+				0.2
+						* Math.log(
+								1
+										+ poseTimerMap.getOrDefault(PoseStatus.NORMAL, 0L) / (double) 60
+										+ poseCountMap.getOrDefault(PoseStatus.NORMAL, 0));
+
+		// 점수 하락 계산 (거북목 시간이 많을수록 빠르게 하락)
+		double scoreDecrease =
+				0.2
+						* Math.log(
+								1
+										+ poseTimerMap.getOrDefault(PoseStatus.FORWARD, 0L) / (double) 60
+										+ poseCountMap.getOrDefault(PoseStatus.FORWARD, 0));
+
+		// 최종 점수 계산
+		double finalScore = baseScore + scoreIncrease - scoreDecrease;
+
+		// 점수는 0~100 사이로 제한
+		this.historyPoint = (int) Math.max(0, Math.min(100, finalScore));
+
 		return this;
 	}
 }
