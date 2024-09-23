@@ -12,6 +12,19 @@ spring:
       uri: ${MONGODB_URI}
       auto-index-creation: true
 
+  mail:
+    host: smtp.gmail.com # 1
+    port: 587 # 2
+    username: ${mail.username} # 3
+    password: ${mail.password} # 4
+    properties:
+      mail:
+        smtp:
+          auth: true # 5
+          timeout: 5000 # 6
+          starttls:
+            enable: true # 7
+
 
 
 # prometheus config
