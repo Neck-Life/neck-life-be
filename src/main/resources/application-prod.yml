@@ -75,3 +75,16 @@ kakao:
   redirect_uri: http://localhost:8080/api/v1/social/kakao
   client_id: thisIsKaKaoClientId
 
+
+
+client:
+  max-attempts: 3
+  pool:
+    max-connect: 100
+    max-connect-per-route: 5
+  timeout:
+    connect: 5000
+    read: 5000
+  retry:
+    maxAttempts: 3
+    backOffPeriod: 2000
