@@ -201,7 +201,7 @@ public class MemberController {
 		//		Long memberId = 1L;
 
 		System.out.println(userDetails);
-		postInquiryService.execute(memberId, postInquiryBody.getTitle(), postInquiryBody.getTitle());
+		postInquiryService.execute(memberId, postInquiryBody.getTitle(), postInquiryBody.getContent());
 
 		return ApiResponseGenerator.success("접수되었습니다.", HttpStatus.OK, MessageCode.SUCCESS);
 	}
