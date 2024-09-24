@@ -37,6 +37,20 @@ public class SaveHistoryService {
 
 		history.sort(Comparator.comparing(TreeMap::firstKey));
 
+		Set<LocalDate> uniqueLocalDate = new HashSet<>();
+
+		for (TreeMap<LocalDateTime, PoseStatus> subHistory : history) {
+
+			LocalDateTime startAt = subHistory.firstKey();
+			LocalDate startDate = startAt.toLocalDate();
+			uniqueLocalDate.add(startDate);
+		}
+
+		List<LocalDateTime> startAtListForCheckDuplicateHistory =
+				historyRepository.findStartAtByDateList(uniqueLocalDate).stream()
+						.map(HistoryEntity::getStartAt) // HistoryEntity에서 startAt(LocalDateTime) 추출
+						.toList(); // LocalDateTime 리스트로 변환
+
 		// subHistories 정리하기
 		for (TreeMap<LocalDateTime, PoseStatus> subHistory : history) {
 			Map<LocalDateTime, PoseStatus> poseStatusMap = new TreeMap<>();
@@ -45,6 +59,11 @@ public class SaveHistoryService {
 
 			LocalDateTime startAt = subHistory.firstKey();
 			LocalDateTime endAt = subHistory.lastKey();
+
+			if (startAtListForCheckDuplicateHistory.contains(startAt)) {
+				System.out.println("중복된 히스토리");
+				continue;
+			}
 
 			if (subHistory.get(startAt) != PoseStatus.valueOf("START")
 					|| subHistory.get(endAt) != PoseStatus.valueOf("END")) {

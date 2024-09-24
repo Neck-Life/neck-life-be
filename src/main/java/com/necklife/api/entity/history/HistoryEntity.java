@@ -9,6 +9,7 @@ import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -19,6 +20,10 @@ import org.springframework.data.mongodb.core.mapping.Field;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
 @Document(collection = "history")
+@CompoundIndex(
+		name = "unique_history_idx",
+		def = "{'start_at': 1, 'end_at': 1, 'member': 1}",
+		unique = true)
 public class HistoryEntity {
 
 	@Id private String id;
