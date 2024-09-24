@@ -1,11 +1,14 @@
 package com.necklife.api.entity.history;
 
 import com.necklife.api.entity.member.MemberEntity;
+import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -40,6 +43,10 @@ public class HistoryEntity {
 	private Map<PoseStatus, Long> poseTimerMap;
 
 	private Integer historyPoint;
+
+	@CreatedDate @NotNull private LocalDateTime createdAt;
+
+	@LastModifiedDate @NotNull private LocalDateTime updatedAt;
 
 	public HistoryEntity updateHistoryPoint() {
 		double baseScore =

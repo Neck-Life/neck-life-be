@@ -4,13 +4,16 @@ import com.necklife.api.entity.goal.GoalEntity;
 import com.necklife.api.entity.goal.GoalEntity.GoalDetail;
 import com.necklife.api.entity.goal.GoalType;
 import com.necklife.api.entity.member.MemberEntity;
+import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -43,6 +46,10 @@ public class HistorySummaryEntity {
 	private Map<PoseStatus, Long> totalPoseTimerMap;
 
 	private Integer totalHistoryPoint;
+
+	@CreatedDate @NotNull private LocalDateTime createdAt;
+
+	@LastModifiedDate @NotNull private LocalDateTime updatedAt;
 
 	public HistorySummaryEntity updateHistoryPoint() {
 

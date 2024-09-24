@@ -104,6 +104,8 @@ public class SaveHistoryService {
 
 		saveSummaryHistory(memberEntity, historySummaryMap, forSaveHistorySummaryEntity);
 
+		// todo 여기서 중복되는 history인지 검증이 필요함 이걸 DB한테 맡길 수 있지 않을까 근데 여기에 또 이걸 historySummary에 넣으니까 그 전에
+		// 탐지해야되나
 		historyRepository.saveAll(forSaveHistoryEntity);
 		historySummaryRepository.saveAll(forSaveHistorySummaryEntity);
 	}
@@ -123,6 +125,7 @@ public class SaveHistoryService {
 			Map<PoseStatus, Long> poseTimerMap = new HashMap<>();
 			TreeMap<LocalDateTime, PoseStatus> totalPoseStatusMap = new TreeMap<>();
 
+			// 여기서 히스토리 동일한게 있는지 검증?
 			for (HistoryEntity historyEntity : histories) {
 				historyEntity
 						.getPoseCountMap()
