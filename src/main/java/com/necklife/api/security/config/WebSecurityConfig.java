@@ -109,8 +109,7 @@ public class WebSecurityConfig {
 								"/swagger-resources/**",
 								"/v3/api-docs/**",
 								"/openapi3.yaml",
-								"/reports/**",
-								"/**")
+								"/reports/**")
 						.requestMatchers(
 								HttpMethod.POST,
 								"/api/v1/members",

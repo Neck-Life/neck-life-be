@@ -22,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -196,6 +197,7 @@ public class MemberController {
 			@AuthenticationPrincipal TokenUserDetails userDetails,
 			@Valid @RequestBody PostInquiryBody postInquiryBody) {
 
+		log.info("SecurityContextHolder.getContext().getAuthentication() : ${}", SecurityContextHolder.getContext().getAuthentication());
 		//		String memberId = findMemberByToken(httpServletRequest);
 		String memberId = (userDetails.getUsername());
 		//		Long memberId = 1L;
