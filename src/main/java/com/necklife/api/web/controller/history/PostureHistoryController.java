@@ -6,6 +6,7 @@ import com.necklife.api.security.authentication.token.TokenUserDetailsService;
 import com.necklife.api.security.token.TokenGenerator;
 import com.necklife.api.security.token.TokenResolver;
 import com.necklife.api.web.dto.request.history.HistoryPointEnum;
+import com.necklife.api.web.dto.request.history.PostOnlyRawHistoryBody;
 import com.necklife.api.web.dto.request.history.PostPostureHistoryBody;
 import com.necklife.api.web.dto.request.history.PostRawHistoryBody;
 import com.necklife.api.web.support.ApiResponse;
@@ -17,10 +18,8 @@ import com.necklife.api.web.usecase.dto.request.history.PostHistoryRequest;
 import com.necklife.api.web.usecase.dto.response.history.GetHistoryPointResponse;
 import com.necklife.api.web.usecase.dto.response.history.GetMonthlyDetailResponse;
 import com.necklife.api.web.usecase.dto.response.history.GetYearDetailResponse;
-import com.necklife.api.web.usecase.history.GetHistoryPointUseCase;
-import com.necklife.api.web.usecase.history.GetMonthlyDetailUseCase;
-import com.necklife.api.web.usecase.history.GetYearDetailUseCase;
-import com.necklife.api.web.usecase.history.PostHistoryUseCase;
+import com.necklife.api.web.usecase.dto.response.history.PostRawHistoryResponse;
+import com.necklife.api.web.usecase.history.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -54,6 +53,7 @@ public class PostureHistoryController {
 	private final GetMonthlyDetailUseCase getMonthlyDetailUseCase;
 	private final GetHistoryPointUseCase getHistoryPointUseCase;
 
+	private final PostRawDataOnlyRawUseCase postRawDataOnlyRawUseCase;
 	@PostMapping
 	public ApiResponse<ApiResponse.Success> postHistory(
 			HttpServletRequest httpServletRequest,
@@ -126,15 +126,15 @@ public class PostureHistoryController {
 	}
 
 	@PostMapping("/raw")
-	public ApiResponse<ApiResponse.Success> postRawData(
+	public ApiResponse<ApiResponse.SuccessBody<List<PostRawHistoryResponse>>> postRawData(
 			@AuthenticationPrincipal TokenUserDetails userDetails,
-			@Valid @RequestBody List<PostRawHistoryBody> postRawHistoryBodyList) {
+			@Valid @RequestBody PostOnlyRawHistoryBody postRawHistoryBodyList) {
 		String username = userDetails.getUsername();
 
+		List<PostRawHistoryResponse> postRawHistoryResponses = postRawDataOnlyRawUseCase.execute(username, postRawHistoryBodyList.getRawData());
 
 
-
-		return ApiResponseGenerator.success(HttpStatus.OK, MessageCode.SUCCESS);
+		return ApiResponseGenerator.success(postRawHistoryResponses,HttpStatus.OK, MessageCode.SUCCESS);
 	}
 
 
