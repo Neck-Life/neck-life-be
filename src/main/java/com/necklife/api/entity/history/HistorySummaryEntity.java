@@ -8,7 +8,6 @@ import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import lombok.*;
@@ -51,7 +50,6 @@ public class HistorySummaryEntity {
 	@CreatedDate @NotNull private LocalDateTime createdAt;
 
 	@LastModifiedDate @NotNull private LocalDateTime updatedAt;
-
 
 	public HistorySummaryEntity updateHistoryPoint() {
 

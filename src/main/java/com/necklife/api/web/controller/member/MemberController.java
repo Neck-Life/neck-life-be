@@ -197,7 +197,9 @@ public class MemberController {
 			@AuthenticationPrincipal TokenUserDetails userDetails,
 			@Valid @RequestBody PostInquiryBody postInquiryBody) {
 
-		log.info("SecurityContextHolder.getContext().getAuthentication() : ${}", SecurityContextHolder.getContext().getAuthentication());
+		log.info(
+				"SecurityContextHolder.getContext().getAuthentication() : ${}",
+				SecurityContextHolder.getContext().getAuthentication());
 		//		String memberId = findMemberByToken(httpServletRequest);
 		String memberId = (userDetails.getUsername());
 		//		Long memberId = 1L;

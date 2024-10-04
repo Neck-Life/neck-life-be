@@ -8,7 +8,6 @@ import com.necklife.api.security.token.TokenResolver;
 import com.necklife.api.web.dto.request.history.HistoryPointEnum;
 import com.necklife.api.web.dto.request.history.PostOnlyRawHistoryBody;
 import com.necklife.api.web.dto.request.history.PostPostureHistoryBody;
-import com.necklife.api.web.dto.request.history.PostRawHistoryBody;
 import com.necklife.api.web.support.ApiResponse;
 import com.necklife.api.web.support.ApiResponseGenerator;
 import com.necklife.api.web.support.MessageCode;
@@ -19,6 +18,11 @@ import com.necklife.api.web.usecase.dto.response.history.*;
 import com.necklife.api.web.usecase.history.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -26,12 +30,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 @Slf4j
 @Validated
@@ -52,6 +50,7 @@ public class PostureHistoryController {
 
 	private final PostRawDataOnlyRawUseCase postRawDataOnlyRawUseCase;
 	private final GetRawDataPositionUseCase getRawDataPositionUseCase;
+
 	@PostMapping
 	public ApiResponse<ApiResponse.Success> postHistory(
 			HttpServletRequest httpServletRequest,
@@ -114,10 +113,11 @@ public class PostureHistoryController {
 	@GetMapping("/point")
 	public ApiResponse<ApiResponse.SuccessBody<GetHistoryPointResponse>> getPoint(
 			@AuthenticationPrincipal TokenUserDetails userDetails,
-			@Valid @RequestParam("type") HistoryPointEnum historyPointRequest ) {
+			@Valid @RequestParam("type") HistoryPointEnum historyPointRequest) {
 		String username = userDetails.getUsername();
 
-		GetHistoryPointResponse getHistoryPointResponse = getHistoryPointUseCase.execute(username,historyPointRequest);
+		GetHistoryPointResponse getHistoryPointResponse =
+				getHistoryPointUseCase.execute(username, historyPointRequest);
 
 		return ApiResponseGenerator.success(
 				getHistoryPointResponse, HttpStatus.OK, MessageCode.SUCCESS);
@@ -129,10 +129,11 @@ public class PostureHistoryController {
 			@Valid @RequestBody PostOnlyRawHistoryBody postRawHistoryBodyList) {
 		String username = userDetails.getUsername();
 
-		List<PostRawHistoryResponse> postRawHistoryResponses = postRawDataOnlyRawUseCase.execute(username, postRawHistoryBodyList.getRawData());
+		List<PostRawHistoryResponse> postRawHistoryResponses =
+				postRawDataOnlyRawUseCase.execute(username, postRawHistoryBodyList.getRawData());
 
-
-		return ApiResponseGenerator.success(postRawHistoryResponses,HttpStatus.OK, MessageCode.SUCCESS);
+		return ApiResponseGenerator.success(
+				postRawHistoryResponses, HttpStatus.OK, MessageCode.SUCCESS);
 	}
 
 	@GetMapping("/raw")
@@ -143,16 +144,8 @@ public class PostureHistoryController {
 
 		GetRawHistoryResponse response = getRawDataPositionUseCase.execute(username, timestamp);
 
-
-		return ApiResponseGenerator.success(response,HttpStatus.OK, MessageCode.SUCCESS);
+		return ApiResponseGenerator.success(response, HttpStatus.OK, MessageCode.SUCCESS);
 	}
-
-
-
-
-
-
-
 
 	private static void checkYearAndMonth(Integer year, Integer month) {
 

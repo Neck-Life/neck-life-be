@@ -7,8 +7,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class StringToHistoryPoint implements Converter<String, HistoryPointEnum> {
 
-    @Override
-    public HistoryPointEnum convert(String source) {
-        return HistoryPointEnum.valueOf(source.toUpperCase());
-    }
+	@Override
+	public HistoryPointEnum convert(String source) {
+		return HistoryPointEnum.valueOf(source.toUpperCase());
+	}
 }
