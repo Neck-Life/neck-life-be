@@ -15,10 +15,7 @@ import com.necklife.api.web.support.MessageCode;
 import com.necklife.api.web.usecase.dto.request.history.GetMonthlyHistoryRequest;
 import com.necklife.api.web.usecase.dto.request.history.GetYearHistoryRequest;
 import com.necklife.api.web.usecase.dto.request.history.PostHistoryRequest;
-import com.necklife.api.web.usecase.dto.response.history.GetHistoryPointResponse;
-import com.necklife.api.web.usecase.dto.response.history.GetMonthlyDetailResponse;
-import com.necklife.api.web.usecase.dto.response.history.GetYearDetailResponse;
-import com.necklife.api.web.usecase.dto.response.history.PostRawHistoryResponse;
+import com.necklife.api.web.usecase.dto.response.history.*;
 import com.necklife.api.web.usecase.history.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -54,6 +51,7 @@ public class PostureHistoryController {
 	private final GetHistoryPointUseCase getHistoryPointUseCase;
 
 	private final PostRawDataOnlyRawUseCase postRawDataOnlyRawUseCase;
+	private final GetRawDataPositionUseCase getRawDataPositionUseCase;
 	@PostMapping
 	public ApiResponse<ApiResponse.Success> postHistory(
 			HttpServletRequest httpServletRequest,
@@ -136,6 +134,19 @@ public class PostureHistoryController {
 
 		return ApiResponseGenerator.success(postRawHistoryResponses,HttpStatus.OK, MessageCode.SUCCESS);
 	}
+
+	@GetMapping("/raw")
+	public ApiResponse<ApiResponse.SuccessBody<GetRawHistoryResponse>> getRawData(
+			@AuthenticationPrincipal TokenUserDetails userDetails,
+			@RequestParam("timestamp") LocalDateTime timestamp) {
+		String username = userDetails.getUsername();
+
+		GetRawHistoryResponse response = getRawDataPositionUseCase.execute(username, timestamp);
+
+
+		return ApiResponseGenerator.success(response,HttpStatus.OK, MessageCode.SUCCESS);
+	}
+
 
 
 
