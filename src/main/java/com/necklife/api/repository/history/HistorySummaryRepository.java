@@ -5,10 +5,16 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 
+
 public interface HistorySummaryRepository extends MongoRepository<HistorySummaryEntity, String> {
+
+
 
 	List<HistorySummaryEntity> findAllByMemberId(String memberId);
 
@@ -28,6 +34,8 @@ public interface HistorySummaryRepository extends MongoRepository<HistorySummary
 	// field가 localDate 타입이므로 isoDate 변환이 필요함
 	@Query(value = "{ 'memberId': ?0, 'date': {'$gte': ?1, '$lte': ?2 } }", fields = "{'totalHistoryPoint': 1, 'date': 1}")
 	List<HistorySummaryEntity> findPointByMemberIdAndDate(String memberId, LocalDate start_At, LocalDate end_At);
+
+
 
 
 
