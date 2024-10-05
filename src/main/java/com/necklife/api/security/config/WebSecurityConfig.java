@@ -108,7 +108,6 @@ public class WebSecurityConfig {
 								"/swagger-ui/*",
 								"/swagger-resources/**",
 								"/v3/api-docs/**",
-								"/api/v1/**",
 								"/openapi3.yaml",
 								"/reports/**")
 						.requestMatchers(
@@ -134,7 +133,6 @@ public class WebSecurityConfig {
 								"/v3/api-docs/**",
 								"/openapi3.yaml",
 								"/reports/**",
-								"/api/v1/**",
 								"/swagger")
 						.requestMatchers(
 								HttpMethod.POST,
