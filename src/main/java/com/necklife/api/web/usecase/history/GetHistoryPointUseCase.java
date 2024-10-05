@@ -26,7 +26,7 @@ public class GetHistoryPointUseCase {
 		LocalDate startAt = now.minusDays(beforeDay);
 
 		List<HistorySummaryEntity> historySummaryEntities =
-				historySummaryRepository.findPointByMemberIdAndDate(memberId, startAt, now);
+				historySummaryRepository.findPointByMemberIdAndDate(memberId, startAt, now.plusDays(1));
 
 		for (HistorySummaryEntity historySummaryEntity : historySummaryEntities) {
 			historyPointMap.put(
