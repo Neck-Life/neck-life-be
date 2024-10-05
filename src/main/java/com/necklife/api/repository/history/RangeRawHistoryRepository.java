@@ -16,9 +16,10 @@ public class RangeRawHistoryRepository {
 	public RawHistoryEntity findByTimestampRange(
 			String MemberId, LocalDateTime start, LocalDateTime end) {
 		Query query = new Query();
-		query.addCriteria(Criteria.where("member.id").is(MemberId));
-		query.addCriteria(Criteria.where("date").is(start.toLocalDate()));
-		query.addCriteria(Criteria.where("rawData.timestamp").gte(start).lt(end));
+		query.addCriteria(Criteria.where("memberId").is(MemberId));
+
+		query.addCriteria(
+				Criteria.where("rawData.timestamp").gte(start.toString()).lte(end.toString()));
 
 		query.fields().include("rawData").exclude("_id"); // _id 필드 제외 시 명시적으로 제외 가능
 

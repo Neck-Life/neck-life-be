@@ -1,5 +1,6 @@
 package com.necklife.api.web.usecase.history;
 
+import com.necklife.api.entity.history.RawHistoryEntity;
 import com.necklife.api.repository.history.RangeRawHistoryRepository;
 import com.necklife.api.repository.member.MemberRepository;
 import com.necklife.api.web.usecase.dto.response.history.GetRawHistoryResponse;
@@ -29,21 +30,27 @@ public class GetRawDataPositionUseCase {
 		LocalDateTime end = rawTimestamp.plusSeconds(3);
 
 		if (start.isBefore(rawTimestamp.minusDays(1))) {
-			rawData.addAll(
-					rangeRawHistoryRepository
-							.findByTimestampRange(MemberId, end.toLocalDate().atStartOfDay(), end)
-							.getRawData());
+			RawHistoryEntity byTimestampRange =
+					rangeRawHistoryRepository.findByTimestampRange(
+							MemberId, end.toLocalDate().atStartOfDay(), end);
+
+			if (byTimestampRange != null) {
+				rawData.addAll(byTimestampRange.getRawData());
+			}
 		}
 
-		rawData.addAll(
-				rangeRawHistoryRepository.findByTimestampRange(MemberId, start, end).getRawData());
+		RawHistoryEntity byTimestampRange =
+				rangeRawHistoryRepository.findByTimestampRange(MemberId, start, end);
+		if (byTimestampRange != null) {
+			rawData.addAll(byTimestampRange.getRawData());
 
-		LocalDateTime startTime = LocalDateTime.parse(rawData.get(0).get("timestamp"));
-		for (Map<String, String> raw : rawData) {
-			LocalDateTime timestamp = LocalDateTime.parse(raw.get("timestamp"));
-			raw.remove("timestamp");
-			long milliseconds = java.time.Duration.between(startTime, timestamp).toMillis();
-			raw.put("milliseconds", String.valueOf(milliseconds));
+			LocalDateTime startTime = LocalDateTime.parse(rawData.get(0).get("timestamp"));
+			for (Map<String, String> raw : rawData) {
+				LocalDateTime timestamp = LocalDateTime.parse(raw.get("timestamp"));
+				raw.remove("timestamp");
+				long milliseconds = java.time.Duration.between(startTime, timestamp).toMillis();
+				raw.put("milliseconds", String.valueOf(milliseconds));
+			}
 		}
 
 		return GetRawHistoryResponse.builder().rawData(rawData).build();

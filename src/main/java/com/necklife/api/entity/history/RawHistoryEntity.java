@@ -18,7 +18,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
-@Document(collection = "raw_history_summary")
+@Document(collection = "raw_history")
 public class RawHistoryEntity {
 
 	@Id private String id;
