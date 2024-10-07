@@ -9,7 +9,6 @@ import com.necklife.api.repository.history.HistoryRepository;
 import com.necklife.api.repository.history.HistorySummaryRepository;
 import com.necklife.api.service.goal.GetActiveGoalService;
 import com.necklife.api.service.streak.UpdateStreakService;
-import com.necklife.api.web.exception.NotSupportHistoryException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -65,11 +64,11 @@ public class SaveHistoryService {
 				continue;
 			}
 
-//			if (subHistory.get(startAt) != PoseStatus.valueOf("START")
-//					|| subHistory.get(endAt) != PoseStatus.valueOf("END")) {
-//
-//				throw new NotSupportHistoryException();
-//			}
+			//			if (subHistory.get(startAt) != PoseStatus.valueOf("START")
+			//					|| subHistory.get(endAt) != PoseStatus.valueOf("END")) {
+			//
+			//				throw new NotSupportHistoryException();
+			//			}
 
 			LocalDate startDate = startAt.toLocalDate();
 
