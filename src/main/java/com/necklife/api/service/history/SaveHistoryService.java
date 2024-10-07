@@ -65,11 +65,11 @@ public class SaveHistoryService {
 				continue;
 			}
 
-			if (subHistory.get(startAt) != PoseStatus.valueOf("START")
-					|| subHistory.get(endAt) != PoseStatus.valueOf("END")) {
-
-				throw new NotSupportHistoryException();
-			}
+//			if (subHistory.get(startAt) != PoseStatus.valueOf("START")
+//					|| subHistory.get(endAt) != PoseStatus.valueOf("END")) {
+//
+//				throw new NotSupportHistoryException();
+//			}
 
 			LocalDate startDate = startAt.toLocalDate();
 
