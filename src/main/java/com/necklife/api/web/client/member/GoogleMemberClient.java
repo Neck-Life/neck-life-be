@@ -26,6 +26,7 @@ public class GoogleMemberClient implements SocialMemberClient {
 		String targetUrl =
 				UriComponentsBuilder.fromHttpUrl(googleApi)
 						.queryParam("id_token", targetId)
+//						.queryParam("access_type", "offline")
 						.build()
 						.toUriString();
 
