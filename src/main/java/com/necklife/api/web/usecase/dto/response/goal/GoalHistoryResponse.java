@@ -1,7 +1,10 @@
 package com.necklife.api.web.usecase.dto.response.goal;
 
 import java.time.LocalDate;
+import java.util.Map;
 import java.util.TreeMap;
+
+import com.necklife.api.entity.goal.GoalType;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
@@ -11,5 +14,5 @@ import lombok.Getter;
 @Getter
 public class GoalHistoryResponse {
 
-	private TreeMap<LocalDate, Double> goalHistories;
+	private TreeMap<LocalDate, Map<GoalType, Double>> goalHistories;
 }
