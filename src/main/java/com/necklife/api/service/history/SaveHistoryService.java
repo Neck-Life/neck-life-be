@@ -97,6 +97,10 @@ public class SaveHistoryService {
 				LocalDateTime neckEventDate = neckEvent.getKey();
 				PoseStatus neckEventStatus = neckEvent.getValue();
 
+				if(neckEventStatus == beforeState) {
+					continue;
+				}
+
 				poseStatusMap.put(neckEventDate, neckEventStatus);
 				poseCountMap.put(neckEventStatus, poseCountMap.getOrDefault(neckEventStatus, 0) + 1);
 
