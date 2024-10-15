@@ -6,7 +6,6 @@ import com.necklife.api.repository.history.HistorySummaryRepository;
 import com.necklife.api.repository.member.MemberRepository;
 import com.necklife.api.web.usecase.dto.response.goal.GoalHistoryResponse;
 import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -31,7 +30,8 @@ public class GetGoalsHistoryUseCase {
 		TreeMap<LocalDate, Map<GoalType, Double>> goalHistoryMap = new TreeMap<>();
 
 		for (HistorySummaryEntity historySummaryEntity : allHistory) {
-			goalHistoryMap.put(historySummaryEntity.getDate(), historySummaryEntity.getGoalAchievements());
+			goalHistoryMap.put(
+					historySummaryEntity.getDate(), historySummaryEntity.getGoalAchievements());
 		}
 
 		return GoalHistoryResponse.builder().goalHistories(goalHistoryMap).build();

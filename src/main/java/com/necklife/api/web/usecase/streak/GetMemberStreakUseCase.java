@@ -23,7 +23,7 @@ public class GetMemberStreakUseCase {
 		if (findMember.isPresent()) {
 			StreakEntity execute = getStreakService.execute(findMember.get());
 			return StreakResponse.builder()
-					.lastGoalStreakDate(execute.getLastGoalStreakDate())
+					//					.lastGoalStreakDate(execute.getLastGoalStreakDate())
 					.currentGoalStreak(execute.getCurrentGoalStreak())
 					.maxGoalStreak(execute.getMaxGoalStreak())
 					.lastHistoryStreakDate(execute.getLastHistoryStreakDate())

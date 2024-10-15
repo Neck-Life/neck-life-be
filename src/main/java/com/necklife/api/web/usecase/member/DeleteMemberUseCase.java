@@ -37,7 +37,7 @@ public class DeleteMemberUseCase {
 		MemberEntity member = findMember.get();
 		switch (member.getOauthProvider().toString()) {
 			case "GOOGLE":
-//				socialMemberData = googleOauthService.execute(id_token);
+				//				socialMemberData = googleOauthService.execute(id_token);
 				break;
 				//            case "kakao":
 				//                socialMemberData = kaKaoOauthService.execute(id_token);

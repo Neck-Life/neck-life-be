@@ -132,7 +132,6 @@ public class HistorySummaryEntity {
 		// 초기화
 		goalAchievements = new HashMap<>();
 
-
 		if (goal == null || goal.getGoals().isEmpty()) {
 			return;
 		}
@@ -145,10 +144,10 @@ public class HistorySummaryEntity {
 			// 목표 유형에 따라 달성 여부 계산
 			switch (type) {
 				case MEASUREMENT:
-					achievedRate = Math.min(measuredTime / goalDetail.getTargetValue(),1);
+					achievedRate = Math.min(measuredTime / goalDetail.getTargetValue(), 1);
 					break;
 				case SCORE:
-					achievedRate = Math.min(totalHistoryPoint / goalDetail.getTargetValue(),1);
+					achievedRate = Math.min(totalHistoryPoint / goalDetail.getTargetValue(), 1);
 					break;
 					// 다른 목표 유형에 대한 처리 추가 가능
 			}
@@ -156,6 +155,5 @@ public class HistorySummaryEntity {
 			// 결과를 goalAchievements 맵에 저장
 			goalAchievements.put(type, achievedRate);
 		}
-
 	}
 }

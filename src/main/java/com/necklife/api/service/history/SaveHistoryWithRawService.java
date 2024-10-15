@@ -111,7 +111,7 @@ public class SaveHistoryWithRawService {
 				LocalDateTime neckEventDate = neckEvent.getKey();
 				PoseStatus neckEventStatus = neckEvent.getValue();
 
-				if(neckEventStatus == beforeState) {
+				if (neckEventStatus == beforeState) {
 					continue;
 				}
 

@@ -17,7 +17,7 @@ public class PostRawDataOnlyRawUseCase {
 	private final SaveOnlyRawDataService saveOnlyRawDataService;
 
 	private final HashSet<String> rawDataKeySet =
-			new HashSet<>(Arrays.asList("timestamp", "position", "status"));
+			new HashSet<>(Arrays.asList("timestamp", "pitch", "position", "status"));
 
 	public List<PostRawHistoryResponse> execute(String MemberId, List<Map<String, String>> rawData) {
 
