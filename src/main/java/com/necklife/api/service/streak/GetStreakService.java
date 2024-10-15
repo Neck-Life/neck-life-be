@@ -21,8 +21,6 @@ public class GetStreakService {
 						() ->
 								StreakEntity.builder()
 										.member(member)
-										.currentGoalStreak(0)
-										.maxGoalStreak(0)
 										.currentHistoryStreak(0)
 										.maxHistoryStreak(0)
 										.build());
