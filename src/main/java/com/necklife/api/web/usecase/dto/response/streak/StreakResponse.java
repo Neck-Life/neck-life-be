@@ -12,7 +12,7 @@ import lombok.Getter;
 @Getter
 public class StreakResponse {
 
-//	private Map<GoalType, LocalDate> lastGoalStreakDate; // 마지막 목표 달성 스트릭이 기록된 날짜
+	//	private Map<GoalType, LocalDate> lastGoalStreakDate; // 마지막 목표 달성 스트릭이 기록된 날짜
 	private Map<GoalType, Integer> currentGoalStreak; // 현재 목표 달성 스트릭 길    이
 	private Map<GoalType, Integer> maxGoalStreak; // 최대 목표 달성 스트릭 길이
 
