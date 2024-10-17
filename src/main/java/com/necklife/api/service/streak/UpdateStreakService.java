@@ -108,7 +108,14 @@ public class UpdateStreakService {
 
 			for (GoalType goalType : GoalType.values()) {
 
-				if (goalAchievements.get(goalType) != null && goalAchievements.get(goalType) == 1.0) {
+				if (goalAchievements.get(goalType) == null) {
+					lastGoalStreakDate.put(goalType, null);
+					currentGoalStreak.put(goalType, 0);
+					maxGoalStreak.put(goalType, 0);
+					continue;
+				}
+
+				if (goalAchievements.get(goalType) == 1.0) {
 					lastGoalStreakDate.put(goalType, activityDate);
 					currentGoalStreak.put(goalType, 1);
 					maxGoalStreak.put(goalType, 1);
