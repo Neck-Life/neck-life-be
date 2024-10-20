@@ -50,12 +50,12 @@ public class GetPitchTiltForwardUseCase {
 									TreeMap<LocalDateTime, PoseStatus> tilt =
 											new TreeMap<>(summary.getTotalTiltStatusMap());
 
-									//                                    int point = summary.getTotalHistoryPoint();
+									int point = summary.getTotalHistoryPoint();
 
 									return GetMonthlyDetailPitchForwardTiltResponse.Day.builder()
 											.date(date.getDayOfMonth())
 											.measurementTime(measurementTime)
-											//                                            .point(0)
+											.point(point)
 											.poseCountMap(poseCountMap)
 											.poseTimerMap(poseTimerMap)
 											.forward(forward)
