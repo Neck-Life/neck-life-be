@@ -16,7 +16,7 @@ public class PostRawPitchTiltForwardUseCase {
 	private final SavePitchForwardTiltRawHistoryService savePitchForwardTiltRawHistoryService;
 
 	private final HashSet<String> rawDataKeySet =
-			new HashSet<>(Arrays.asList("timestamp", "position", "pitch", "status"));
+			new HashSet<>(Arrays.asList("timestamp", "position", "pitch", "roll", "status"));
 
 	public void execute(
 			String MemberId,
