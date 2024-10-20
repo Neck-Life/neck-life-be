@@ -3,8 +3,14 @@ package com.necklife.api.entity.history;
 public enum PoseStatus {
 	FORWARD("FORWARD"),
 	BACKWARD("BACKWARD"),
-	TILTED("TILTED"),
+	TILT("TILT"),
+	DOWNNORMAL("DOWNNORMAL"),
+
+	// deprecated
 	NORMAL("NORMAL"),
+	FORWARDNORMAL("FORWARDNORMAL"),
+	TILTNORMAL("TILTNORMAL"),
+	DOWN("DOWN"),
 	UNKNOWN("UNKNOWN"),
 
 	START("START"),

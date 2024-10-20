@@ -41,6 +41,7 @@ public class HistoryEntity {
 
 	private double measuredTime;
 
+	// Deprecated
 	private Map<LocalDateTime, PoseStatus> poseStatusMap;
 
 	private Map<PoseStatus, Integer> poseCountMap;
@@ -48,6 +49,11 @@ public class HistoryEntity {
 	private Map<PoseStatus, Long> poseTimerMap;
 
 	private Integer historyPoint;
+
+	// v3부터 적용
+	private Map<LocalDateTime, PoseStatus> pitchStatusMap;
+	private Map<LocalDateTime, PoseStatus> forwardStatusMap;
+	private Map<LocalDateTime, PoseStatus> tiltingStatusMap;
 
 	@CreatedDate @NotNull private LocalDateTime createdAt;
 

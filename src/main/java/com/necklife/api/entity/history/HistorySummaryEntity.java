@@ -39,6 +39,7 @@ public class HistorySummaryEntity {
 
 	private double measuredTime;
 
+	// Deprecated
 	private TreeMap<LocalDateTime, PoseStatus> totalPoseStatusMap;
 
 	private Map<PoseStatus, Integer> totalPoseCountMap;
@@ -46,6 +47,11 @@ public class HistorySummaryEntity {
 	private Map<PoseStatus, Long> totalPoseTimerMap;
 
 	private Integer totalHistoryPoint;
+
+	// v3부터 적용
+	private Map<LocalDateTime, PoseStatus> totalPitchStatusMap;
+	private Map<LocalDateTime, PoseStatus> totalForwardStatusMap;
+	private Map<LocalDateTime, PoseStatus> totalTiltStatusMap;
 
 	@CreatedDate @NotNull private LocalDateTime createdAt;
 
@@ -86,6 +92,44 @@ public class HistorySummaryEntity {
 		return this;
 	}
 
+	public HistorySummaryEntity updateHistoryPointV3() {
+
+		// 기본 점수 설정 (60점)
+		double baseScore = 60;
+
+		// 정상 자세에 따른 점수 상승 계산 (DOWNNORMAL, FORWARDNORMAL, TILTNORMAL 상태 고려)
+		double downNormalTime = totalPoseTimerMap.getOrDefault(PoseStatus.DOWNNORMAL, 0L) / (double) 60;
+		double forwardNormalTime =
+				totalPoseTimerMap.getOrDefault(PoseStatus.FORWARDNORMAL, 0L) / (double) 60;
+		double tiltNormalTime = totalPoseTimerMap.getOrDefault(PoseStatus.TILTNORMAL, 0L) / (double) 60;
+
+		// 총 정상 자세 시간 합산
+		double normalTime = downNormalTime + forwardNormalTime + tiltNormalTime;
+
+		// 거북목 자세에 따른 점수 하락 계산 (FORWARD, TILT, DOWN 상태 고려)
+		double forwardTime = totalPoseTimerMap.getOrDefault(PoseStatus.FORWARD, 0L) / (double) 60;
+		double tiltTime = totalPoseTimerMap.getOrDefault(PoseStatus.TILT, 0L) / (double) 60;
+		double downTime = totalPoseTimerMap.getOrDefault(PoseStatus.DOWN, 0L) / (double) 60;
+
+		// 총 비정상 자세 시간 합산
+		double abnormalTime = forwardTime + tiltTime + downTime;
+
+		// 점수 상승 계산 (정상 자세 시간이 많을수록 점수 상승)
+		double scoreIncrease = 0.2 * Math.log(1 + normalTime);
+
+		// 점수 하락 계산 (비정상 자세 시간이 많을수록 점수 하락)
+		double scoreDecrease = 0.2 * Math.log(1 + abnormalTime);
+
+		// 최종 점수 계산
+		double finalScore = baseScore + scoreIncrease - scoreDecrease;
+
+		// 점수는 0~100 사이로 제한
+		this.totalHistoryPoint = (int) Math.max(0, Math.min(100, finalScore));
+
+		return this;
+	}
+
+	// deprecated
 	public HistorySummaryEntity updateSummary(
 			TreeMap<LocalDateTime, PoseStatus> totalPoseStatusMap,
 			Map<PoseStatus, Integer> totalPoseCountMap,
@@ -94,6 +138,50 @@ public class HistorySummaryEntity {
 			this.totalPoseStatusMap = totalPoseStatusMap;
 		} else {
 			this.totalPoseStatusMap.putAll(totalPoseStatusMap);
+		}
+
+		if (this.totalPoseCountMap == null) {
+			this.totalPoseCountMap = totalPoseCountMap;
+		} else {
+
+			totalPoseCountMap.forEach(
+					((poseStatus, count) -> this.totalPoseCountMap.merge(poseStatus, count, Integer::sum)));
+		}
+
+		if (this.totalPoseTimerMap == null) {
+			this.totalPoseTimerMap = totalPoseTimerMap;
+		} else {
+
+			totalPoseTimerMap.forEach(
+					((poseStatus, count) -> this.totalPoseTimerMap.merge(poseStatus, count, Long::sum)));
+		}
+
+		return this;
+	}
+
+	public HistorySummaryEntity updateSummary(
+			TreeMap<LocalDateTime, PoseStatus> totalPitchStatusMap,
+			TreeMap<LocalDateTime, PoseStatus> totalForwardStatusMap,
+			TreeMap<LocalDateTime, PoseStatus> totalTiltStatusMap,
+			Map<PoseStatus, Integer> totalPoseCountMap,
+			Map<PoseStatus, Long> totalPoseTimerMap) {
+
+		if (this.totalPitchStatusMap == null) {
+			this.totalPitchStatusMap = totalPitchStatusMap;
+		} else {
+			this.totalPitchStatusMap.putAll(totalPitchStatusMap);
+		}
+
+		if (this.totalForwardStatusMap == null) {
+			this.totalForwardStatusMap = totalForwardStatusMap;
+		} else {
+			this.totalForwardStatusMap.putAll(totalForwardStatusMap);
+		}
+
+		if (this.totalTiltStatusMap == null) {
+			this.totalTiltStatusMap = totalTiltStatusMap;
+		} else {
+			this.totalTiltStatusMap.putAll(totalTiltStatusMap);
 		}
 
 		if (this.totalPoseCountMap == null) {
