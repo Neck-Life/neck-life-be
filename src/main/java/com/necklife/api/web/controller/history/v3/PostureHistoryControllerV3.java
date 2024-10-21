@@ -38,6 +38,15 @@ public class PostureHistoryControllerV3 {
 
 		String memberId = tokenUserDetails.getId();
 
+		if (postureHistoryBody.getPitch() == null
+				|| postureHistoryBody.getForward() == null
+				|| postureHistoryBody.getTilt() == null
+				|| postureHistoryBody.getRawData() == null) {
+
+			log.info("postHistory: postureHistoryBody is null");
+			return ApiResponseGenerator.success(HttpStatus.OK);
+		}
+
 		postRawPitchTiltForwardUseCase.execute(
 				memberId,
 				postureHistoryBody.getPitch(),
