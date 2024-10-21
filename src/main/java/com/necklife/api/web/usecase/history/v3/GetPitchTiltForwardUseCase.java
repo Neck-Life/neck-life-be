@@ -43,12 +43,30 @@ public class GetPitchTiltForwardUseCase {
 									double measurementTime = summary.getMeasuredTime();
 									Map<PoseStatus, Integer> poseCountMap = summary.getTotalPoseCountMap();
 									Map<PoseStatus, Long> poseTimerMap = summary.getTotalPoseTimerMap();
-									TreeMap<LocalDateTime, PoseStatus> pitch =
-											new TreeMap<>(summary.getTotalPitchStatusMap());
-									TreeMap<LocalDateTime, PoseStatus> forward =
-											new TreeMap<>(summary.getTotalForwardStatusMap());
-									TreeMap<LocalDateTime, PoseStatus> tilt =
-											new TreeMap<>(summary.getTotalTiltStatusMap());
+
+									Map<LocalDateTime, PoseStatus> totalPitchStatusMap =
+											summary.getTotalPitchStatusMap();
+									if (totalPitchStatusMap == null) {
+										totalPitchStatusMap = new TreeMap<>();
+									}
+
+									Map<LocalDateTime, PoseStatus> totalForwardStatusMap =
+											summary.getTotalForwardStatusMap();
+									if (totalForwardStatusMap == null) {
+										totalForwardStatusMap = new TreeMap<>();
+									}
+
+									Map<LocalDateTime, PoseStatus> totalTiltStatusMap =
+											summary.getTotalTiltStatusMap();
+									if (totalTiltStatusMap == null) {
+										totalTiltStatusMap = new TreeMap<>();
+									}
+
+									TreeMap<LocalDateTime, PoseStatus> pitch = new TreeMap<>(totalPitchStatusMap);
+
+									TreeMap<LocalDateTime, PoseStatus> forward = new TreeMap<>(totalForwardStatusMap);
+
+									TreeMap<LocalDateTime, PoseStatus> tilt = new TreeMap<>(totalTiltStatusMap);
 
 									int point = summary.getTotalHistoryPoint();
 
