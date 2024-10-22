@@ -61,6 +61,9 @@ public class PostureHistoryController {
 
 		for (Map<LocalDateTime, String> subHistory : postureHistoryBody.getHistorys()) {
 
+			if (subHistory == null) {
+				continue;
+			}
 			TreeMap<LocalDateTime, PoseStatus> convertedMap = new TreeMap<>();
 			for (Map.Entry<LocalDateTime, String> entry : subHistory.entrySet()) {
 				LocalDateTime key = entry.getKey();
