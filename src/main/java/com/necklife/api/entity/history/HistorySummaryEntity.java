@@ -93,7 +93,7 @@ public class HistorySummaryEntity {
 	}
 
 	public HistorySummaryEntity updateHistoryPointV3() {
-// 기본 점수 설정 (60점)
+		// 기본 점수 설정 (60점)
 		double baseScore = 60;
 
 		// 정상 자세에 따른 점수 상승 계산 (DOWNNORMAL, FORWARDNORMAL, TILTNORMAL 상태 고려)
