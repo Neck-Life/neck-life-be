@@ -43,7 +43,7 @@ public class WebSecurityConfig {
 				.httpBasic(AbstractHttpConfigurer::disable)
 				.authorizeHttpRequests(
 						authorize ->
-								authorize.requestMatchers("/api/v1/**").authenticated().anyRequest().permitAll())
+								authorize.requestMatchers("/api/**").authenticated().anyRequest().permitAll())
 				.addFilterBefore(
 						getTokenInvalidExceptionHandlerFilter(), AbstractPreAuthenticatedProcessingFilter.class)
 				.addFilterAt(generateAuthenticationFilter(), AbstractPreAuthenticatedProcessingFilter.class)
@@ -69,7 +69,7 @@ public class WebSecurityConfig {
 				.httpBasic(AbstractHttpConfigurer::disable)
 				.authorizeHttpRequests(
 						authorize ->
-								authorize.requestMatchers("/api/v1/**").authenticated().anyRequest().permitAll())
+								authorize.requestMatchers("/api/**").authenticated().anyRequest().permitAll())
 				.addFilterBefore(
 						getTokenInvalidExceptionHandlerFilter(), AbstractPreAuthenticatedProcessingFilter.class)
 				.addFilterAt(generateAuthenticationFilter(), AbstractPreAuthenticatedProcessingFilter.class)
