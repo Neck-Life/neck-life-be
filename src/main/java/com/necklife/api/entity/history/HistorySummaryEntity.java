@@ -93,32 +93,32 @@ public class HistorySummaryEntity {
 	}
 
 	public HistorySummaryEntity updateHistoryPointV3() {
-
-		// 기본 점수 설정 (60점)
+// 기본 점수 설정 (60점)
 		double baseScore = 60;
 
 		// 정상 자세에 따른 점수 상승 계산 (DOWNNORMAL, FORWARDNORMAL, TILTNORMAL 상태 고려)
-		double downNormalTime = totalPoseTimerMap.getOrDefault(PoseStatus.DOWNNORMAL, 0L) / (double) 60;
-		double forwardNormalTime =
-				totalPoseTimerMap.getOrDefault(PoseStatus.FORWARDNORMAL, 0L) / (double) 60;
-		double tiltNormalTime = totalPoseTimerMap.getOrDefault(PoseStatus.TILTNORMAL, 0L) / (double) 60;
+		double downNormalTime = totalPoseTimerMap.getOrDefault(PoseStatus.DOWNNORMAL, 0L); // 초 단위
+		double forwardNormalTime = totalPoseTimerMap.getOrDefault(PoseStatus.FORWARDNORMAL, 0L); // 초 단위
+		double tiltNormalTime = totalPoseTimerMap.getOrDefault(PoseStatus.TILTNORMAL, 0L); // 초 단위
 
-		// 총 정상 자세 시간 합산
+		// 총 정상 자세 시간 합산 (초 단위)
 		double normalTime = downNormalTime + forwardNormalTime + tiltNormalTime;
 
 		// 거북목 자세에 따른 점수 하락 계산 (FORWARD, TILT, DOWN 상태 고려)
-		double forwardTime = totalPoseTimerMap.getOrDefault(PoseStatus.FORWARD, 0L) / (double) 60;
-		double tiltTime = totalPoseTimerMap.getOrDefault(PoseStatus.TILT, 0L) / (double) 60;
-		double downTime = totalPoseTimerMap.getOrDefault(PoseStatus.DOWN, 0L) / (double) 60;
+		double forwardTime = totalPoseTimerMap.getOrDefault(PoseStatus.FORWARD, 0L); // 초 단위
+		double tiltTime = totalPoseTimerMap.getOrDefault(PoseStatus.TILT, 0L); // 초 단위
+		double downTime = totalPoseTimerMap.getOrDefault(PoseStatus.DOWN, 0L); // 초 단위
 
-		// 총 비정상 자세 시간 합산
+		// 총 비정상 자세 시간 합산 (초 단위)
 		double abnormalTime = forwardTime + tiltTime + downTime;
 
 		// 점수 상승 계산 (정상 자세 시간이 많을수록 점수 상승)
-		double scoreIncrease = 0.2 * Math.log(1 + normalTime);
+		// 정상 자세 시간 1분마다 점수 2점 상승
+		double scoreIncrease = (normalTime / 60) * 2; // 60초(1분)마다 2점 추가
 
 		// 점수 하락 계산 (비정상 자세 시간이 많을수록 점수 하락)
-		double scoreDecrease = 0.2 * Math.log(1 + abnormalTime);
+		// 비정상 자세 시간 1분마다 점수 3점 하락
+		double scoreDecrease = (abnormalTime / 60) * 3; // 60초(1분)마다 3점 감소
 
 		// 최종 점수 계산
 		double finalScore = baseScore + scoreIncrease - scoreDecrease;
