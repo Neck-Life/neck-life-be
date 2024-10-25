@@ -43,12 +43,7 @@ management:
       exposure:
         include: "*"
 
-tom
 
-servlet:
-  multipart:
-    max-file-size: 15MB
-  max-request-size: 15MB
 
 # security config
 security:
