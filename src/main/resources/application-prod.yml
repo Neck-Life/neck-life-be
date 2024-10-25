@@ -24,6 +24,10 @@ spring:
           timeout: 5000 # 6
           starttls:
             enable: true # 7
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
 
 
 
@@ -38,6 +42,13 @@ management:
     web:
       exposure:
         include: "*"
+
+tom
+
+servlet:
+  multipart:
+    max-file-size: 15MB
+  max-request-size: 15MB
 
 # security config
 security:
