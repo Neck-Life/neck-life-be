@@ -29,7 +29,7 @@ public class PostRawPitchTiltForwardUseCase {
 		List<TreeMap<LocalDateTime, PoseStatus>> forwardMap = checkHistoryData(forward);
 		List<TreeMap<LocalDateTime, PoseStatus>> tiltMap = checkHistoryData(tilt);
 
-		checkRawData(rawData);
+		//		checkRawData(rawData);
 
 		savePitchForwardTiltRawHistoryService.execute(MemberId, pitchMap, forwardMap, tiltMap, rawData);
 	}

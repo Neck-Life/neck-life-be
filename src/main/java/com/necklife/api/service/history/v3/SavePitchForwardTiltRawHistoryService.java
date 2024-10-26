@@ -227,15 +227,15 @@ public class SavePitchForwardTiltRawHistoryService {
 			LocalDateTime startTime = poseStatusMap.firstKey();
 			LocalDateTime endTime = poseStatusMap.lastKey();
 
-			List<Map<String, String>> subRawData = new ArrayList<>();
-
-			for (Map<String, String> raw : rawData) {
-				LocalDateTime timestamp = LocalDateTime.parse(raw.get("timestamp"));
-
-				if (startTime.isBefore(timestamp) && endTime.isAfter(timestamp)) {
-					subRawData.add(raw);
-				}
-			}
+			//			List<Map<String, String>> subRawData = new ArrayList<>();
+			//
+			//			for (Map<String, String> raw : rawData) {
+			//				LocalDateTime timestamp = LocalDateTime.parse(raw.get("timestamp"));
+			//
+			//				if (startTime.isBefore(timestamp) && endTime.isAfter(timestamp)) {
+			//					subRawData.add(raw);
+			//				}
+			//			}
 
 			double measuredTime = histories.stream().mapToDouble(HistoryEntity::getMeasuredTime).sum();
 
@@ -285,10 +285,10 @@ public class SavePitchForwardTiltRawHistoryService {
 				historySummaryEntity = findSummary.get();
 			}
 
-			RawHistoryEntity rawHistoryEntity =
-					saveRawDataService.execute(memberEntity, historySummaryEntity, subRawData);
-
-			forSaveRawHistoryEntities.add(rawHistoryEntity);
+			//			RawHistoryEntity rawHistoryEntity =
+			//					saveRawDataService.execute(memberEntity, historySummaryEntity, subRawData);
+			//
+			//			forSaveRawHistoryEntities.add(rawHistoryEntity);
 
 			historySummaryEntity.updateMeasuredTime(measuredTime);
 			historySummaryEntity.updateSummary(
