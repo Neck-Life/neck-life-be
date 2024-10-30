@@ -11,4 +11,8 @@ import lombok.*;
 @Builder
 public class RefreshMemberAuthTokenBody {
 	@NotEmpty private String refreshToken;
+
+	private String timeZone;
+	private String language;
+	private String notificationToken;
 }

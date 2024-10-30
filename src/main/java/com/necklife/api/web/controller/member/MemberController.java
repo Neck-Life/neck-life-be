@@ -12,6 +12,9 @@ import com.necklife.api.web.dto.response.member.*;
 import com.necklife.api.web.support.ApiResponse;
 import com.necklife.api.web.support.ApiResponseGenerator;
 import com.necklife.api.web.support.MessageCode;
+import com.necklife.api.web.usecase.dto.request.member.GetMemberTokenDetailUseCaseRequest;
+import com.necklife.api.web.usecase.dto.request.member.PostBasicMemberUseCaseRequest;
+import com.necklife.api.web.usecase.dto.request.member.PostMemberUseCaseRequest;
 import com.necklife.api.web.usecase.dto.response.member.*;
 import com.necklife.api.web.usecase.member.*;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -51,14 +54,24 @@ public class MemberController {
 
 	private final TokenUserDetailsService tokenUserDetailsService;
 
+	private final PostFCMUseCase postFCMUseCase;
+
 	// todo usecase in/out 객체로 분리
 
 	/* 로그인과 회원가입은 동시에 이루어집니다. */
 	@PostMapping()
 	public ApiResponse<ApiResponse.SuccessBody<PostMemberResponse>> postMember(
 			@Valid @RequestBody PostOauthMemberBody postOauthMemberBody) {
-		PostMemberUseCaseResponse useCaseResponse =
-				postMemberUseCase.execute(postOauthMemberBody.getCode(), postOauthMemberBody.getProvider());
+
+		PostMemberUseCaseRequest request =
+				PostMemberUseCaseRequest.builder()
+						.code(postOauthMemberBody.getCode())
+						.provider(postOauthMemberBody.getProvider())
+						.timeZone(postOauthMemberBody.getTimeZone())
+						.language(postOauthMemberBody.getLanguage())
+						.build();
+
+		PostMemberUseCaseResponse useCaseResponse = postMemberUseCase.execute(request);
 		AuthToken authToken =
 				tokenGenerator.generateAuthToken(useCaseResponse.getId(), List.of(Roles.ROLE_USER));
 		PostMemberResponse response =
@@ -76,9 +89,16 @@ public class MemberController {
 	@PostMapping("/basic")
 	public ApiResponse<ApiResponse.SuccessBody<PostMemberResponse>> postBasicMember(
 			@Valid @RequestBody PostBasicMemberBody postBasicMemberBody) {
-		PostMemberUseCaseResponse useCaseResponse =
-				postBasicMemberUseCase.execute(
-						postBasicMemberBody.getEmail(), postBasicMemberBody.getPassword());
+		PostBasicMemberUseCaseRequest request =
+				PostBasicMemberUseCaseRequest.builder()
+						.email(postBasicMemberBody.getEmail())
+						.password(postBasicMemberBody.getPassword())
+						.timeZone(postBasicMemberBody.getTimeZone())
+						.language(postBasicMemberBody.getLanguage())
+						.notificationToken(postBasicMemberBody.getNotificationToken())
+						.build();
+
+		PostMemberUseCaseResponse useCaseResponse = postBasicMemberUseCase.execute(request);
 		AuthToken authToken =
 				tokenGenerator.generateAuthToken(useCaseResponse.getId(), List.of(Roles.ROLE_USER));
 		PostMemberResponse response =
@@ -132,12 +152,22 @@ public class MemberController {
 	@PostMapping("/token")
 	public ApiResponse<ApiResponse.SuccessBody<MemberTokenResponse>> refreshMemberAuthToken(
 			@Valid @RequestBody RefreshMemberAuthTokenBody memberAuthTokenBody) {
+
 		String memberId =
 				tokenResolver
 						.resolveId(memberAuthTokenBody.getRefreshToken())
 						.orElseThrow(() -> new IllegalArgumentException("Invalid token"));
+
+		GetMemberTokenDetailUseCaseRequest request =
+				GetMemberTokenDetailUseCaseRequest.builder()
+						.id(memberId)
+						.timeZone(memberAuthTokenBody.getTimeZone())
+						.language(memberAuthTokenBody.getLanguage())
+						.notificationToken(memberAuthTokenBody.getNotificationToken())
+						.build();
+
 		GetMemberTokenDetailUseCaseResponse useCaseResponse =
-				getMemberTokenDetailUseCase.execute(memberId);
+				getMemberTokenDetailUseCase.execute(request);
 		AuthToken authToken =
 				tokenGenerator.generateAuthToken(useCaseResponse.getId(), List.of(Roles.ROLE_USER));
 		MemberTokenResponse response =
@@ -208,6 +238,15 @@ public class MemberController {
 		postInquiryService.execute(memberId, postInquiryBody.getTitle(), postInquiryBody.getContent());
 
 		return ApiResponseGenerator.success("접수되었습니다.", HttpStatus.OK, MessageCode.SUCCESS);
+	}
+
+	@PostMapping("/fcm")
+	public ApiResponse<ApiResponse.SuccessBody<Void>> postInquiry(
+			@AuthenticationPrincipal TokenUserDetails userDetails, @Valid @RequestBody FCMBody fcmBody) {
+
+		postFCMUseCase.execute(userDetails.getUsername(), fcmBody.getFcmToken());
+
+		return ApiResponseGenerator.success(null, HttpStatus.OK, MessageCode.SUCCESS);
 	}
 
 	private String findMemberByToken(HttpServletRequest request) {

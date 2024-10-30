@@ -12,6 +12,7 @@ import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.necklife.api.ApiApplication;
+import com.necklife.api.security.authentication.token.TokenUserDetailsService;
 import com.necklife.api.security.token.AuthToken;
 import com.necklife.api.security.token.TokenGenerator;
 import com.necklife.api.security.token.TokenResolver;
@@ -61,11 +62,13 @@ class MemberControllerTest {
 	@MockBean GetMemberDetailUseCase getMemberDetailUseCase;
 	@MockBean GetMemberTokenDetailUseCase getMemberTokenDetailUseCase;
 
+	@MockBean TokenUserDetailsService tokenUserDetailsService;
+
 	@Test
 	@DisplayName("POST /api/v1/members 회원 가입을 한다.")
 	@WithUserDetails(userDetailsServiceBeanName = "testTokenUserDetailsService")
 	void postMember() throws Exception {
-		when(postMemberUseCase.execute(any(), any()))
+		when(postMemberUseCase.execute(any()))
 				.thenReturn(new PostMemberUseCaseResponse("1", "이메일", "제공자", "상태"));
 		when(tokenGenerator.generateAuthToken(any(), any()))
 				.thenReturn(new AuthToken("accessToken", "refreshToken"));

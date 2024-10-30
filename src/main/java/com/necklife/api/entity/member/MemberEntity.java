@@ -54,6 +54,14 @@ public class MemberEntity {
 
 	private LocalDateTime deletedAt;
 
+	private LocalDateTime lastLoginAt;
+
+	private String timeZone;
+
+	private String language;
+
+	private String notificationToken;
+
 	public MemberEntity delete() {
 		this.deletedAt = LocalDateTime.now();
 		return withDrawn();
@@ -81,5 +89,9 @@ public class MemberEntity {
 
 	public void updateRefreshToken(String oauthRefreshToken) {
 		this.oauthRefreshToken = oauthRefreshToken;
+	}
+
+	public void updateLastLoginAt() {
+		this.lastLoginAt = LocalDateTime.now();
 	}
 }
