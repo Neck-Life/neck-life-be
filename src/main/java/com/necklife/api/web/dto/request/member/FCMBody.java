@@ -8,13 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
-public class PostBasicMemberBody {
+public class FCMBody {
 
-	private String email;
-	private String password;
-
-	private String timeZone;
-	private String language;
-
-	private String notificationToken;
+	private String fcmToken;
 }

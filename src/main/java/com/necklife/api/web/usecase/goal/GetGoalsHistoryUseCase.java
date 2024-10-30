@@ -30,6 +30,9 @@ public class GetGoalsHistoryUseCase {
 		TreeMap<LocalDate, Map<GoalType, Double>> goalHistoryMap = new TreeMap<>();
 
 		for (HistorySummaryEntity historySummaryEntity : allHistory) {
+
+			Map<GoalType, Double> goalAchievements = historySummaryEntity.getGoalAchievements();
+
 			goalHistoryMap.put(
 					historySummaryEntity.getDate(), historySummaryEntity.getGoalAchievements());
 		}

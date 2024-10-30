@@ -15,4 +15,8 @@ public class PostOauthMemberBody {
 
 	// 구글, 애플, 카카오
 	@NotEmpty private String provider;
+
+	private String timeZone;
+	private String language;
+	private String notificationToken;
 }

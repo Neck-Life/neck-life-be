@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class Oauth2UserService {
+public class Oauth2UserServiceV2 {
 
 	private final MemberRepository memberRepository;
 
@@ -21,7 +21,8 @@ public class Oauth2UserService {
 	private final AppleOauthService appleOauthService;
 
 	@Transactional(readOnly = false)
-	public PostMemberRepoResponse findOrSaveMember(String id_token, String provider) {
+	public PostMemberRepoResponse findOrSaveMember(
+			String id_token, String provider, String timeZone, String language) {
 		SocialMemberData socialMemberData;
 		switch (provider) {
 			case "google":
@@ -56,7 +57,9 @@ public class Oauth2UserService {
 									newMember.unpaid();
 									return memberRepository.save(newMember);
 								});
-		memberRepository.updateLastLoginAtById(member.getId(), LocalDateTime.now());
+
+		memberRepository.updateLastLoginTimeZoneAndLanguageAtById(
+				member.getId(), LocalDateTime.now(), timeZone, language);
 
 		return PostMemberRepoResponse.builder()
 				.id(member.getId())

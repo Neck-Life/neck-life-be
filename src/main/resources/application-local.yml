@@ -38,18 +38,18 @@ spring:
       uri:  mongodb+srv://dudtkd665:vkflwl0722@necklife-db.dauntck.mongodb.net/
       auto-index-creation: true
 
-  mail:
-    host: smtp.gmail.com # 1
-    port: 587 # 2
-    username: ${mail.username} # 3
-    password: ${mail.password} # 4
-    properties:
-      mail:
-        smtp:
-          auth: true # 5
-          timeout: 5000 # 6
-          starttls:
-            enable: true # 7
+#  mail:
+#    host: smtp.gmail.com # 1
+#    port: 587 # 2
+#    username: ${mail.username} # 3
+#    password: ${mail.password} # 4
+#    properties:
+#      mail:
+#        smtp:
+#          auth: true # 5
+#          timeout: 5000 # 6
+#          starttls:
+#            enable: true # 7
 
 # logging config
 logging:
@@ -90,6 +90,10 @@ security:
     exposed-headers: "Set-Cookie, Authorization, Content-Type, X-Requested-With, Accept, Origin, Access-Control-Request-Method, Access-Control-Request-Headers, Access-Control-Allow-Origin, Access-Control-Allow-Credentials"
     allow-credentials: true
     max-age: 1800
+
+firebase:
+  project-id: neck-life
+  key-path: firebase/neck-life-firebase-adminsdk-xyb39-aba2fb5ec8.json
 
 # cookie config
 cookie:
