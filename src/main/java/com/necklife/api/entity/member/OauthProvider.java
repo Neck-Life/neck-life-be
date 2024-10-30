@@ -10,7 +10,7 @@ public enum OauthProvider {
 	public String toString() {
 		switch (this) {
 			case GOOGLE:
-				return "google";
+				return "GOOGLE";
 			case APPLE:
 				return "APPLE";
 			case KAKAO:
