@@ -14,6 +14,7 @@ import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -23,6 +24,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
 @Document(collection = "history_summary")
+@CompoundIndex(name = "member_date_idx", def = "{'memberId': 1, 'date': 1}", unique = true)
 public class HistorySummaryEntity {
 
 	@Id private String id;
