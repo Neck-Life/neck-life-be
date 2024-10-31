@@ -26,11 +26,7 @@ public class GetMonthlyDetailUseCase {
 
 		List<HistorySummaryEntity> historySummaryEntities =
 				historySummaryRepository.findByMemberIdAndDateBetweenOrderByDate(
-						memberId,
-						LocalDate.of(year, month, 1),
-						LocalDate.of(year, month, 1).plusMonths(1));
-
-
+						memberId, LocalDate.of(year, month, 1), LocalDate.of(year, month, 1).plusMonths(1));
 
 		// 요약된 데이터를 바탕으로 일별 데이터 변환
 		List<GetMonthlyDetailResponse.Day> daily =
