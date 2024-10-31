@@ -7,7 +7,6 @@ import jakarta.annotation.PostConstruct;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -21,7 +20,8 @@ public class FCMInitializer {
 
 	@PostConstruct
 	public void getFcmCredential() {
-		try (InputStream refreshToken = new FileInputStream(fcmKeyPath)) { // FileInputStream으로 절대 경로 파일 읽기
+		try (InputStream refreshToken =
+				new FileInputStream(fcmKeyPath)) { // FileInputStream으로 절대 경로 파일 읽기
 			FirebaseOptions options =
 					FirebaseOptions.builder()
 							.setCredentials(GoogleCredentials.fromStream(refreshToken))
