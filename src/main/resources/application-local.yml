@@ -93,7 +93,7 @@ security:
 
 firebase:
   project-id: neck-life
-  key-path: firebase/neck-life-firebase-adminsdk-xyb39-aba2fb5ec8.json
+  key-path: ${firebase.key-path}
 
 # cookie config
 cookie:
