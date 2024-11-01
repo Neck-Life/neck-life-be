@@ -3,8 +3,8 @@ package com.necklife.api.notification.service;
 import com.google.firebase.messaging.*;
 import com.necklife.api.entity.member.MemberEntity;
 import com.necklife.api.repository.member.MemberRepository;
-import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -17,34 +17,56 @@ public class PostureNotificationService {
 	private final MemberRepository memberRepository;
 	private final FCMService fcmService;
 
-	// 한국 시간대 사용자에게 알림 전송
-	@Scheduled(cron = "0 0 * * * ?", zone = "Asia/Seoul")
-	public void sendKoreaTimezoneNotifications() {
-		List<MemberEntity> members = memberRepository.findAllByTimeZone("Asia/Seoul");
-		List<String> fcmTokens =
-				members.stream()
+	// 한국 시간대, 한국어 사용자에게 알림 전송 (deleted가 null인 사용자만 포함)
+	@Scheduled(cron = "0 0 14 * * ?", zone = "Asia/Seoul")
+	public void sendKoreaTimezoneKoreanNotifications() {
+		Set<String> fcmTokens =
+				memberRepository.findAllByAsianTimeZonesWithKorean().stream()
 						.map(MemberEntity::getNotificationToken)
 						.filter(Objects::nonNull)
-						.collect(Collectors.toList());
+						.collect(Collectors.toSet());
 
 		sendMulticastNotification(fcmTokens, "지금! 거북목 아니신가요?", "바른 자세를 유지할 시간이에요!");
 	}
 
-	// 미국 뉴욕 시간대 사용자에게 알림 전송
-	@Scheduled(cron = "0 0 14 * * ?", zone = "America/New_York")
-	public void sendUSTimezoneNotifications() {
-		List<MemberEntity> members = memberRepository.findAllByAmericanTimeZones();
-		List<String> fcmTokens =
-				members.stream()
+	// 한국 시간대, 영어 사용자에게 알림 전송 (deleted가 null인 사용자만 포함)
+	@Scheduled(cron = "0 0 14 * * ?", zone = "Asia/Seoul")
+	public void sendKoreaTimezoneEnglishNotifications() {
+		Set<String> fcmTokens =
+				memberRepository.findAllByAsianTimeZonesWithEnglish().stream()
 						.map(MemberEntity::getNotificationToken)
 						.filter(Objects::nonNull)
-						.collect(Collectors.toList());
+						.collect(Collectors.toSet());
+
+		sendMulticastNotification(fcmTokens, "Check Your Posture!", "Time to check your posture!");
+	}
+
+	// 미국 뉴욕 시간대, 한국어 사용자에게 알림 전송 (deleted가 null인 사용자만 포함)
+	@Scheduled(cron = "0 0 14 * * ?", zone = "America/New_York")
+	public void sendUSTimezoneKoreanNotifications() {
+		Set<String> fcmTokens =
+				memberRepository.findAllByAmericanTimeZonesWithKorean().stream()
+						.map(MemberEntity::getNotificationToken)
+						.filter(Objects::nonNull)
+						.collect(Collectors.toSet());
+
+		sendMulticastNotification(fcmTokens, "지금! 거북목 아니신가요?", "바른 자세를 유지할 시간이에요!");
+	}
+
+	// 미국 뉴욕 시간대, 영어 사용자에게 알림 전송 (deleted가 null인 사용자만 포함)
+	@Scheduled(cron = "0 0 14 * * ?", zone = "America/New_York")
+	public void sendUSTimezoneEnglishNotifications() {
+		Set<String> fcmTokens =
+				memberRepository.findAllByAmericanTimeZonesWithEnglish().stream()
+						.map(MemberEntity::getNotificationToken)
+						.filter(Objects::nonNull)
+						.collect(Collectors.toSet());
 
 		sendMulticastNotification(fcmTokens, "Check Your Posture!", "Time to check your posture!");
 	}
 
 	// 멀티캐스트 알림 전송 메서드
-	private void sendMulticastNotification(List<String> fcmTokens, String title, String body) {
+	private void sendMulticastNotification(Set<String> fcmTokens, String title, String body) {
 		if (fcmTokens.isEmpty()) return;
 
 		MulticastMessage message =
