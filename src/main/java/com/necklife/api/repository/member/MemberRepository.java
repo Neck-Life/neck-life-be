@@ -22,20 +22,20 @@ public interface MemberRepository
 
 	// For American time zones - Korean users (ko-KR)
 	@Query(
-			"{'timeZone': {$regex: '^America/'}, 'language': 'ko-KR', 'deletedAt': { $exists: false }}")
+			"{'timeZone': {$regex: '^America/'}, 'language': 'ko_KR', 'deletedAt': { $exists: false }}")
 	List<MemberEntity> findAllByAmericanTimeZonesWithKorean();
 
 	// For American time zones - Non-Korean users (any language except ko-KR)
 	@Query(
-			"{'timeZone': {$regex: '^America/'}, 'language': { $ne: 'ko-KR' }, 'deletedAt': { $exists: false }}")
+			"{'timeZone': {$regex: '^America/'}, 'language': { $ne: 'ko_KR' }, 'deletedAt': { $exists: false }}")
 	List<MemberEntity> findAllByAmericanTimeZonesWithEnglish();
 
 	// For Asian time zones - Korean users (ko-KR)
-	@Query("{'timeZone': {$regex: '^Asia/'}, 'language': 'ko-KR', 'deletedAt': { $exists: false }}")
+	@Query("{'timeZone': {$regex: '^Asia/'}, 'language': 'ko_KR', 'deletedAt': { $exists: false }}")
 	List<MemberEntity> findAllByAsianTimeZonesWithKorean();
 
 	// For Asian time zones - Non-Korean users (any language except ko-KR)
 	@Query(
-			"{'timeZone': {$regex: '^Asia/'}, 'language': { $ne: 'ko-KR' }, 'deletedAt': { $exists: false }}")
+			"{'timeZone': {$regex: '^Asia/'}, 'language': { $ne: 'ko_KR' }, 'deletedAt': { $exists: false }}")
 	List<MemberEntity> findAllByAsianTimeZonesWithEnglish();
 }

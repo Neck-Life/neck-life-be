@@ -1,6 +1,7 @@
 package com.necklife.api.web.controller.member;
 
 import com.necklife.api.notification.service.FCMService;
+import com.necklife.api.notification.service.PostureNotificationService;
 import com.necklife.api.web.support.ApiResponse;
 import com.necklife.api.web.support.ApiResponseGenerator;
 import com.necklife.api.web.support.MessageCode;
@@ -19,6 +20,8 @@ public class AppleOauthController {
 
 	@Autowired private FCMService fcmService;
 
+	@Autowired private PostureNotificationService postureNotificationService;
+
 	@CrossOrigin(origins = {"https://appleid.apple.com"})
 	@PostMapping("/api/callback/apple")
 	public ApiResponse<ApiResponse.SuccessBody<String>> postBasicMember(HttpServletRequest request) {
@@ -30,11 +33,7 @@ public class AppleOauthController {
 
 	@GetMapping("/api/callback")
 	public ApiResponse<ApiResponse.SuccessBody<String>> test() {
-		String testUserId =
-				"fi5CufUmyUl9sgmgMs-Ki8:APA91bFcbpuImD7dghTUio6ld152Ri_ILImTWAoFDNAK62pqZ0ZLSS1W72EQ93h-6eGkIzrD8qV8DHv04c3LyRSAMZEu0hIpv5HTPB8cvLFPX11-F95kD-I"; // 테스트 기기의 FCM 토큰
-		String testMessage = "Hello from FCM test!";
-
-		fcmService.sendNotification(testUserId, "test", testMessage);
+		postureNotificationService.sendKoreaTimezoneKoreanNotifications();
 
 		return ApiResponseGenerator.success("성공", HttpStatus.OK, MessageCode.RESOURCE_CREATED);
 	}
