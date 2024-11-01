@@ -18,7 +18,7 @@ public class PostureNotificationService {
 	private final FCMService fcmService;
 
 	// 한국 시간대, 한국어 사용자에게 알림 전송 (deleted가 null인 사용자만 포함)
-	@Scheduled(cron = "0 0 14 * * ?", zone = "Asia/Seoul")
+	@Scheduled(cron = "0 * * * * ?", zone = "Asia/Seoul")
 	public void sendKoreaTimezoneKoreanNotifications() {
 		Set<String> fcmTokens =
 				memberRepository.findAllByAsianTimeZonesWithKorean().stream()
