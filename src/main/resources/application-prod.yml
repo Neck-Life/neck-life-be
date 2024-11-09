@@ -62,6 +62,10 @@ security:
     allow-credentials: ${CORS_ALLOW_CREDENTIALS}
     max-age: ${CORS_MAX_AGE}
 
+firebase:
+  project-id: neck-life
+  key-path: ${firebase.key-path}
+
 # cookie config
 cookie:
   domain: ${COOKIE_DOMAIN}

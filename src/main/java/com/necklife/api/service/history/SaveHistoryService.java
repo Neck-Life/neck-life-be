@@ -163,8 +163,9 @@ public class SaveHistoryService {
 
 			Optional<GoalEntity> activeGoal =
 					getActiveGoalService.execute(memberEntity.getId(), totalPoseStatusMap.firstKey());
-			Optional<HistorySummaryEntity> findSummary =
-					historySummaryRepository.findByMemberAndDate(memberEntity.getId(), date);
+			List<HistorySummaryEntity> findSummary =
+					historySummaryRepository.findByMemberIdAndDateOrderByMeasuredTimeDesc(
+							memberEntity.getId(), date);
 
 			HistorySummaryEntity historySummaryEntity;
 			if (findSummary.isEmpty()) {
@@ -182,7 +183,7 @@ public class SaveHistoryService {
 				}
 
 			} else {
-				historySummaryEntity = findSummary.get();
+				historySummaryEntity = findSummary.get(0);
 			}
 
 			historySummaryEntity.updateMeasuredTime(measuredTime);
