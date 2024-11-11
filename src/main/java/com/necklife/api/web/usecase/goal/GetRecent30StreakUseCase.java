@@ -51,7 +51,7 @@ public class GetRecent30StreakUseCase {
 								})
 						.toList();
 
-		if (collect.get(collect.size()).dayNumber == 31) {
+		if (collect.get(collect.size() - 1).dayNumber == 31) {
 			if (collect.get(0).getDayNumber() == 1) {
 				collect.remove(0);
 			}
