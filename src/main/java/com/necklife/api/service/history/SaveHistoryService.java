@@ -190,7 +190,7 @@ public class SaveHistoryService {
 			historySummaryEntity.updateSummary(totalPoseStatusMap, poseCountMap, poseTimerMap);
 			historySummaryEntity.updateHistoryPoint();
 			//			historySummaryEntity.calculateAchievements();
-			updateStreakService.execute(memberEntity, historySummaryEntity);
+			//			updateStreakService.execute(memberEntity, historySummaryEntity);
 
 			forSaveHistorySummaryEntity.add(historySummaryEntity);
 		}

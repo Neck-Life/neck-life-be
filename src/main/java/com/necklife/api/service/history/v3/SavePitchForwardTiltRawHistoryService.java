@@ -300,7 +300,7 @@ public class SavePitchForwardTiltRawHistoryService {
 					poseTimerMap);
 			historySummaryEntity.updateHistoryPointV3();
 			historySummaryEntity.calculateAchievements();
-			updateStreakService.execute(memberEntity, historySummaryEntity);
+			//			updateStreakService.execute(memberEntity, historySummaryEntity);
 
 			forSaveHistorySummaryEntity.add(historySummaryEntity);
 		}
