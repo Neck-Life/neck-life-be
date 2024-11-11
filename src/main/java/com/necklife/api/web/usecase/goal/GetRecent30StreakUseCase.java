@@ -51,6 +51,16 @@ public class GetRecent30StreakUseCase {
 								})
 						.toList();
 
+		if (collect.get(collect.size()).dayNumber == 31) {
+			if (collect.get(0).getDayNumber() == 1) {
+				collect.remove(0);
+			}
+
+			for (HistoryWithDay historyWithDay : collect) {
+				historyWithDay.dayNumber = historyWithDay.dayNumber - 1;
+			}
+		}
+
 		for (HistoryWithDay historyWithDay : collect) {
 
 			int point =
