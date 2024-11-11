@@ -284,6 +284,10 @@ public class SavePitchForwardTiltRawHistoryService {
 
 			} else {
 				historySummaryEntity = findSummary.get(0);
+
+				for (int i = 1; i < findSummary.size(); i++) {
+					historySummaryRepository.delete(findSummary.get(i));
+				}
 			}
 
 			//			RawHistoryEntity rawHistoryEntity =
