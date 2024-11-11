@@ -53,11 +53,11 @@ public class GetRecent30StreakUseCase {
 
 		for (HistoryWithDay historyWithDay : collect) {
 
+			int point =
+					Math.min(
+							(int) (historyWithDay.getHistory().getMeasuredTime() * 100 / maxMeasuredTime), 1);
 			recent30StreakDtos[historyWithDay.getDayNumber() - 1] =
-					Recent30StreakDto.builder()
-							.day(historyWithDay.getDayNumber())
-							.point((int) (historyWithDay.getHistory().getMeasuredTime() * 100 / maxMeasuredTime))
-							.build();
+					Recent30StreakDto.builder().day(historyWithDay.getDayNumber()).point(point).build();
 		}
 
 		List<Recent30StreakDto> list = Arrays.stream(recent30StreakDtos).toList();
