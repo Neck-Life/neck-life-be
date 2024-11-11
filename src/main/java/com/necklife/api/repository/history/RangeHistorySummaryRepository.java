@@ -2,7 +2,6 @@ package com.necklife.api.repository.history;
 
 import com.necklife.api.entity.history.HistorySummaryEntity;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -20,7 +19,7 @@ public class RangeHistorySummaryRepository {
 		Query query = new Query();
 		query
 				.addCriteria(Criteria.where("memberId").is(MemberId))
-				.addCriteria(Criteria.where("date").gte(start.toInstant(ZoneOffset.UTC)));
+				.addCriteria(Criteria.where("date").gte(start));
 
 		return mongoTemplate.find(query, HistorySummaryEntity.class);
 	}

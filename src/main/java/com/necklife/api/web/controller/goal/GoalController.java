@@ -10,6 +10,7 @@ import com.necklife.api.web.support.ApiResponseGenerator;
 import com.necklife.api.web.support.MessageCode;
 import com.necklife.api.web.usecase.dto.response.goal.GoalHistoryResponse;
 import com.necklife.api.web.usecase.dto.response.goal.GoalResponse;
+import com.necklife.api.web.usecase.dto.response.goal.Recent30StreakDto;
 import com.necklife.api.web.usecase.dto.response.streak.StreakResponse;
 import com.necklife.api.web.usecase.goal.*;
 import com.necklife.api.web.usecase.streak.GetMemberStreakUseCase;
@@ -41,6 +42,8 @@ public class GoalController {
 	private final GetMemberStreakUseCase getMemberStreakUseCase;
 	private final GetGoalsUseCase getGoalsUsecase;
 	private final UpdateGoalsUseCase updateGoalsUseCase;
+
+	private final GetRecent30StreakUseCase getRecent30StreakUseCase;
 
 	@GetMapping("/default")
 	public ApiResponse<ApiResponse.SuccessBody<GoalResponse>> getDefaultGoals(
@@ -136,6 +139,18 @@ public class GoalController {
 		//		Long memberId = 1L;
 
 		StreakResponse response = getMemberStreakUseCase.execute(memberId);
+
+		return ApiResponseGenerator.success(response, HttpStatus.OK, MessageCode.SUCCESS);
+	}
+
+	@GetMapping("/recent30")
+	public ApiResponse<ApiResponse.SuccessBody<List<Recent30StreakDto>>> getRecent30day(
+			HttpServletRequest httpServletRequest) {
+		UserDetails userDetails =
+				tokenUserDetailsService.loadUserByUsername(
+						httpServletRequest.getHeader("Authorization").substring(7));
+
+		List<Recent30StreakDto> response = getRecent30StreakUseCase.execute(userDetails.getUsername());
 
 		return ApiResponseGenerator.success(response, HttpStatus.OK, MessageCode.SUCCESS);
 	}
