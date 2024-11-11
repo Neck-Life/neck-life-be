@@ -11,7 +11,8 @@ public interface HistorySummaryRepository extends MongoRepository<HistorySummary
 
 	List<HistorySummaryEntity> findAllByMemberId(String memberId);
 
-	Optional<HistorySummaryEntity> findByMemberAndDate(String memberId, LocalDate date);
+	List<HistorySummaryEntity> findByMemberIdAndDateOrderByMeasuredTimeDesc(
+			String memberId, LocalDate date);
 
 	// 특정 년도에 해당하는 데이터를 가져오는 쿼리
 	List<HistorySummaryEntity> findByMemberIdAndDateBetweenOrderByDate(

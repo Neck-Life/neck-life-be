@@ -263,8 +263,9 @@ public class SavePitchForwardTiltRawHistoryService {
 
 			Optional<GoalEntity> activeGoal =
 					getActiveGoalService.execute(memberEntity.getId(), totalPitchStatusMap.firstKey());
-			Optional<HistorySummaryEntity> findSummary =
-					historySummaryRepository.findByMemberAndDate(memberEntity.getId(), date);
+			List<HistorySummaryEntity> findSummary =
+					historySummaryRepository.findByMemberIdAndDateOrderByMeasuredTimeDesc(
+							memberEntity.getId(), date);
 
 			HistorySummaryEntity historySummaryEntity;
 			if (findSummary.isEmpty()) {
@@ -282,7 +283,7 @@ public class SavePitchForwardTiltRawHistoryService {
 				}
 
 			} else {
-				historySummaryEntity = findSummary.get();
+				historySummaryEntity = findSummary.get(0);
 			}
 
 			//			RawHistoryEntity rawHistoryEntity =

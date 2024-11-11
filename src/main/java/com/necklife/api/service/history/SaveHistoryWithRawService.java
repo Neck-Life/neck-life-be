@@ -205,8 +205,9 @@ public class SaveHistoryWithRawService {
 
 			Optional<GoalEntity> activeGoal =
 					getActiveGoalService.execute(memberEntity.getId(), totalPoseStatusMap.firstKey());
-			Optional<HistorySummaryEntity> findSummary =
-					historySummaryRepository.findByMemberAndDate(memberEntity.getId(), date);
+			List<HistorySummaryEntity> findSummary =
+					historySummaryRepository.findByMemberIdAndDateOrderByMeasuredTimeDesc(
+							memberEntity.getId(), date);
 
 			HistorySummaryEntity historySummaryEntity;
 			if (findSummary.isEmpty()) {
@@ -224,7 +225,7 @@ public class SaveHistoryWithRawService {
 				}
 
 			} else {
-				historySummaryEntity = findSummary.get();
+				historySummaryEntity = findSummary.get(0);
 			}
 
 			RawHistoryEntity rawHistoryEntity =
