@@ -95,50 +95,49 @@ public class HistorySummaryEntity {
 	}
 
 	public HistorySummaryEntity updateHistoryPointV3() {
-		// 기본 점수 설정 (60점)
+		// 기본 점수 설정
 		double baseScore = 60;
+
+		// 동적 최소/최대 점수 설정 (예: 최소 50점, 최대 90점으로 설정)
+		double dynamicMinScore = 50;
+		double dynamicMaxScore = 90;
 
 		// 정상 자세에 따른 점수 상승 계산 (DOWNNORMAL, FORWARDNORMAL, TILTNORMAL 상태 고려)
 		double downNormalTime = totalPoseTimerMap.getOrDefault(PoseStatus.DOWNNORMAL, 0L); // 초 단위
 		double forwardNormalTime = totalPoseTimerMap.getOrDefault(PoseStatus.FORWARDNORMAL, 0L); // 초 단위
 		double tiltNormalTime = totalPoseTimerMap.getOrDefault(PoseStatus.TILTNORMAL, 0L); // 초 단위
 
-		// 정상 자세 발생 횟수 (예시로 각 상태 횟수를 더해서 계산)
 		int downNormalCount = totalPoseCountMap.getOrDefault(PoseStatus.DOWNNORMAL, 0);
 		int forwardNormalCount = totalPoseCountMap.getOrDefault(PoseStatus.FORWARDNORMAL, 0);
 		int tiltNormalCount = totalPoseCountMap.getOrDefault(PoseStatus.TILTNORMAL, 0);
 		int normalCount = downNormalCount + forwardNormalCount + tiltNormalCount;
 
-		// 총 정상 자세 시간 합산 (초 단위)
 		double normalTime = downNormalTime + forwardNormalTime + tiltNormalTime;
 
-		// 거북목 자세에 따른 점수 하락 계산 (FORWARD, TILT, DOWN 상태 고려)
+		// 비정상 자세에 따른 점수 하락 계산 (FORWARD, TILT, DOWN 상태 고려)
 		double forwardTime = totalPoseTimerMap.getOrDefault(PoseStatus.FORWARD, 0L); // 초 단위
 		double tiltTime = totalPoseTimerMap.getOrDefault(PoseStatus.TILT, 0L); // 초 단위
 		double downTime = totalPoseTimerMap.getOrDefault(PoseStatus.DOWN, 0L); // 초 단위
 
-		// 비정상 자세 발생 횟수
 		int forwardCount = totalPoseCountMap.getOrDefault(PoseStatus.FORWARD, 0);
 		int tiltCount = totalPoseCountMap.getOrDefault(PoseStatus.TILT, 0);
 		int downCount = totalPoseCountMap.getOrDefault(PoseStatus.DOWN, 0);
 		int abnormalCount = forwardCount + tiltCount + downCount;
 
-		// 총 비정상 자세 시간 합산 (초 단위)
 		double abnormalTime = forwardTime + tiltTime + downTime;
 
-		// 점수 상승 계산: 정상 자세 시간 2분마다 2점씩 상승, 최대 한도 적용
-		double maxScoreIncrease = 30; // 최대 상승 가능 점수 한도
-		double scoreIncrease = Math.min((normalTime / 120) * 2, maxScoreIncrease); // 횟수마다 0.1점 추가
-
-		// 점수 하락 계산: 비정상 자세가 많을수록 점수 하락 비율 증가, 횟수마다 0.2점씩 추가 하락
-		double abnormalFactor = 1 + (abnormalTime / 300) + (abnormalCount * 0.2); // 횟수마다 0.2점 추가 하락
-		double scoreDecrease = (abnormalTime / 60) * 3 * abnormalFactor;
+		// 점수 상승/하락 계산 (시간 및 횟수 기반 조정)
+		double scoreIncrease =
+				Math.min((normalTime / 120) * 2 + (normalCount * 0.1), dynamicMaxScore - baseScore);
+		double abnormalFactor = 1 + (abnormalTime / 300) + (abnormalCount * 0.2);
+		double scoreDecrease =
+				Math.min((abnormalTime / 60) * 3 * abnormalFactor, baseScore - dynamicMinScore);
 
 		// 최종 점수 계산
 		double finalScore = baseScore + scoreIncrease - scoreDecrease;
 
-		// 점수는 0~100 사이로 제한
-		this.totalHistoryPoint = (int) Math.max(0, Math.min(100, finalScore));
+		// 점수는 동적 최소/최대 점수 사이로 제한
+		this.totalHistoryPoint = (int) Math.max(dynamicMinScore, Math.min(dynamicMaxScore, finalScore));
 
 		return this;
 	}
