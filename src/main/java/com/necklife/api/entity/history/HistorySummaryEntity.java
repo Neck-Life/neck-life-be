@@ -103,6 +103,12 @@ public class HistorySummaryEntity {
 		double forwardNormalTime = totalPoseTimerMap.getOrDefault(PoseStatus.FORWARDNORMAL, 0L); // 초 단위
 		double tiltNormalTime = totalPoseTimerMap.getOrDefault(PoseStatus.TILTNORMAL, 0L); // 초 단위
 
+		// 정상 자세 발생 횟수 (예시로 각 상태 횟수를 더해서 계산)
+		int downNormalCount = totalPoseCountMap.getOrDefault(PoseStatus.DOWNNORMAL, 0);
+		int forwardNormalCount = totalPoseCountMap.getOrDefault(PoseStatus.FORWARDNORMAL, 0);
+		int tiltNormalCount = totalPoseCountMap.getOrDefault(PoseStatus.TILTNORMAL, 0);
+		int normalCount = downNormalCount + forwardNormalCount + tiltNormalCount;
+
 		// 총 정상 자세 시간 합산 (초 단위)
 		double normalTime = downNormalTime + forwardNormalTime + tiltNormalTime;
 
@@ -111,16 +117,22 @@ public class HistorySummaryEntity {
 		double tiltTime = totalPoseTimerMap.getOrDefault(PoseStatus.TILT, 0L); // 초 단위
 		double downTime = totalPoseTimerMap.getOrDefault(PoseStatus.DOWN, 0L); // 초 단위
 
+		// 비정상 자세 발생 횟수
+		int forwardCount = totalPoseCountMap.getOrDefault(PoseStatus.FORWARD, 0);
+		int tiltCount = totalPoseCountMap.getOrDefault(PoseStatus.TILT, 0);
+		int downCount = totalPoseCountMap.getOrDefault(PoseStatus.DOWN, 0);
+		int abnormalCount = forwardCount + tiltCount + downCount;
+
 		// 총 비정상 자세 시간 합산 (초 단위)
 		double abnormalTime = forwardTime + tiltTime + downTime;
 
-		// 점수 상승 계산 (정상 자세 시간이 많을수록 점수 상승)
-		// 정상 자세 시간 1분마다 점수 2점 상승
-		double scoreIncrease = (normalTime / 60) * 2; // 60초(1분)마다 2점 추가
+		// 점수 상승 계산: 정상 자세 시간 2분마다 2점씩 상승, 최대 한도 적용
+		double maxScoreIncrease = 30; // 최대 상승 가능 점수 한도
+		double scoreIncrease = Math.min((normalTime / 120) * 2, maxScoreIncrease); // 횟수마다 0.1점 추가
 
-		// 점수 하락 계산 (비정상 자세 시간이 많을수록 점수 하락)
-		// 비정상 자세 시간 1분마다 점수 3점 하락
-		double scoreDecrease = (abnormalTime / 60) * 3; // 60초(1분)마다 3점 감소
+		// 점수 하락 계산: 비정상 자세가 많을수록 점수 하락 비율 증가, 횟수마다 0.2점씩 추가 하락
+		double abnormalFactor = 1 + (abnormalTime / 300) + (abnormalCount * 0.2); // 횟수마다 0.2점 추가 하락
+		double scoreDecrease = (abnormalTime / 60) * 3 * abnormalFactor;
 
 		// 최종 점수 계산
 		double finalScore = baseScore + scoreIncrease - scoreDecrease;
