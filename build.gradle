@@ -175,6 +175,8 @@ dependencies {
     // AOP
     implementation "org.springframework.boot:spring-boot-starter-aop"
 
+    //SLACK
+    implementation 'com.slack.api:slack-api-client:1.30.0'
 }
 
 test {
