@@ -49,3 +49,6 @@ springdoc:
   swagger-ui:
     url: /docs/openapi3.yaml
     path: /swagger
+
+slack:
+  webhook-url: ${SLACK_WEBHOOK_URL}
