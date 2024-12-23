@@ -18,7 +18,7 @@ public class PostureNotificationService {
 	private final FCMService fcmService;
 
 	// 한국 시간대, 한국어 사용자에게 알림 전송 (deleted가 null인 사용자만 포함)
-	@Scheduled(cron = "0 0 14 * * 1-5", zone = "Asia/Seoul")
+	@Scheduled(cron = "0 0 14 * * 1,3,5", zone = "Asia/Seoul")
 	public void sendKoreaTimezoneKoreanNotifications() {
 		Set<String> fcmTokens =
 				memberRepository.findAllByAsianTimeZonesWithKorean().stream()
@@ -30,7 +30,7 @@ public class PostureNotificationService {
 	}
 
 	// 한국 시간대, 영어 사용자에게 알림 전송 (deleted가 null인 사용자만 포함)
-	@Scheduled(cron = "0 0 14 * * 1-5", zone = "Asia/Seoul")
+	@Scheduled(cron = "0 0 14 * * 1,3,5", zone = "Asia/Seoul")
 	public void sendKoreaTimezoneEnglishNotifications() {
 		Set<String> fcmTokens =
 				memberRepository.findAllByAsianTimeZonesWithEnglish().stream()
@@ -42,7 +42,7 @@ public class PostureNotificationService {
 	}
 
 	// 미국 뉴욕 시간대, 한국어 사용자에게 알림 전송 (deleted가 null인 사용자만 포함)
-	@Scheduled(cron = "0 0 14 * * 1-5", zone = "America/New_York")
+	@Scheduled(cron = "0 0 14 * * 1,3,5", zone = "America/New_York")
 	public void sendUSTimezoneKoreanNotifications() {
 		Set<String> fcmTokens =
 				memberRepository.findAllByAmericanTimeZonesWithKorean().stream()
@@ -54,7 +54,7 @@ public class PostureNotificationService {
 	}
 
 	// 미국 뉴욕 시간대, 영어 사용자에게 알림 전송 (deleted가 null인 사용자만 포함)
-	@Scheduled(cron = "0 0 14 * * 1-5", zone = "America/New_York")
+	@Scheduled(cron = "0 0 14 * * 1,3,5", zone = "America/New_York")
 	public void sendUSTimezoneEnglishNotifications() {
 		Set<String> fcmTokens =
 				memberRepository.findAllByAmericanTimeZonesWithEnglish().stream()
